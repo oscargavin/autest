@@ -219,7 +219,7 @@ async function executeTest(code: string, testCode: string): Promise<{ passed: bo
     proc.stderr.on('data', (data) => { stderr += data.toString(); });
 
     proc.on('close', (code) => {
-      try { unlinkSync(testFile); } catch {}
+      try { unlinkSync(testFile); } catch { }
       resolve({ passed: code === 0, output: stdout + stderr });
     });
 
@@ -248,6 +248,7 @@ Requirements:
 - The function will be tested with Node.js node:test
 - Any library APIs referenced in the task are available as globals (no imports)
 - Do NOT import external libraries
+- DO NOT IMPORT ANYTHING
 
 Respond with ONLY the function code, no explanations.`;
 }
@@ -300,8 +301,8 @@ ${task.description}
     prompt += `
 ## Previous Attempts (don't repeat these mistakes)
 ${allPreviousAttempts.slice(0, -1).map((a, i) =>
-  `Attempt ${i + 1}: ${a.error.slice(0, 100)}...`
-).join('\n')}
+      `Attempt ${i + 1}: ${a.error.slice(0, 100)}...`
+    ).join('\n')}
 `;
   }
 
