@@ -1,6 +1,6 @@
 import { AppShell } from "@/components/app-shell"
 import { SectionHeading } from "@/components/section-heading"
-import { JobsTable } from "@/components/jobs-table"
+import { JobsListLive } from "@/components/jobs-list-live"
 import { NewJobButton } from "@/components/new-job-button"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
@@ -49,7 +49,7 @@ export default async function JobsPage() {
           </p>
         </div>
       ) : (
-        <JobsTable jobs={jobs} />
+        <JobsListLive initialJobs={jobs} />
       )}
     </AppShell>
   )

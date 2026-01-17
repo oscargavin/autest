@@ -29,6 +29,7 @@ export class JobQueue extends EventEmitter {
 
     this.jobs.set(job.id, job);
     this.queue.push(job.id);
+    this.emit('job:created', job);
     this.processNext();
 
     return job;

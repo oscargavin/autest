@@ -28,6 +28,56 @@ export function registerRoutes(fastify: FastifyInstance, queue: JobQueue) {
     return { jobs: queue.getAllJobs() };
   });
 
+  // SSE endpoint for all job updates (for jobs list page)
+  fastify.get('/api/jobs/sse', async (request, reply) => {
+    const origin = request.headers.origin || '*'
+    reply.raw.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': 'true'
+    });
+
+    const sendEvent = (event: string, data: unknown) => {
+      reply.raw.write(`event: ${event}\ndata: ${JSON.stringify(data)}\n\n`);
+    };
+
+    // Send current jobs list
+    sendEvent('jobs', queue.getAllJobs());
+
+    // Listen for any job changes
+    const onJobCreated = (job: Job) => {
+      sendEvent('job:created', job);
+    };
+
+    const onProgress = (job: Job, event: ProgressEvent) => {
+      sendEvent('job:progress', { jobId: job.id, progress: event });
+    };
+
+    const onComplete = (job: Job) => {
+      sendEvent('job:complete', job);
+    };
+
+    const onError = (job: Job) => {
+      sendEvent('job:error', job);
+    };
+
+    const cleanup = () => {
+      queue.off('job:created', onJobCreated);
+      queue.off('job:progress', onProgress);
+      queue.off('job:complete', onComplete);
+      queue.off('job:error', onError);
+    };
+
+    queue.on('job:created', onJobCreated);
+    queue.on('job:progress', onProgress);
+    queue.on('job:complete', onComplete);
+    queue.on('job:error', onError);
+
+    request.raw.on('close', cleanup);
+  });
+
   // Get a specific job
   fastify.get<{
     Params: { id: string };
@@ -48,10 +98,13 @@ export function registerRoutes(fastify: FastifyInstance, queue: JobQueue) {
       return reply.status(404).send({ error: 'Job not found' });
     }
 
+    const origin = request.headers.origin || '*'
     reply.raw.writeHead(200, {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      'Connection': 'keep-alive'
+      'Connection': 'keep-alive',
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Credentials': 'true'
     });
 
     // Send initial state
