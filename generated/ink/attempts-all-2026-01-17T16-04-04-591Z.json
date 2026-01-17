@@ -1,0 +1,749 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function logMessage(msg) {\n  await useStdout(msg + '\\n');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665674858.mjs:12\n# functionUnderTest('Hello World');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665674858.mjs:12:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665674858.mjs\nnot ok 1 - generated/temp-test-1768665674858.mjs\n  ---\n  duration_ms: 34.237166\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665674858.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.181875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:14.964Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logMessage(msg) {\n\tconst { write } = useStdout();\n\twrite(`${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673582.mjs:13\n# functionUnderTest('Hello World');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673582.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665673582.mjs\nnot ok 1 - generated/temp-test-1768665673582.mjs\n  ---\n  duration_ms: 34.522\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673582.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.876166\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:13.694Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(msg) {\n\tconst { write } = useStdout();\n\twrite(`${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665681632.mjs\nok 1 - generated/temp-test-1768665681632.mjs\n  ---\n  duration_ms: 34.608875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.972083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:21.744Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function logMultiple(messages) {\n  for (const message of messages) {\n    await useStdout.write(message + '\\n');\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665682281.mjs:14\n# functionUnderTest(['msg1', 'msg2']);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665682281.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665682281.mjs\nnot ok 1 - generated/temp-test-1768665682281.mjs\n  ---\n  duration_ms: 34.226709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665682281.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.471042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:22.393Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logMultiple(messages) {\n  const {write} = useStdout();\n  for (const message of messages) {\n    write(`${message}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672940.mjs:15\n# functionUnderTest(['msg1', 'msg2']);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672940.mjs:15:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665672940.mjs\nnot ok 1 - generated/temp-test-1768665672940.mjs\n  ---\n  duration_ms: 34.660625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672940.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.213875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:13.052Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(messages) {\n  const {write} = useStdout();\n  for (const message of messages) {\n    write(`${message}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665678937.mjs\nok 1 - generated/temp-test-1768665678937.mjs\n  ---\n  duration_ms: 32.784833\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.03925\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:19.018Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function conditionalLog(msg, condition) {\n  if (condition) {\n    await useStdout(msg);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665675971.mjs:14\n# functionUnderTest('test', true);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665675971.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665675971.mjs\nnot ok 1 - generated/temp-test-1768665675971.mjs\n  ---\n  duration_ms: 34.427958\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665675971.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.436541\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:16.080Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function conditionalLog(msg, condition) {\n  if (condition) {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665678718.mjs:15\n# functionUnderTest('test', true);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665678718.mjs:15:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665678718.mjs\nnot ok 1 - generated/temp-test-1768665678718.mjs\n  ---\n  duration_ms: 33.792166\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665678718.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.732458\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:18.832Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(msg, condition) {\n  if (condition) {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665687134.mjs\nok 1 - generated/temp-test-1768665687134.mjs\n  ---\n  duration_ms: 34.760666\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.279125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:27.247Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function timestampedLog(msg) {\n  const stdout = useStdout();\n  const timestamp = new Date().toISOString();\n  await stdout.write(`${timestamp} ${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665680037.mjs:17\n# functionUnderTest('test');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665680037.mjs:17:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665680037.mjs\nnot ok 1 - generated/temp-test-1768665680037.mjs\n  ---\n  duration_ms: 34.747584\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665680037.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.978834\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:20.151Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function timestampedLog(msg) {\n  const {write} = useStdout();\n  write(`${new Date().toISOString()} ${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673777.mjs:16\n# functionUnderTest('test');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673777.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665673777.mjs\nnot ok 1 - generated/temp-test-1768665673777.mjs\n  ---\n  duration_ms: 31.756292\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665673777.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 35.651792\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:13.850Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(msg) {\n  const {write} = useStdout();\n  write(`${new Date().toISOString()} ${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684736.mjs:3\n#   write(`${new Date().toISOString()} ${msg}\\\\n`);\n#            ^\n# TypeError: Date is not a constructor\n#     at functionUnderTest (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684736.mjs:3:12)\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684736.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665684736.mjs\nnot ok 1 - generated/temp-test-1768665684736.mjs\n  ---\n  duration_ms: 31.709417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684736.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 35.47575\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:24.802Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function timestampedLog(msg) {\n  const {write} = useStdout();\n  write(`${Date.toISOString()} ${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665699761.mjs:16\n# functionUnderTest('test');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665699761.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665699761.mjs\nnot ok 1 - generated/temp-test-1768665699761.mjs\n  ---\n  duration_ms: 33.175625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665699761.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.63875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:39.844Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function logError(errMsg) {\n  useStderr(errMsg);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665691271.mjs:12\n# functionUnderTest('Error occurred');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665691271.mjs:12:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665691271.mjs\nnot ok 1 - generated/temp-test-1768665691271.mjs\n  ---\n  duration_ms: 34.676125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665691271.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.000375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:31.383Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logError(errMsg) {\n  const {write} = useStderr();\n  write(`${errMsg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672556.mjs:13\n# functionUnderTest('Error occurred');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672556.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665672556.mjs\nnot ok 1 - generated/temp-test-1768665672556.mjs\n  ---\n  duration_ms: 33.799625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665672556.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.991334\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:12.650Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function functionUnderTest(errMsg) {\n  const {write} = useStderr();\n  write(`${errMsg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665687782.mjs\nok 1 - generated/temp-test-1768665687782.mjs\n  ---\n  duration_ms: 34.23225\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.733958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:27.892Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function logErrors(errors) {\n  errors.forEach(console.error);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665689052.mjs:12\n# functionUnderTest(['err1', 'err2']);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665689052.mjs:12:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665689052.mjs\nnot ok 1 - generated/temp-test-1768665689052.mjs\n  ---\n  duration_ms: 34.423458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665689052.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.671667\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:29.163Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logErrors(errors) {\n  const {write} = useStderr();\n  for (const error of errors) {\n    write(`${error}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684639.mjs:15\n# functionUnderTest(['err1', 'err2']);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684639.mjs:15:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665684639.mjs\nnot ok 1 - generated/temp-test-1768665684639.mjs\n  ---\n  duration_ms: 35.023625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665684639.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.303375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:24.754Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(errors) {\n  const {write} = useStderr();\n  for (const error of errors) {\n    write(`${error}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665697527.mjs\nok 1 - generated/temp-test-1768665697527.mjs\n  ---\n  duration_ms: 34.626208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.193375\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:37.639Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function getStdinRawMode() {\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n    return true;\n  }\n  return false;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665709129.mjs:15\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665709129.mjs:15:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665709129.mjs\nnot ok 1 - generated/temp-test-1768665709129.mjs\n  ---\n  duration_ms: 34.970583\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665709129.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.418833\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:49.242Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function getStdinRawMode() {\n\tconst {setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665688704.mjs:12\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665688704.mjs:12:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665688704.mjs\nnot ok 1 - generated/temp-test-1768665688704.mjs\n  ---\n  duration_ms: 34.878709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665688704.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.111292\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:28.818Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n\tconst {setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665710697.mjs\nok 1 - generated/temp-test-1768665710697.mjs\n  ---\n  duration_ms: 34.217625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.820208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:50.809Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function checkRawModeSupported() {\n\tif (!process.stdin.isTTY) {\n\t\treturn false;\n\t}\n\n\tif (process.platform !== 'win32') {\n\t\treturn true;\n\t}\n\n\treturn Boolean(\n\t\tprocess.env.WT_SESSION ||\n\t\tprocess.env.WT_PROFILE_ID ||\n\t\tprocess.env.TERM_PROGRAM === 'vscode' ||\n\t\tprocess.env.TERM_PROGRAM === 'Hyper' ||\n\t\tprocess.env.TERM_PROGRAM === 'iTerm.app' ||\n\t\tprocess.env.TERM_PROGRAM === 'WezTerm' ||\n\t\tprocess.env.CONEMU_TASK_NAME ||\n\t\tprocess.env.TERM === 'xterm' ||\n\t\tprocess.env.TERM === 'xterm-256color' ||\n\t\tprocess.env.TERM?.startsWith('screen')\n\t);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665721433.mjs:28\n# assert.strictEqual(functionUnderTest(), true);\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665721433.mjs:28:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665721433.mjs\nnot ok 1 - generated/temp-test-1768665721433.mjs\n  ---\n  duration_ms: 34.620625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665721433.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.036875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:01.545Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function checkRawModeSupported() {\n\tconst {isRawModeSupported} = useStdin();\n\treturn isRawModeSupported;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665687449.mjs:10\n# assert.strictEqual(functionUnderTest(), true);\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665687449.mjs:10:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665687449.mjs\nnot ok 1 - generated/temp-test-1768665687449.mjs\n  ---\n  duration_ms: 34.616833\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665687449.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.733417\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:27.559Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function functionUnderTest() {\n\tconst {isRawModeSupported} = useStdin();\n\treturn isRawModeSupported;\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665696574.mjs\nok 1 - generated/temp-test-1768665696574.mjs\n  ---\n  duration_ms: 35.1215\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.97825\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:36.691Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function enableRawMode() {\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n  }\n  return process.stdin;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665698674.mjs:13\n# const result = functionUnderTest();\n#                ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665698674.mjs:13:16\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665698674.mjs\nnot ok 1 - generated/temp-test-1768665698674.mjs\n  ---\n  duration_ms: 34.414125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665698674.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.724\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:38.788Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function enableRawMode() {\n\tconst {stdin, setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n\treturn stdin;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665692488.mjs:12\n# const result = functionUnderTest();\n#                ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665692488.mjs:12:16\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665692488.mjs\nnot ok 1 - generated/temp-test-1768665692488.mjs\n  ---\n  duration_ms: 32.95925\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665692488.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.873459\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:32.604Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n\tconst {stdin, setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n\treturn stdin;\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665729930.mjs\nok 1 - generated/temp-test-1768665729930.mjs\n  ---\n  duration_ms: 34.432708\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.507666\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:10.026Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function setupKeyHandler(callback) {\n  const stdin = process.stdin;\n  if (stdin.isTTY) {\n    stdin.setRawMode(true);\n  }\n  stdin.resume();\n  stdin.on('data', callback);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665705408.mjs:17\n# functionUnderTest(() => {});\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665705408.mjs:17:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665705408.mjs\nnot ok 1 - generated/temp-test-1768665705408.mjs\n  ---\n  duration_ms: 34.558792\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665705408.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.089667\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:45.523Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function setupKeyHandler(callback) {\n  const { stdin } = useStdin();\n  stdin.on('data', callback);\n  return () => stdin.removeListener('data', callback);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701389.mjs:14\n# functionUnderTest(() => {});\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701389.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665701389.mjs\nnot ok 1 - generated/temp-test-1768665701389.mjs\n  ---\n  duration_ms: 34.524667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701389.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.971083\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:41.503Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(callback) {\n  const { stdin, setRawMode } = useStdin();\n  setRawMode(true);\n  stdin.on('data', callback);\n  return () => stdin.removeListener('data', callback);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665716794.mjs\nok 1 - generated/temp-test-1768665716794.mjs\n  ---\n  duration_ms: 34.800208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.364125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:01:56.911Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function processKeyHex(dataBuffer) {\n  console.log(dataBuffer.toString('hex'));\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665700347.mjs:14\n# functionUnderTest(Buffer.from('deadbeef'));\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665700347.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665700347.mjs\nnot ok 1 - generated/temp-test-1768665700347.mjs\n  ---\n  duration_ms: 34.87975\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665700347.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.225209\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:40.458Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function processKeyHex(dataBuffer) {\n  console.log(dataBuffer.toString('hex'));\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701906.mjs:14\n# functionUnderTest(Buffer.from('deadbeef'));\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701906.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665701906.mjs\nnot ok 1 - generated/temp-test-1768665701906.mjs\n  ---\n  duration_ms: 34.738667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665701906.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.524208\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:42.022Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function processKeyHex(dataBuffer) {\n  useStdout().write(dataBuffer.toString('hex') + '\\n');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665735995.mjs:14\n# functionUnderTest(Buffer.from('deadbeef'));\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665735995.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665735995.mjs\nnot ok 1 - generated/temp-test-1768665735995.mjs\n  ---\n  duration_ms: 36.739708\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665735995.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.228583\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:16.112Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(dataBuffer) {\n  useStdout().write(dataBuffer.toString('hex') + '\\n');\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665754822.mjs\nok 1 - generated/temp-test-1768665754822.mjs\n  ---\n  duration_ms: 34.670209\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.375708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:34.935Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function safeKeyListener() {\n  const queue = [];\n  let resolvePending = null;\n  let closed = false;\n  const listener = (key) => {\n    if (closed) return;\n    if (resolvePending) {\n      const resolve = resolvePending;\n      resolvePending = null;\n      resolve(key);\n      return;\n    }\n    queue.push(key);\n  };\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n  }\n  process.stdin.resume();\n  process.stdin.on('data', listener);\n  const nextKey = async () => {\n    if (closed) {\n      throw new Error('KeyListener destroyed');\n    }\n    if (queue.length > 0) {\n      return queue.shift();\n    }\n    return new Promise((resolve) => {\n      resolvePending = resolve;\n    });\n  };\n  const destroy = () => {\n    closed = true;\n    if (resolvePending) {\n      resolvePending(new Error('KeyListener destroyed'));\n      resolvePending = null;\n    }\n    process.stdin.removeListener('data', listener);\n    if (process.stdin.isTTY) {\n      process.stdin.setRawMode(false);\n    }\n    process.stdin.pause();\n  };\n  return { nextKey, destroy };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754331.mjs:53\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754331.mjs:53:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665754331.mjs\nnot ok 1 - generated/temp-test-1768665754331.mjs\n  ---\n  duration_ms: 34.255375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754331.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.440708\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:34.445Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function safeKeyListener(handler) {\n  const { stdin } = useStdin();\n  stdin.setRawMode?.(true);\n  const onData = (data) => {\n    handler(Buffer.from(data).toString('hex'));\n  };\n  stdin.on('data', onData);\n  return () => {\n    stdin.removeListener('data', onData);\n    stdin.setRawMode?.(false);\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665723583.mjs:21\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665723583.mjs:21:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665723583.mjs\nnot ok 1 - generated/temp-test-1768665723583.mjs\n  ---\n  duration_ms: 34.026583\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665723583.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.194917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:03.695Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function functionUnderTest() {\n  const { stdin, setRawMode, isRawModeSupported } = useStdin();\n  if (isRawModeSupported) {\n    setRawMode(true);\n  }\n  const onData = (data) => {\n    console.log(Buffer.from(data).toString('hex'));\n  };\n  stdin.on('data', onData);\n  return () => {\n    stdin.removeListener('data', onData);\n    if (isRawModeSupported) {\n      setRawMode(false);\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665796998.mjs\nok 1 - generated/temp-test-1768665796998.mjs\n  ---\n  duration_ms: 35.815625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 41.485667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:17.107Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function persistentLog(msg) {\n  await useStdout.write(`${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715706.mjs:12\n# functionUnderTest('persistent');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715706.mjs:12:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665715706.mjs\nnot ok 1 - generated/temp-test-1768665715706.mjs\n  ---\n  duration_ms: 34.359375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715706.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.314708\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:55.822Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function persistentLog(msg) {\n  const {write} = useStdout();\n  write(`${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665710289.mjs:13\n# functionUnderTest('persistent');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665710289.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665710289.mjs\nnot ok 1 - generated/temp-test-1768665710289.mjs\n  ---\n  duration_ms: 34.870417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665710289.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.537333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:50.403Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(msg) {\n  const {write} = useStdout();\n  write(`${msg}\\n`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665719897.mjs\nok 1 - generated/temp-test-1768665719897.mjs\n  ---\n  duration_ms: 34.218958\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.702542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:00.012Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function intervalLogger(intervalMs, msg) {\n  return setInterval(() => useStdout(msg), intervalMs);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715984.mjs:13\n# functionUnderTest(1, 'interval');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715984.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665715984.mjs\nnot ok 1 - generated/temp-test-1768665715984.mjs\n  ---\n  duration_ms: 33.476625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665715984.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.321042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:56.082Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function intervalLogger(intervalMs, msg) {\n  const { write } = useStdout();\n  return setInterval(() => write(`${msg}\\n`), intervalMs);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665718258.mjs:14\n# functionUnderTest(1, 'interval');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665718258.mjs:14:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665718258.mjs\nnot ok 1 - generated/temp-test-1768665718258.mjs\n  ---\n  duration_ms: 34.598791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665718258.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.756875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:01:58.370Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(intervalMs, msg) {\n  const { write } = useStdout();\n  return setInterval(() => write(`${msg}\\n`), intervalMs);\n}",
+    "testOutput": "TAP version 13\n# node:internal/modules/run_main:122\n#     triggerUncaughtException(\n#     ^\n# AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n# + actual - expected\n# + undefined\n# - 'interval\\\\n'\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665741607.mjs:17:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5) {\n#   generatedMessage: true,\n#   code: 'ERR_ASSERTION',\n#   actual: undefined,\n#   expected: 'interval\\\\n',\n#   operator: 'strictEqual'\n# }\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665741607.mjs\nnot ok 1 - generated/temp-test-1768665741607.mjs\n  ---\n  duration_ms: 34.8055\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665741607.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.024917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:21.723Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(intervalMs, msg) {\n  const { write } = useStdout();\n  const log = () => write(`${msg}\\n`);\n  log();\n  return setInterval(log, intervalMs);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665818996.mjs\nok 1 - generated/temp-test-1768665818996.mjs\n  ---\n  duration_ms: 36.31675\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.6255\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:39.107Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function logToStream(streamType, msg) {\n  if (streamType === 'stdout') {\n    await useStdout(msg);\n  } else {\n    await useStderr(msg);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665724095.mjs:16\n# functionUnderTest('stdout', 'out msg');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665724095.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665724095.mjs\nnot ok 1 - generated/temp-test-1768665724095.mjs\n  ---\n  duration_ms: 34.594125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665724095.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.942959\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:04.205Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logToStream(streamType, msg) {\n  if (streamType === 'stdout') {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  } else {\n    const { write } = useStderr();\n    write(`${msg}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665726536.mjs:18\n# functionUnderTest('stdout', 'out msg');\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665726536.mjs:18:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665726536.mjs\nnot ok 1 - generated/temp-test-1768665726536.mjs\n  ---\n  duration_ms: 34.972209\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665726536.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.443292\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:06.645Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(streamType, msg) {\n  if (streamType === 'stdout') {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  } else {\n    const { write } = useStderr();\n    write(`${msg}\\n`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665734546.mjs\nok 1 - generated/temp-test-1768665734546.mjs\n  ---\n  duration_ms: 34.474042\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.944708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:14.660Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function checkboxJsx(checked, label) {\n  return (\n    <Box aria-role='checkbox' aria-state={{checked}}>\n      <Text>{label}</Text>\n    </Box>\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665737253.mjs:3\n#     <Box aria-role='checkbox' aria-state={{checked}}>\n#     ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665737253.mjs\nnot ok 1 - generated/temp-test-1768665737253.mjs\n  ---\n  duration_ms: 33.247125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665737253.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.610416\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:17.364Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function checkboxJsx(checked, label) {\n  return (\n    <Box aria-role=\"checkbox\" aria-state={{ checked }}>\n      <Text>{label}</Text>\n    </Box>\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665724379.mjs:3\n#     <Box aria-role=\"checkbox\" aria-state={{ checked }}>\n#     ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665724379.mjs\nnot ok 1 - generated/temp-test-1768665724379.mjs\n  ---\n  duration_ms: 32.25725\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665724379.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.222583\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:04.479Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function checkboxJsx(checked, label) {\n  return Box(\n    {\n      'aria-role': 'checkbox',\n      'aria-state': { checked }\n    },\n    Text(label)\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665742865.mjs:18\n# const result = functionUnderTest(true, 'Terms');\n#                ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665742865.mjs:18:16\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665742865.mjs\nnot ok 1 - generated/temp-test-1768665742865.mjs\n  ---\n  duration_ms: 35.169875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665742865.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.739333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:22.973Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(checked, label) {\n  return Box(\n    {\n      'aria-role': 'checkbox',\n      'aria-state': { checked }\n    },\n    Text(label)\n  );\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665773628.mjs\nok 1 - generated/temp-test-1768665773628.mjs\n  ---\n  duration_ms: 34.444333\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.963208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:53.742Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function buttonJsx(label, disabled) {\n  return {\n    type: 'button',\n    props: {\n      type: 'button',\n      'aria-label': label,\n      disabled: Boolean(disabled),\n      children: label\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754955.mjs:18\n# functionUnderTest('Submit', false);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754955.mjs:18:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665754955.mjs\nnot ok 1 - generated/temp-test-1768665754955.mjs\n  ---\n  duration_ms: 31.178292\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665754955.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 34.943959\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:35.021Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function buttonJsx(label, disabled) {\n  return (\n    <Box aria-role=\"button\" aria-label={label} aria-state={{disabled}}>\n      <Text>{label}</Text>\n    </Box>\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665733078.mjs:3\n#     <Box aria-role=\"button\" aria-label={label} aria-state={{disabled}}>\n#     ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665733078.mjs\nnot ok 1 - generated/temp-test-1768665733078.mjs\n  ---\n  duration_ms: 34.607542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665733078.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.881375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:13.188Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function buttonJsx(label, disabled) {\n  return Box(\n    {\n      'aria-role': 'button',\n      'aria-label': label,\n      'aria-state': { disabled }\n    },\n    Text(label)\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665766022.mjs:17\n# functionUnderTest('Submit', false);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665766022.mjs:17:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665766022.mjs\nnot ok 1 - generated/temp-test-1768665766022.mjs\n  ---\n  duration_ms: 54.963708\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665766022.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 60.796167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:46.158Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(label, disabled) {\n  return Box(\n    {\n      'aria-role': 'button',\n      'aria-label': label,\n      'aria-state': { disabled }\n    },\n    Text(label)\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665787605.mjs:6\n#       'aria-state': { disabled }\n#                       ^\n# ReferenceError: Text is not defined\n#     at functionUnderTest (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665787605.mjs:6:23)\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665787605.mjs:17:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665787605.mjs\nnot ok 1 - generated/temp-test-1768665787605.mjs\n  ---\n  duration_ms: 34.720833\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665787605.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.488417\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:07.719Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function formElements() {\n  const textbox = document.createElement('input');\n  textbox.type = 'text';\n  textbox.setAttribute('role', 'textbox');\n  textbox.setAttribute('aria-label', 'Text input');\n\n  const checkbox = document.createElement('input');\n  checkbox.type = 'checkbox';\n  checkbox.setAttribute('role', 'checkbox');\n  checkbox.setAttribute('aria-label', 'Checkbox');\n\n  const button = document.createElement('button');\n  button.setAttribute('role', 'button');\n  button.textContent = 'Submit';\n  button.setAttribute('aria-label', 'Submit button');\n\n  return { textbox, checkbox, button };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665750004.mjs:25\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665750004.mjs:25:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665750004.mjs\nnot ok 1 - generated/temp-test-1768665750004.mjs\n  ---\n  duration_ms: 35.318542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665750004.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.755\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:30.115Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function formElements() {\n  return {\n    textbox: (\n      <Box aria-role=\"textbox\" aria-label=\"Username\">\n        <Text>Username</Text>\n      </Box>\n    ),\n    checkbox: (\n      <Box aria-role=\"checkbox\" aria-state={{ checked: true }}>\n        <Text>Accept terms</Text>\n      </Box>\n    ),\n    button: (\n      <Box aria-role=\"button\" aria-label=\"Submit\">\n        <Text>Submit</Text>\n      </Box>\n    )\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665752465.mjs:4\n#       <Box aria-role=\"textbox\" aria-label=\"Username\">\n#       ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665752465.mjs\nnot ok 1 - generated/temp-test-1768665752465.mjs\n  ---\n  duration_ms: 32.089417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665752465.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.039416\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:32.579Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function formElements() {\n  return {\n    textbox: Box({\n      'aria-role': 'textbox',\n      'aria-label': 'Username',\n      children: Text('Username')\n    }),\n    checkbox: Box({\n      'aria-role': 'checkbox',\n      'aria-state': { checked: true },\n      children: Text('Accept terms')\n    }),\n    button: Box({\n      'aria-role': 'button',\n      'aria-label': 'Submit',\n      children: Text('Submit')\n    })\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665779163.mjs:26\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665779163.mjs:26:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665779163.mjs\nnot ok 1 - generated/temp-test-1768665779163.mjs\n  ---\n  duration_ms: 33.996875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665779163.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.427833\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:59.275Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest() {\n  return {\n    textbox: Box({\n      'aria-role': 'textbox',\n      'aria-label': 'Username',\n      children: Text('Username')\n    }),\n    checkbox: Box({\n      'aria-role': 'checkbox',\n      'aria-state': { checked: true },\n      children: Text('Accept terms')\n    }),\n    button: Box({\n      'aria-role': 'button',\n      'aria-label': 'Submit',\n      children: Text('Submit')\n    })\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665795493.mjs:6\n#       children: Text('Username')\n#                 ^\n# ReferenceError: Text is not defined\n#     at functionUnderTest (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665795493.mjs:6:17)\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665795493.mjs:26:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665795493.mjs\nnot ok 1 - generated/temp-test-1768665795493.mjs\n  ---\n  duration_ms: 34.750542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665795493.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.194\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:15.604Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function conditionalAria(state) {\n  if (state === undefined) return '';\n  return `aria-state=\"${state}\"`;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665753803.mjs:11\n# functionUnderTest({checked: true});\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665753803.mjs:11:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665753803.mjs\nnot ok 1 - generated/temp-test-1768665753803.mjs\n  ---\n  duration_ms: 34.820291\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665753803.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.921042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:33.915Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function conditionalAria(state) {\n  if (state) {\n    return { 'aria-state': state };\n  }\n  return {};\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665756050.mjs:13\n# functionUnderTest({checked: true});\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665756050.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665756050.mjs\nnot ok 1 - generated/temp-test-1768665756050.mjs\n  ---\n  duration_ms: 35.104\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665756050.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.69575\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:36.167Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function conditionalAria(state) {\n  return Box({\n    'aria-role': 'checkbox',\n    ...(state ? { 'aria-state': state } : {})\n  });\n}\nfunctionUnderTest = conditionalAria;",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665812465.mjs:7\n# functionUnderTest = conditionalAria;\n#                   ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665812465.mjs:7:19\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665812465.mjs\nnot ok 1 - generated/temp-test-1768665812465.mjs\n  ---\n  duration_ms: 34.030458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665812465.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.840208\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:32.534Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(state) {\n  return Box({\n    'aria-role': 'checkbox',\n    ...(state ? { 'aria-state': state } : {})\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665829521.mjs\nok 1 - generated/temp-test-1768665829521.mjs\n  ---\n  duration_ms: 35.120208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.677291\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:49.644Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function disableRawMode() {\n  setRawMode(false);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665763083.mjs:10\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665763083.mjs:10:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665763083.mjs\nnot ok 1 - generated/temp-test-1768665763083.mjs\n  ---\n  duration_ms: 33.109917\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665763083.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 37.710416\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:43.171Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function disableRawMode() {\n  setRawMode(false);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665757906.mjs:10\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665757906.mjs:10:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665757906.mjs\nnot ok 1 - generated/temp-test-1768665757906.mjs\n  ---\n  duration_ms: 35.976791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665757906.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.064375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:38.017Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n  const { setRawMode } = useStdin();\n  setRawMode(false);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665778268.mjs\nok 1 - generated/temp-test-1768665778268.mjs\n  ---\n  duration_ms: 35.13475\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 41.169334\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:58.383Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function hexKeyProcessor(keyData) {\n  return Buffer.from(keyData).toString('hex');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665764622.mjs:9\n# assert.strictEqual(functionUnderTest(new Uint8Array([97,98])), '6162');\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665764622.mjs:9:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665764622.mjs\nnot ok 1 - generated/temp-test-1768665764622.mjs\n  ---\n  duration_ms: 34.659375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665764622.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.171625\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:44.736Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function hexKeyProcessor(keyData) {\n  return keyData.toString('hex');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665758350.mjs:9\n# assert.strictEqual(functionUnderTest(new Uint8Array([97,98])), '6162');\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665758350.mjs:9:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665758350.mjs\nnot ok 1 - generated/temp-test-1768665758350.mjs\n  ---\n  duration_ms: 34.450458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665758350.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.669542\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:38.463Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest(keyData) {\n  return Buffer.from(keyData).toString('hex');\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665769030.mjs\nok 1 - generated/temp-test-1768665769030.mjs\n  ---\n  duration_ms: 33.388916\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.521542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:02:49.144Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function heartbeatLog() {\n  while (true) {\n    console.log(`${new Date().toISOString()} Heartbeat`);\n    await new Promise((resolve) => setTimeout(resolve, 2000));\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665769104.mjs:15\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665769104.mjs:15:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665769104.mjs\nnot ok 1 - generated/temp-test-1768665769104.mjs\n  ---\n  duration_ms: 31.97125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665769104.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 35.863292\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:49.172Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function heartbeatLog() {\n  const {write} = useStderr();\n  const timer = setInterval(() => write(`Heartbeat ${Date.now()}\\n`), 2000);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665780354.mjs:13\n# functionUnderTest();\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665780354.mjs:13:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665780354.mjs\nnot ok 1 - generated/temp-test-1768665780354.mjs\n  ---\n  duration_ms: 41.919917\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665780354.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.104083\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:00.441Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n  const {write} = useStdout();\n  const timer = setInterval(() => write(`Heartbeat ${Date.now()}\\n`), 2000);\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665822157.mjs\nok 1 - generated/temp-test-1768665822157.mjs\n  ---\n  duration_ms: 38.644291\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.217792\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:42.268Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function accessStdout() {\n  const { stdout } = useStdout();\n  return stdout;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665790783.mjs:11\n# const result = functionUnderTest();\n#                ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665790783.mjs:11:16\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665790783.mjs\nnot ok 1 - generated/temp-test-1768665790783.mjs\n  ---\n  duration_ms: 56.544834\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665790783.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 63.625958\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:10.894Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function accessStdout() {\n  const { stdout } = useStdout();\n  return stdout;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665775706.mjs:11\n# const result = functionUnderTest();\n#                ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665775706.mjs:11:16\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665775706.mjs\nnot ok 1 - generated/temp-test-1768665775706.mjs\n  ---\n  duration_ms: 34.581417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665775706.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.102584\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:02:55.821Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n  const { stdout } = useStdout();\n  return stdout;\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665793945.mjs\nok 1 - generated/temp-test-1768665793945.mjs\n  ---\n  duration_ms: 34.900208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.782959\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:14.058Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { stderr } from 'node:process';\n\nexport function accessStderr() {\n  return stderr;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665792898.mjs:12\n# assert.strictEqual(functionUnderTest(), mockStream);\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665792898.mjs:12:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665792898.mjs\nnot ok 1 - generated/temp-test-1768665792898.mjs\n  ---\n  duration_ms: 35.156917\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665792898.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.608334\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:13.012Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function accessStderr() {\n  return useStderr();\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665784761.mjs:10\n# assert.strictEqual(functionUnderTest(), mockStream);\n#        ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665784761.mjs:10:8\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665784761.mjs\nnot ok 1 - generated/temp-test-1768665784761.mjs\n  ---\n  duration_ms: 34.349666\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665784761.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.512459\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:04.876Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function functionUnderTest() {\n  return useStderr().stderr;\n}",
+    "testOutput": "TAP version 13\n# Subtest: generated/temp-test-1768665809241.mjs\nok 1 - generated/temp-test-1768665809241.mjs\n  ---\n  duration_ms: 34.8965\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.320625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T16:03:29.358Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function textboxJsx(required) {\n  return `<input type=\"text\" aria-state=\"${required}\"/>`;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665813093.mjs:10\n# functionUnderTest(true);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665813093.mjs:10:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665813093.mjs\nnot ok 1 - generated/temp-test-1768665813093.mjs\n  ---\n  duration_ms: 36.179958\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665813093.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.195875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:33.204Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function textboxJsx(required) {\n  return (\n    <Box aria-role=\"textbox\" aria-state={{required}}>\n      <Text />\n    </Box>\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665801379.mjs:3\n#     <Box aria-role=\"textbox\" aria-state={{required}}>\n#     ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665801379.mjs\nnot ok 1 - generated/temp-test-1768665801379.mjs\n  ---\n  duration_ms: 33.340958\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665801379.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.503584\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:21.492Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function textboxJsx(required) {\n  return Box(\n    {\n      'aria-role': 'textbox',\n      'aria-state': { required }\n    },\n    Text()\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665834336.mjs:16\n# functionUnderTest(true);\n# ^\n# ReferenceError: functionUnderTest is not defined\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665834336.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665834336.mjs\nnot ok 1 - generated/temp-test-1768665834336.mjs\n  ---\n  duration_ms: 35.455834\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665834336.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 41.36075\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:03:54.447Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function functionUnderTest(required) {\n  return Box(\n    {\n      'aria-role': 'textbox',\n      'aria-state': { required }\n    },\n    Text()\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665844472.mjs:5\n#       'aria-state': { required }\n#                       ^\n# ReferenceError: Text is not defined\n#     at functionUnderTest (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665844472.mjs:5:23)\n#     at file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665844472.mjs:16:1\n#     at ModuleJob.run (node:internal/modules/esm/module_job:271:25)\n#     at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:578:26)\n#     at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:116:5)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768665844472.mjs\nnot ok 1 - generated/temp-test-1768665844472.mjs\n  ---\n  duration_ms: 37.933166\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768665844472.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.178791\n",
+    "passed": false,
+    "timestamp": "2026-01-17T16:04:04.590Z"
+  }
+]

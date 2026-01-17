@@ -1,0 +1,367 @@
+{
+  "library": "ink",
+  "generatedAt": "2026-01-17T16:01:06.355Z",
+  "evaluatedAt": "2026-01-17T16:04:04.593Z",
+  "summary": {
+    "totalTasks": 25,
+    "aFirstPassRate": 0,
+    "bFirstPassRate": 0,
+    "docImpact": 0,
+    "bFailedFirstPass": 25,
+    "bRescuedByRetry": 21,
+    "iterationValue": 84,
+    "bFinalPassRate": 84
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "use-stdout-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "async function logMessage(msg) {\n  await useStdout(msg + '\\n');\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(msg) {\n\tconst { write } = useStdout();\n\twrite(`${msg}\\n`);\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "use-stdout-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function logMultiple(messages) {\n  for (const message of messages) {\n    await useStdout.write(message + '\\n');\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(messages) {\n  const {write} = useStdout();\n  for (const message of messages) {\n    write(`${message}\\n`);\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "use-stdout-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function conditionalLog(msg, condition) {\n  if (condition) {\n    await useStdout(msg);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(msg, condition) {\n  if (condition) {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "use-stdout-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function timestampedLog(msg) {\n  const stdout = useStdout();\n  const timestamp = new Date().toISOString();\n  await stdout.write(`${timestamp} ${msg}\\n`);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "function timestampedLog(msg) {\n  const {write} = useStdout();\n  write(`${Date.toISOString()} ${msg}\\n`);\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "use-stderr-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function logError(errMsg) {\n  useStderr(errMsg);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function functionUnderTest(errMsg) {\n  const {write} = useStderr();\n  write(`${errMsg}\\n`);\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "use-stderr-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function logErrors(errors) {\n  errors.forEach(console.error);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(errors) {\n  const {write} = useStderr();\n  for (const error of errors) {\n    write(`${error}\\n`);\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "use-stdin-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function getStdinRawMode() {\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n    return true;\n  }\n  return false;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n\tconst {setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n}"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "use-stdin-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function checkRawModeSupported() {\n\tif (!process.stdin.isTTY) {\n\t\treturn false;\n\t}\n\n\tif (process.platform !== 'win32') {\n\t\treturn true;\n\t}\n\n\treturn Boolean(\n\t\tprocess.env.WT_SESSION ||\n\t\tprocess.env.WT_PROFILE_ID ||\n\t\tprocess.env.TERM_PROGRAM === 'vscode' ||\n\t\tprocess.env.TERM_PROGRAM === 'Hyper' ||\n\t\tprocess.env.TERM_PROGRAM === 'iTerm.app' ||\n\t\tprocess.env.TERM_PROGRAM === 'WezTerm' ||\n\t\tprocess.env.CONEMU_TASK_NAME ||\n\t\tprocess.env.TERM === 'xterm' ||\n\t\tprocess.env.TERM === 'xterm-256color' ||\n\t\tprocess.env.TERM?.startsWith('screen')\n\t);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function functionUnderTest() {\n\tconst {isRawModeSupported} = useStdin();\n\treturn isRawModeSupported;\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "use-stdin-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function enableRawMode() {\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n  }\n  return process.stdin;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n\tconst {stdin, setRawMode, isRawModeSupported} = useStdin();\n\tif (isRawModeSupported) setRawMode(true);\n\treturn stdin;\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "raw-mode-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function setupKeyHandler(callback) {\n  const stdin = process.stdin;\n  if (stdin.isTTY) {\n    stdin.setRawMode(true);\n  }\n  stdin.resume();\n  stdin.on('data', callback);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(callback) {\n  const { stdin, setRawMode } = useStdin();\n  setRawMode(true);\n  stdin.on('data', callback);\n  return () => stdin.removeListener('data', callback);\n}"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "raw-mode-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function processKeyHex(dataBuffer) {\n  console.log(dataBuffer.toString('hex'));\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(dataBuffer) {\n  useStdout().write(dataBuffer.toString('hex') + '\\n');\n}"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "raw-mode-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function safeKeyListener() {\n  const queue = [];\n  let resolvePending = null;\n  let closed = false;\n  const listener = (key) => {\n    if (closed) return;\n    if (resolvePending) {\n      const resolve = resolvePending;\n      resolvePending = null;\n      resolve(key);\n      return;\n    }\n    queue.push(key);\n  };\n  if (process.stdin.isTTY) {\n    process.stdin.setRawMode(true);\n  }\n  process.stdin.resume();\n  process.stdin.on('data', listener);\n  const nextKey = async () => {\n    if (closed) {\n      throw new Error('KeyListener destroyed');\n    }\n    if (queue.length > 0) {\n      return queue.shift();\n    }\n    return new Promise((resolve) => {\n      resolvePending = resolve;\n    });\n  };\n  const destroy = () => {\n    closed = true;\n    if (resolvePending) {\n      resolvePending(new Error('KeyListener destroyed'));\n      resolvePending = null;\n    }\n    process.stdin.removeListener('data', listener);\n    if (process.stdin.isTTY) {\n      process.stdin.setRawMode(false);\n    }\n    process.stdin.pause();\n  };\n  return { nextKey, destroy };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function functionUnderTest() {\n  const { stdin, setRawMode, isRawModeSupported } = useStdin();\n  if (isRawModeSupported) {\n    setRawMode(true);\n  }\n  const onData = (data) => {\n    console.log(Buffer.from(data).toString('hex'));\n  };\n  stdin.on('data', onData);\n  return () => {\n    stdin.removeListener('data', onData);\n    if (isRawModeSupported) {\n      setRawMode(false);\n    }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "stream-write-preserve",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function persistentLog(msg) {\n  await useStdout.write(`${msg}\\n`);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(msg) {\n  const {write} = useStdout();\n  write(`${msg}\\n`);\n}"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "stream-write-preserve",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function intervalLogger(intervalMs, msg) {\n  return setInterval(() => useStdout(msg), intervalMs);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(intervalMs, msg) {\n  const { write } = useStdout();\n  const log = () => write(`${msg}\\n`);\n  log();\n  return setInterval(log, intervalMs);\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "stream-write-preserve",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function logToStream(streamType, msg) {\n  if (streamType === 'stdout') {\n    await useStdout(msg);\n  } else {\n    await useStderr(msg);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(streamType, msg) {\n  if (streamType === 'stdout') {\n    const { write } = useStdout();\n    write(`${msg}\\n`);\n  } else {\n    const { write } = useStderr();\n    write(`${msg}\\n`);\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "aria-accessibility",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function checkboxJsx(checked, label) {\n  return (\n    <Box aria-role='checkbox' aria-state={{checked}}>\n      <Text>{label}</Text>\n    </Box>\n  );\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(checked, label) {\n  return Box(\n    {\n      'aria-role': 'checkbox',\n      'aria-state': { checked }\n    },\n    Text(label)\n  );\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "aria-accessibility",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function buttonJsx(label, disabled) {\n  return {\n    type: 'button',\n    props: {\n      type: 'button',\n      'aria-label': label,\n      disabled: Boolean(disabled),\n      children: label\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(label, disabled) {\n  return Box(\n    {\n      'aria-role': 'button',\n      'aria-label': label,\n      'aria-state': { disabled }\n    },\n    Text(label)\n  );\n}"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "aria-accessibility",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function formElements() {\n  const textbox = document.createElement('input');\n  textbox.type = 'text';\n  textbox.setAttribute('role', 'textbox');\n  textbox.setAttribute('aria-label', 'Text input');\n\n  const checkbox = document.createElement('input');\n  checkbox.type = 'checkbox';\n  checkbox.setAttribute('role', 'checkbox');\n  checkbox.setAttribute('aria-label', 'Checkbox');\n\n  const button = document.createElement('button');\n  button.setAttribute('role', 'button');\n  button.textContent = 'Submit';\n  button.setAttribute('aria-label', 'Submit button');\n\n  return { textbox, checkbox, button };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest() {\n  return {\n    textbox: Box({\n      'aria-role': 'textbox',\n      'aria-label': 'Username',\n      children: Text('Username')\n    }),\n    checkbox: Box({\n      'aria-role': 'checkbox',\n      'aria-state': { checked: true },\n      children: Text('Accept terms')\n    }),\n    button: Box({\n      'aria-role': 'button',\n      'aria-label': 'Submit',\n      children: Text('Submit')\n    })\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "aria-accessibility",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function conditionalAria(state) {\n  if (state === undefined) return '';\n  return `aria-state=\"${state}\"`;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(state) {\n  return Box({\n    'aria-role': 'checkbox',\n    ...(state ? { 'aria-state': state } : {})\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "use-stdin-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function disableRawMode() {\n  setRawMode(false);\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n  const { setRawMode } = useStdin();\n  setRawMode(false);\n}"
+      }
+    },
+    {
+      "taskId": "task-021",
+      "docTag": "raw-mode-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function hexKeyProcessor(keyData) {\n  return Buffer.from(keyData).toString('hex');\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest(keyData) {\n  return Buffer.from(keyData).toString('hex');\n}"
+      }
+    },
+    {
+      "taskId": "task-022",
+      "docTag": "stream-write-preserve",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function heartbeatLog() {\n  while (true) {\n    console.log(`${new Date().toISOString()} Heartbeat`);\n    await new Promise((resolve) => setTimeout(resolve, 2000));\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n  const {write} = useStdout();\n  const timer = setInterval(() => write(`Heartbeat ${Date.now()}\\n`), 2000);\n}"
+      }
+    },
+    {
+      "taskId": "task-023",
+      "docTag": "use-stdout-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function accessStdout() {\n  const { stdout } = useStdout();\n  return stdout;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n  const { stdout } = useStdout();\n  return stdout;\n}"
+      }
+    },
+    {
+      "taskId": "task-024",
+      "docTag": "use-stderr-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { stderr } from 'node:process';\n\nexport function accessStderr() {\n  return stderr;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function functionUnderTest() {\n  return useStderr().stderr;\n}"
+      }
+    },
+    {
+      "taskId": "task-025",
+      "docTag": "aria-accessibility",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function textboxJsx(required) {\n  return `<input type=\"text\" aria-state=\"${required}\"/>`;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "function functionUnderTest(required) {\n  return Box(\n    {\n      'aria-role': 'textbox',\n      'aria-state': { required }\n    },\n    Text()\n  );\n}"
+      }
+    }
+  ]
+}

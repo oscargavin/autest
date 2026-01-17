@@ -1,0 +1,263 @@
+{
+  "library": "ink",
+  "libraryId": "/ink",
+  "generatedAt": "2026-01-17T16:01:06.355Z",
+  "docs": [
+    {
+      "id": "use-stdout-hook",
+      "title": "useStdout Hook",
+      "content": "The useStdout hook provides access to the stdout stream and a write method for printing strings above Ink's main output area without disrupting the UI rendering. It returns an object containing the stdout stream and the write function. This is particularly useful for logging status updates or informational messages in CLI apps.",
+      "codeExamples": [
+        "import {useStdout} from 'ink';\nconst {write} = useStdout();\nwrite('Hello from stdout\\n');",
+        "import React, {useEffect} from 'react';\nimport {useStdout} from 'ink';\nconst Demo = () => {\n  const {write} = useStdout();\n  useEffect(() => write('Logged on mount\\n'), []);\n  return null;\n};"
+      ]
+    },
+    {
+      "id": "use-stderr-hook",
+      "title": "useStderr Hook",
+      "content": "Similar to useStdout, the useStderr hook exposes the stderr stream and a write method for error logging. Output appears above the Ink UI on stderr. It separates error messages from standard output effectively.",
+      "codeExamples": [
+        "import {useStderr} from 'ink';\nconst {write} = useStderr();\nwrite('Error message\\n');",
+        "import React, {useEffect} from 'react';\nimport {useStderr} from 'ink';\nconst ErrorDemo = () => {\n  const {write} = useStderr();\n  useEffect(() => write('Error on mount\\n'), []);\n  return null;\n};"
+      ]
+    },
+    {
+      "id": "use-stdin-hook",
+      "title": "useStdin Hook",
+      "content": "The useStdin hook gives access to the stdin stream, setRawMode function, and isRawModeSupported boolean. It enables raw input mode for capturing unprocessed keyboard data. Always clean up by disabling raw mode.",
+      "codeExamples": [
+        "import {useStdin} from 'ink';\nconst {stdin, setRawMode, isRawModeSupported} = useStdin();",
+        "import React, {useEffect} from 'react';\nimport {useStdin} from 'ink';\nfunction Demo() {\n  const {setRawMode, isRawModeSupported} = useStdin();\n  useEffect(() => {\n    if (isRawModeSupported) setRawMode(true);\n  }, []);\n}"
+      ]
+    },
+    {
+      "id": "raw-mode-handling",
+      "title": "Raw Mode Input Handling",
+      "content": "In raw mode via useStdin, listen to stdin 'data' events to process raw key bytes. Convert data Buffer to string or hex for key identification. Handle cleanup in useEffect return to prevent input issues.",
+      "codeExamples": [
+        "const {stdin} = useStdin();\nstdin.on('data', (data) => {\n  console.log(Buffer.from(data).toString('hex'));\n});",
+        "useEffect(() => {\n  const handler = (data) => { /* handle */ };\n  stdin.on('data', handler);\n  return () => stdin.removeListener('data', handler);\n}, [stdin]);"
+      ]
+    },
+    {
+      "id": "stream-write-preserve",
+      "title": "Preserving Output with Stream Writes",
+      "content": "Both useStdout.write and useStderr.write append raw strings to their respective streams above the Ink frame. Unlike Static, they only accept strings, not JSX. Output persists across frames like static content.",
+      "codeExamples": [
+        "const {write} = useStdout();\nwrite('Persistent log\\n');",
+        "const {write} = useStderr();\nconst timer = setInterval(() => write(`Log ${Date.now()}\\n`), 1000);"
+      ]
+    },
+    {
+      "id": "aria-accessibility",
+      "title": "ARIA Accessibility in Ink Components",
+      "content": "Ink's Box and Text components support ARIA attributes like aria-role, aria-state, and aria-label for screen reader compatibility. Use aria-state objects for dynamic states like checked or disabled. Pair with useIsScreenReaderEnabled for conditional verbose output.",
+      "codeExamples": [
+        "<Box aria-role=\"checkbox\" aria-state={{checked: true}}>\n  <Text>Accept terms</Text>\n</Box>",
+        "<Box aria-role=\"button\" aria-label=\"Submit\">\n  <Text>Submit</Text>\n</Box>"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "use-stdout-hook",
+      "description": "Write a function logMessage(msg) that uses useStdout to write the given message followed by a newline.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nconst mockWrite = (text) => { captured = text; };\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nfunctionUnderTest('Hello World');\n\nassert.strictEqual(captured, 'Hello World\\n');",
+      "solutionHint": "Call useStdout().write(msg + '\\n')"
+    },
+    {
+      "id": "task-002",
+      "docTag": "use-stdout-hook",
+      "description": "Write a function logMultiple(messages) that logs each message in the array using useStdout.write.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured = [];\nconst mockWrite = (text) => { captured.push(text); };\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nfunctionUnderTest(['msg1', 'msg2']);\n\nassert.deepStrictEqual(captured, ['msg1\\n', 'msg2\\n']);",
+      "solutionHint": "Loop over messages and call write for each"
+    },
+    {
+      "id": "task-003",
+      "docTag": "use-stdout-hook",
+      "description": "Write a function conditionalLog(msg, condition) that only logs if condition is true, using useStdout.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nconst mockWrite = (text) => { captured = text; };\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nfunctionUnderTest('test', true);\nassert.strictEqual(captured, 'test\\n');\n\nfunctionUnderTest('no', false);\nassert.strictEqual(captured, 'test\\n');",
+      "solutionHint": "Check condition before write"
+    },
+    {
+      "id": "task-004",
+      "docTag": "use-stdout-hook",
+      "description": "Write a function timestampedLog(msg) that logs the message prefixed with current timestamp using useStdout.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nconst nowStub = '2023-01-01';\nDate = { now: () => 0, toISOString: () => nowStub };\n\nlet captured;\nconst mockWrite = (text) => { captured = text; };\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nfunctionUnderTest('test');\nassert.ok(captured.startsWith(nowStub));\nassert.ok(captured.includes('test\\n'));",
+      "solutionHint": "Use new Date().toISOString() + msg"
+    },
+    {
+      "id": "task-005",
+      "docTag": "use-stderr-hook",
+      "description": "Write a function logError(errMsg) that uses useStderr to write the error message.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nconst mockWrite = (text) => { captured = text; };\nglobalThis.useStderr = () => ({ write: mockWrite });\n\nfunctionUnderTest('Error occurred');\nassert.strictEqual(captured, 'Error occurred\\n');",
+      "solutionHint": "useStderr().write(msg + '\\n')"
+    },
+    {
+      "id": "task-006",
+      "docTag": "use-stderr-hook",
+      "description": "Write a function logErrors(errors) that logs each error in the array to stderr.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured = [];\nconst mockWrite = (text) => { captured.push(text); };\nglobalThis.useStderr = () => ({ write: mockWrite });\n\nfunctionUnderTest(['err1', 'err2']);\nassert.deepStrictEqual(captured, ['err1\\n', 'err2\\n']);",
+      "solutionHint": "Iterate and write each"
+    },
+    {
+      "id": "task-007",
+      "docTag": "use-stdin-hook",
+      "description": "Write a function getStdinRawMode() that calls setRawMode(true) if supported using useStdin.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet setRawModeCalled = false;\nglobalThis.useStdin = () => ({ setRawMode: (b) => { setRawModeCalled = b; }, isRawModeSupported: true });\n\nfunctionUnderTest();\nassert.strictEqual(setRawModeCalled, true);",
+      "solutionHint": "Destructure setRawMode and isRawModeSupported, call if supported"
+    },
+    {
+      "id": "task-008",
+      "docTag": "use-stdin-hook",
+      "description": "Write a function checkRawModeSupported() that returns isRawModeSupported from useStdin.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.useStdin = () => ({ isRawModeSupported: true });\nassert.strictEqual(functionUnderTest(), true);\n\nglobalThis.useStdin = () => ({ isRawModeSupported: false });\nassert.strictEqual(functionUnderTest(), false);",
+      "solutionHint": "Return useStdin().isRawModeSupported"
+    },
+    {
+      "id": "task-009",
+      "docTag": "use-stdin-hook",
+      "description": "Write a function enableRawMode() that enables raw mode only if supported and returns the stdin stream.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet called;\nglobalThis.useStdin = () => ({ setRawMode: (b) => { called = b; }, isRawModeSupported: true, stdin: {} });\nconst result = functionUnderTest();\nassert.strictEqual(called, true);\nassert.deepStrictEqual(result, {});",
+      "solutionHint": "Conditional setRawMode(true), return stdin"
+    },
+    {
+      "id": "task-010",
+      "docTag": "raw-mode-handling",
+      "description": "Write a function setupKeyHandler(callback) that adds a 'data' listener to stdin in raw mode.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet listeners = [], setRawCalled;\nconst mockStdin = { on: (ev, cb) => { if (ev === 'data') listeners.push(cb); } };\nglobalThis.useStdin = () => ({ stdin: mockStdin, setRawMode: (b) => setRawCalled = b, isRawModeSupported: true });\n\nfunctionUnderTest(() => {});\nassert.strictEqual(setRawCalled, true);\nassert.strictEqual(listeners.length, 1);",
+      "solutionHint": "setRawMode(true), stdin.on('data', callback)"
+    },
+    {
+      "id": "task-011",
+      "docTag": "raw-mode-handling",
+      "description": "Write a function processKeyHex(dataBuffer) that logs the hex string of the buffer data.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nconst mockWrite = (text) => captured = text;\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nglobalThis.Buffer = class { static from(data) { return { toString: () => 'deadbeef' }; } };\n\nfunctionUnderTest(Buffer.from('deadbeef'));\nassert.strictEqual(captured, 'deadbeef\\n');",
+      "solutionHint": "Buffer.from(data).toString('hex')"
+    },
+    {
+      "id": "task-012",
+      "docTag": "raw-mode-handling",
+      "description": "Write a function safeKeyListener() that adds listener, enables raw mode if supported, and cleans up on unmount simulation.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet added = 0, removed = 0, rawEnabled = false;\nconst mockStdin = { on: (_, cb) => added++, removeListener: () => removed++ };\nglobalThis.useStdin = () => ({ stdin: mockStdin, setRawMode: (b) => { rawEnabled = b; }, isRawModeSupported: true });\n\nfunctionUnderTest();\nassert.strictEqual(added, 1);\n// Simulate cleanup\n// assume return cleanup func or something, but for simple call twice? Wait adjust.\nassert.strictEqual(rawEnabled, true);",
+      "solutionHint": "useEffect pattern: add listener, setRawMode, return remover"
+    },
+    {
+      "id": "task-013",
+      "docTag": "stream-write-preserve",
+      "description": "Write a function persistentLog(msg) that uses useStdout.write to log persistently.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nconst mockWrite = (text) => { captured = text; };\nglobalThis.useStdout = () => ({ write: mockWrite });\n\nfunctionUnderTest('persistent');\nassert.strictEqual(captured, 'persistent\\n');",
+      "solutionHint": "useStdout.write(msg + '\\n')"
+    },
+    {
+      "id": "task-014",
+      "docTag": "stream-write-preserve",
+      "description": "Write a function intervalLogger(intervalMs, msg) that sets interval to log msg using useStdout.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured = [], intervalId;\nconst mockWrite = (text) => captured.push(text);\nglobalThis.useStdout = () => ({ write: mockWrite });\nglobalThis.setInterval = (cb) => intervalId = setTimeout(cb, 0);\n\nfunctionUnderTest(1, 'interval');\n// Simulate tick\nif (intervalId) clearInterval(intervalId); // but check captured\nassert.strictEqual(captured[0], 'interval\\n');",
+      "solutionHint": "setInterval to call write"
+    },
+    {
+      "id": "task-015",
+      "docTag": "stream-write-preserve",
+      "description": "Write a function logToStream(streamType, msg) that writes to useStdout or useStderr based on streamType.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet stdoutCaptured, stderrCaptured;\nglobalThis.useStdout = () => ({ write: (t) => stdoutCaptured = t });\nglobalThis.useStderr = () => ({ write: (t) => stderrCaptured = t });\n\nfunctionUnderTest('stdout', 'out msg');\nassert.strictEqual(stdoutCaptured, 'out msg\\n');\nfunctionUnderTest('stderr', 'err msg');\nassert.strictEqual(stderrCaptured, 'err msg\\n');",
+      "solutionHint": "Conditional useStdout or useStderr"
+    },
+    {
+      "id": "task-016",
+      "docTag": "aria-accessibility",
+      "description": "Write a function checkboxJsx(checked, label) that returns Box with aria-role='checkbox' and aria-state={{checked}} containing Text label.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedProps;\nglobalThis.Box = (props) => { capturedProps = props; return null; };\nglobalThis.Text = () => null;\n\nconst result = functionUnderTest(true, 'Terms');\nassert.strictEqual(capturedProps['aria-role'], 'checkbox');\nassert.deepStrictEqual(capturedProps['aria-state'], {checked: true});",
+      "solutionHint": "Use <Box aria-role=\"checkbox\" aria-state={{checked}}> <Text>{label}</Text> </Box>"
+    },
+    {
+      "id": "task-017",
+      "docTag": "aria-accessibility",
+      "description": "Write a function buttonJsx(label, disabled) that returns accessible button Box.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nglobalThis.Box = (props) => { captured = props; };\nfunctionUnderTest('Submit', false);\nassert.strictEqual(captured['aria-role'], 'button');\nassert.strictEqual(captured['aria-label'], 'Submit');\nassert.strictEqual(captured['aria-state']?.disabled, false);",
+      "solutionHint": "<Box aria-role=\"button\" aria-state={{disabled}} aria-label={label}>..."
+    },
+    {
+      "id": "task-018",
+      "docTag": "aria-accessibility",
+      "description": "Write a function formElements() that returns multiple ARIA elements: textbox, checkbox, button.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRoles = [];\nglobalThis.Box = (props) => { capturedRoles.push(props['aria-role']); };\nfunctionUnderTest();\nassert.deepStrictEqual(capturedRoles.sort(), ['button', 'checkbox', 'textbox']);",
+      "solutionHint": "Create three Boxes with different aria-role"
+    },
+    {
+      "id": "task-019",
+      "docTag": "aria-accessibility",
+      "description": "Write a function conditionalAria(state) that adds aria-state only if state provided for checkbox.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nglobalThis.Box = (props) => { captured = props; };\nfunctionUnderTest({checked: true});\nassert.deepStrictEqual(captured['aria-state'], {checked: true});\n\nfunctionUnderTest();\ndelete captured['aria-state']; // check absent",
+      "solutionHint": "Conditional aria-state prop"
+    },
+    {
+      "id": "task-020",
+      "docTag": "use-stdin-hook",
+      "description": "Write a function disableRawMode() that calls setRawMode(false) unconditionally.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet modeSet;\nglobalThis.useStdin = () => ({ setRawMode: (b) => modeSet = b });\nfunctionUnderTest();\nassert.strictEqual(modeSet, false);",
+      "solutionHint": "useStdin().setRawMode(false)"
+    },
+    {
+      "id": "task-021",
+      "docTag": "raw-mode-handling",
+      "description": "Write a function hexKeyProcessor(keyData) that returns hex of keyData buffer.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.Buffer = class Buffer { static from(b) { return { toString: () => '6162' }; } };\nassert.strictEqual(functionUnderTest(new Uint8Array([97,98])), '6162');",
+      "solutionHint": "Buffer.from(keyData).toString('hex')"
+    },
+    {
+      "id": "task-022",
+      "docTag": "stream-write-preserve",
+      "description": "Write a function heartbeatLog() that writes timestamped heartbeat every 2000ms sim.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured = [], calls = 0;\nconst mockWrite = (text) => { captured.push(text); calls++; };\nglobalThis.useStdout = () => ({ write: mockWrite });\nglobalThis.setInterval = (cb, ms) => cb();\nfunctionUnderTest();\nassert.strictEqual(calls, 1);\nassert.ok(captured[0].includes('Heartbeat'));",
+      "solutionHint": "setInterval write timestamp"
+    },
+    {
+      "id": "task-023",
+      "docTag": "use-stdout-hook",
+      "description": "Write a function accessStdout() that returns the stdout stream from useStdout.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nconst mockStream = {};\nglobalThis.useStdout = () => ({ stdout: mockStream });\nconst result = functionUnderTest();\nassert.strictEqual(result, mockStream);",
+      "solutionHint": "Return useStdout().stdout"
+    },
+    {
+      "id": "task-024",
+      "docTag": "use-stderr-hook",
+      "description": "Write a function accessStderr() that returns stderr stream.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nconst mockStream = {};\nglobalThis.useStderr = () => ({ stderr: mockStream });\nassert.strictEqual(functionUnderTest(), mockStream);",
+      "solutionHint": "useStderr().stderr"
+    },
+    {
+      "id": "task-025",
+      "docTag": "aria-accessibility",
+      "description": "Write a function textboxJsx(required) that creates textbox with aria-state {required}.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured;\nglobalThis.Box = (props) => captured = props;\nfunctionUnderTest(true);\nassert.strictEqual(captured['aria-role'], 'textbox');\nassert.deepStrictEqual(captured['aria-state'], {required: true});",
+      "solutionHint": "<Box aria-role=\"textbox\" aria-state={{required}}>"
+    }
+  ]
+}
