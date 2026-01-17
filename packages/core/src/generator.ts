@@ -54,6 +54,7 @@ export async function generateTaskSuite(options: GenerateOptions): Promise<TaskS
 
     emit('generate', 15, 'Generating tasks with Grok + Context7...');
 
+    let stepCount = 0;
     const { text, steps } = await generateText({
       model: xai('grok-4-1-fast-reasoning'),
       system: systemPrompt,
@@ -61,8 +62,9 @@ export async function generateTaskSuite(options: GenerateOptions): Promise<TaskS
       tools,
       stopWhen: stepCountIs(10),
       onStepFinish: ({ toolCalls }) => {
+        stepCount++;
         for (const call of toolCalls) {
-          emit('generate', 20 + steps.length * 5, `Tool: ${call.toolName}`);
+          emit('generate', Math.min(20 + stepCount * 5, 65), `Tool: ${call.toolName}`);
         }
       }
     });

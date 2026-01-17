@@ -112,10 +112,12 @@ export function NewJobButton({ libraries }: NewJobButtonProps) {
       })
 
       if (res.ok) {
+        const data = await res.json()
         setOpen(false)
         setSearchQuery('')
         setSelectedPackage('')
-        router.refresh()
+        // Redirect to job detail page to see progress
+        router.push(`/jobs/${data.job.id}`)
       }
     } finally {
       setLoading(false)
