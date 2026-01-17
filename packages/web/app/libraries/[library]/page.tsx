@@ -3,8 +3,7 @@ import { AppShell } from "@/components/app-shell"
 import { LibraryResultsPanel } from "@/components/library-results-panel"
 import { SectionHeading } from "@/components/section-heading"
 import { StatusBadge } from "@/components/status-badge"
-import { Button } from "@/components/ui/button"
-import { PlayIcon, DownloadIcon } from "lucide-react"
+import { LibraryActions } from "@/components/library-actions"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
@@ -53,16 +52,7 @@ export default async function LibraryDetailPage({
         actions={
           <>
             <StatusBadge status={results ? "evaluated" : "pending"} />
-            <Button variant="outline">
-              <PlayIcon className="size-4" />
-              Run evaluation
-            </Button>
-            {results && (
-              <Button variant="outline">
-                <DownloadIcon className="size-4" />
-                Export
-              </Button>
-            )}
+            <LibraryActions library={library} hasResults={!!results} />
           </>
         }
       />
