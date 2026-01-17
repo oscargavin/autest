@@ -17,7 +17,9 @@
     "typescript": "^5.9.3"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.1.5",
-    "@anthropic-ai/sdk": "^0.71.2"
+    "@e2b/code-interpreter": "^2.3.3",
+    "@upstash/context7-sdk": "^0.1.0",
+    "dotenv": "^17.2.2",
+    "openai": "^4.104.0"
   }
 }

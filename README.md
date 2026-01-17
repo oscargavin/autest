@@ -1,20 +1,28 @@
 # autest
 
-A/B test framework measuring doc impact on Claude's coding tasks.
+A/B test framework measuring doc impact on LLM coding tasks.
 
 ## Usage
 
 ```bash
-npm run autogen -- <library>    # generate tests from Context7 docs
-npm run run:all -- <library>    # run A vs B variants
-npm run evaluate -- <library>   # compare results
-npm run export -- <library>     # export training data
+npm run autogen -- <library> [context7-id] # generate tests from Context7 docs
+npm run run:all -- <library>              # run A vs B variants
+npm run evaluate -- <library>             # compare results
+npm run export -- <library>               # export training data
+```
+
+## Environment
+
+```bash
+export XAI_API_KEY="xai_..." # or set OPENAI_API_KEY
+export E2B_API_KEY="e2b_..."
+export CONTEXT7_API_KEY="ctx_..."
 ```
 
 ## What it tests
 
-- **Variant A**: Claude solves tasks without docs (1 attempt)
-- **Variant B**: Claude solves tasks with docs (up to 3 attempts)
+- **Variant A**: LLM solves tasks without docs (1 attempt)
+- **Variant B**: LLM solves tasks with docs (up to 3 attempts)
 
 ## Output
 
@@ -42,4 +50,6 @@ Docs help most for newer/unusual APIs.
 ## Requirements
 
 - Node 18+
-- `ANTHROPIC_API_KEY` env var
+- `XAI_API_KEY` env var
+- `E2B_API_KEY` env var
+- `CONTEXT7_API_KEY` env var

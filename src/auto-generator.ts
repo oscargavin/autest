@@ -1,11 +1,8 @@
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import 'dotenv/config';
 import { writeFileSync, mkdirSync } from 'node:fs';
+import { Context7 } from '@upstash/context7-sdk';
+import { generateText } from './llm.js';
 import type { TaskSet, DocSection, Task } from './types.js';
-
-const CONTEXT7_MCP_CONFIG = {
-  command: 'npx',
-  args: ['-y', '@upstash/context7-mcp']
-};
 
 const GENERATION_TOPICS = [
   'hooks API useChat usage examples streaming',
@@ -21,68 +18,21 @@ interface GeneratedOutput {
   tasks: Task[];
 }
 
-async function generateTaskSuite(libraryName: string): Promise<void> {
+async function generateTaskSuite(libraryName: string, libraryIdOverride?: string): Promise<void> {
   console.log(`\n🚀 Generating test suite for: ${libraryName}\n`);
 
-  // Step 1: Use Claude with Context7 to fetch docs and generate tasks
+  // Step 1: Fetch documentation with Context7
+  const context7 = new Context7();
+  const libraryId = libraryIdOverride || await resolveLibraryId(context7, libraryName);
+  const context = await fetchDocumentation(context7, libraryId, GENERATION_TOPICS);
+
+  // Step 2: Generate tasks with Grok
   const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(libraryName, GENERATION_TOPICS);
+  const userPrompt = buildUserPrompt(libraryName, libraryId, context);
 
-  console.log('📚 Querying Context7 and generating tasks with Claude...\n');
+  console.log('📚 Generating tasks with Grok...\n');
 
-  let fullResponse = '';
-
-  const response = query({
-    prompt: userPrompt,
-    options: {
-      systemPrompt,
-      mcpServers: {
-        context7: CONTEXT7_MCP_CONFIG
-      },
-      allowedTools: [
-        'mcp__context7__resolve-library-id',
-        'mcp__context7__query-docs'
-      ],
-      model: 'claude-sonnet-4-5',
-      maxTurns: 15
-    }
-  });
-
-  let turnCount = 0;
-  for await (const message of response) {
-    const msg = message as any;
-
-    if (msg.type === 'assistant') {
-      const assistantMsg = msg.message;
-      if (assistantMsg?.content) {
-        if (typeof assistantMsg.content === 'string') {
-          fullResponse += assistantMsg.content;
-        } else if (Array.isArray(assistantMsg.content)) {
-          for (const block of assistantMsg.content) {
-            if (block.type === 'text' && block.text) {
-              fullResponse += block.text;
-            } else if (block.type === 'tool_use') {
-              console.log(`  🔧 ${block.name}`);
-            }
-          }
-        }
-      }
-    } else if (msg.type === 'result') {
-      if (msg.result && typeof msg.result === 'string') {
-        fullResponse += msg.result;
-      }
-      if (msg.subtype === 'success') {
-        console.log(`  ✅ Generation complete`);
-      }
-    } else if (msg.type === 'system' && msg.subtype === 'init') {
-      console.log(`  📍 Session started`);
-    } else if (msg.type === 'error') {
-      console.error(`  ❌ Error: ${JSON.stringify(msg.error || msg)}`);
-    }
-
-    turnCount++;
-  }
-  console.log(`\n  📊 Total turns: ${turnCount}`);
+  const fullResponse = await generateText(systemPrompt, userPrompt);
 
   // Step 2: Extract JSON from response
   console.log('\n📝 Parsing generated output...\n');
@@ -137,8 +87,7 @@ function buildSystemPrompt(): string {
   return `You are a test suite generator for evaluating how well AI models can use library APIs.
 
 Your job:
-1. Use the Context7 MCP tools to fetch documentation for a library
-2. Generate a structured test suite from that documentation
+1. Generate a structured test suite from provided documentation
 
 OUTPUT FORMAT:
 Return a JSON object with this exact structure (no markdown code blocks around it):
@@ -169,7 +118,7 @@ RULES FOR DOC SECTIONS:
 - Each section should teach ONE concept
 - Keep content concise (2-4 sentences max)
 - Include 1-2 minimal code examples per section
-- Extract patterns from the Context7 documentation
+- Extract patterns from the provided documentation
 
 RULES FOR TASKS:
 - Generate 3-4 tasks per doc section (20-25 total)
@@ -205,19 +154,45 @@ test('function does X correctly', () => {
 });
 \`\`\`
 
-After fetching docs and generating the suite, output ONLY the JSON object.`;
+After generating the suite, output ONLY the JSON object.`;
 }
 
-function buildUserPrompt(libraryName: string, topics: string[]): string {
+async function resolveLibraryId(client: Context7, libraryName: string): Promise<string> {
+  const response = await client.searchLibrary(`Docs for ${libraryName}`);
+  const results = response.results;
+  if (!results.length) {
+    throw new Error(`No Context7 library match for ${libraryName}`);
+  }
+  return results[0].id;
+}
+
+async function fetchDocumentation(
+  client: Context7,
+  libraryId: string,
+  topics: string[]
+): Promise<string> {
+  const sections: string[] = [];
+
+  for (const topic of topics) {
+    const response = await client.getDocs(libraryId, {
+      format: 'txt',
+      topic,
+      mode: 'info'
+    });
+    sections.push(`## ${topic}\n\n${response.content}`);
+  }
+
+  return sections.join('\n\n---\n\n');
+}
+
+function buildUserPrompt(libraryName: string, libraryId: string, context: string): string {
   return `Generate a test suite for the library: ${libraryName}
+Library ID: ${libraryId}
 
-Steps:
-1. First, use resolve-library-id to find the Context7 library ID for "${libraryName}"
-2. Then, use query-docs to fetch documentation for these topics:
-${topics.map(t => `   - ${t}`).join('\n')}
-3. Generate 5-7 doc sections and 20-25 tasks based on the documentation
-4. Output the final JSON
+Documentation context:
+${context}
 
+Generate 5-7 doc sections and 20-25 tasks. Output the final JSON.
 Remember: Output ONLY the JSON object at the end, no markdown code blocks.`;
 }
 
@@ -287,17 +262,22 @@ function validateOutput(output: GeneratedOutput): void {
 
 async function main() {
   const libraryName = process.argv[2];
+  const libraryIdOverride = process.argv[3];
 
   if (!libraryName) {
-    console.error('Usage: npm run autogen -- <library-name>');
+    console.error('Usage: npm run autogen -- <library-name> [context7-library-id]');
     console.error('Example: npm run autogen -- tanstack-ai');
+    console.error('Example: npm run autogen -- node-fetch /nodejs/node');
     process.exit(1);
   }
 
   try {
-    await generateTaskSuite(libraryName);
+    await generateTaskSuite(libraryName, libraryIdOverride);
   } catch (error) {
     console.error('❌ Generation failed:', error);
+    if (error instanceof Error) {
+      console.log('Hint: pass a Context7 library ID as a second argument.');
+    }
     process.exit(1);
   }
 }

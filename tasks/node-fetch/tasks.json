@@ -1,219 +1,247 @@
 {
   "library": "node-fetch",
-  "libraryId": "/nodejs/node",
-  "generatedAt": "2026-01-17T12:42:46.099Z",
+  "libraryId": "/node/fetch",
+  "generatedAt": "2026-01-17T14:55:57.643Z",
   "docs": [
     {
-      "id": "basic-get",
-      "title": "Basic GET Request",
-      "content": "The fetch() function makes HTTP requests. For GET requests, call fetch(url) and await the response. Check res.ok for success. Use res.json() to parse JSON responses.",
+      "id": "fetch-basics",
+      "title": "Basic Fetch Requests",
+      "content": "The fetch() function makes HTTP requests returning a Promise<Response>. Specify method, headers, and body in options for different request types. Check response.ok and status after fetch resolves.",
       "codeExamples": [
-        "const res = await fetch('https://api.example.com/data');\nif (res.ok) {\n  const data = await res.json();\n  console.log(data);\n}"
+        "const res = await fetch('https://example.com');\nif (res.ok) console.log(await res.text());",
+        "const res = await fetch('https://example.com', { method: 'POST', body: JSON.stringify({key: 'value'}) });"
       ]
     },
     {
-      "id": "post-json",
-      "title": "POST with JSON Body",
-      "content": "To send JSON data, pass an options object with method: 'POST', headers with 'Content-Type': 'application/json', and body: JSON.stringify(data).",
+      "id": "response-consume",
+      "title": "Consuming Response Body",
+      "content": "Use response.text(), json(), or arrayBuffer() to parse the entire body. For efficiency, stream with response.body as ReadableStream supporting async iteration.",
       "codeExamples": [
-        "const res = await fetch('https://api.example.com/users', {\n  method: 'POST',\n  headers: { 'Content-Type': 'application/json' },\n  body: JSON.stringify({ name: 'John', email: 'john@example.com' })\n});\nconst created = await res.json();"
+        "const data = await response.json();",
+        "for await (const chunk of response.body) { process(chunk); }"
       ]
     },
     {
-      "id": "headers",
-      "title": "Working with Headers",
-      "content": "Response headers are accessed via res.headers. Use res.headers.get('header-name') to retrieve specific headers. You can also iterate over headers. To send custom headers, include a headers object in the request options.",
+      "id": "stream-methods",
+      "title": "Readable Stream Processing Methods",
+      "content": "Readable streams provide forEach, map, filter, reduce for async chunk processing. These methods handle promises returned by callbacks and manage backpressure.",
       "codeExamples": [
-        "const res = await fetch('https://api.example.com');\nconst contentType = res.headers.get('content-type');\nconsole.log(contentType);",
-        "const res = await fetch('https://api.example.com', {\n  headers: { 'Authorization': 'Bearer token123' }\n});"
+        "await readable.forEach(chunk => console.log(chunk));",
+        "const result = await readable.map(chunk => chunk.toUpperCase()).toArray();"
       ]
     },
     {
-      "id": "status-codes",
-      "title": "Handling Status Codes",
-      "content": "res.status gives the numeric HTTP status code (200, 404, etc). res.ok is true for 2xx responses. res.statusText gives the status message. The url property contains the final URL after redirects.",
+      "id": "stream-pipeline",
+      "title": "Chaining Streams with pipeline",
+      "content": "stream.pipeline() sequences streams and auto-closes on errors. Useful for fetch response.body to transforms or writables, but avoid with requests to prevent premature socket close.",
       "codeExamples": [
-        "const res = await fetch(url);\nif (res.status === 404) {\n  console.log('Not found');\n} else if (res.ok) {\n  const data = await res.json();\n}\nconsole.log('Final URL:', res.url);"
+        "import { pipeline } from 'node:stream';\nawait pipeline(response.body, writable);",
+        "pipeline(readable, transform, writable, err => { if (err) throw err; });"
       ]
     },
     {
-      "id": "abort-signal",
-      "title": "Request Cancellation with AbortController",
-      "content": "Use AbortController to cancel requests. Create controller with new AbortController(), pass controller.signal to fetch options, call controller.abort() to cancel. The abort throws an error with name 'AbortError'.",
+      "id": "undici-client",
+      "title": "Undici Client for Connection Reuse",
+      "content": "Undici's Client pools connections for a base URL, supporting HTTP/2 over TLS. Configure with options like keepAlive and headers for repeated requests.",
       "codeExamples": [
-        "const controller = new AbortController();\nsetTimeout(() => controller.abort(), 5000);\n\ntry {\n  const res = await fetch(url, { signal: controller.signal });\n  const data = await res.json();\n} catch (err) {\n  if (err.name === 'AbortError') {\n    console.log('Request was cancelled');\n  }\n}"
+        "import { Client } from 'undici';\nconst client = new Client('https://example.com');\nconst res = await client.request({ path: '/api' });",
+        "const client = new Client('https://example.com', { keepAliveTimeout: 1000 });"
       ]
     },
     {
-      "id": "response-text",
-      "title": "Reading Response as Text",
-      "content": "Use res.text() to read the response body as a string instead of JSON. Use res.blob() for binary data. Use res.arrayBuffer() for raw bytes. The body can only be consumed once.",
+      "id": "proxy-agent",
+      "title": "Proxy Support with ProxyAgent",
+      "content": "ProxyAgent routes requests via a proxy, configurable as dispatcher option or global. Supports HTTP proxies and per-request overrides.",
       "codeExamples": [
-        "const res = await fetch('https://example.com');\nconst html = await res.text();\nconsole.log(html);",
-        "const res = await fetch('https://example.com/image.png');\nconst blob = await res.blob();"
+        "import { ProxyAgent } from 'undici';\nconst agent = new ProxyAgent('http://proxy:8080');\nfetch(url, { dispatcher: agent });",
+        "globalThis.fetch = (url, opts) => undici.fetch(url, { ...opts, dispatcher: agent });"
       ]
     }
   ],
   "tasks": [
     {
       "id": "task-001",
-      "docTag": "basic-get",
+      "docTag": "fetch-basics",
+      "description": "Write a function getStatus(url) that fetches the URL and returns the status code.",
       "difficulty": "easy",
-      "description": "Write a function fetchJson(url) that fetches JSON from a URL and returns the parsed data. Throw an error if the response is not ok.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => {\n  if (url === 'https://api.test.com/success') {\n    return { ok: true, json: async () => ({ id: 1, name: 'test' }) };\n  }\n  return { ok: false, status: 404 };\n};\n\ntest('fetchJson returns parsed JSON for successful response', async () => {\n  const result = await fetchJson('https://api.test.com/success');\n  assert.deepStrictEqual(result, { id: 1, name: 'test' });\n});\n\ntest('fetchJson throws error for non-ok response', async () => {\n  await assert.rejects(\n    async () => fetchJson('https://api.test.com/fail'),\n    /error|failed|not ok/i\n  );\n});",
-      "solutionHint": "Check res.ok and throw if false, otherwise return res.json()"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nglobalThis.fetch = async (u, o) => {\n  captured = { u, o };\n  return new Response(null, { status: 200 });\n};\n\ntest('getStatus returns 200', async () => {\n  const result = await getStatus('https://test.com');\n  assert.strictEqual(result, 200);\n  assert.strictEqual(captured.u, 'https://test.com');\n});\n\ntest('getStatus handles 404', async () => {\n  globalThis.fetch = async () => new Response(null, { status: 404 });\n  const result = await getStatus('https://fail.com');\n  assert.strictEqual(result, 404);\n});",
+      "solutionHint": "Call fetch(url) then return response.status"
     },
     {
       "id": "task-002",
-      "docTag": "basic-get",
+      "docTag": "fetch-basics",
+      "description": "Write a function postData(url, data) that POSTs JSON data and returns true if response.ok.",
       "difficulty": "easy",
-      "description": "Write a function fetchMultiple(urls) that takes an array of URLs and fetches all of them in parallel, returning an array of JSON results.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => {\n  const id = parseInt(url.split('/').pop());\n  return { ok: true, json: async () => ({ id }) };\n};\n\ntest('fetchMultiple returns all results in order', async () => {\n  const urls = ['https://api.test.com/1', 'https://api.test.com/2', 'https://api.test.com/3'];\n  const results = await fetchMultiple(urls);\n  assert.deepStrictEqual(results, [{ id: 1 }, { id: 2 }, { id: 3 }]);\n});\n\ntest('fetchMultiple handles empty array', async () => {\n  const results = await fetchMultiple([]);\n  assert.deepStrictEqual(results, []);\n});",
-      "solutionHint": "Use Promise.all with map over urls"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nglobalThis.fetch = async (u, o) => {\n  captured = { u, o };\n  return new Response('ok', { status: 201 });\n};\n\ntest('postData succeeds', async () => {\n  const result = await postData('https://test.com', { foo: 'bar' });\n  assert.strictEqual(result, true);\n  assert.strictEqual(captured.u, 'https://test.com');\n  assert.deepStrictEqual(captured.o.method, 'POST');\n  assert.deepStrictEqual(captured.o.headers.get('Content-Type'), 'application/json');\n});",
+      "solutionHint": "Use fetch with {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)} then response.ok"
     },
     {
       "id": "task-003",
-      "docTag": "basic-get",
+      "docTag": "fetch-basics",
+      "description": "Write a function fetchWithHeaders(url, customHeaders) that adds custom headers to a GET request.",
       "difficulty": "medium",
-      "description": "Write a function fetchWithRetry(url, maxRetries) that fetches a URL and retries up to maxRetries times if the response is not ok. Return the JSON data on success, throw after all retries fail.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet callCount = 0;\nglobalThis.fetch = async (url) => {\n  callCount++;\n  if (url.includes('fail-twice') && callCount <= 2) {\n    return { ok: false, status: 500 };\n  }\n  if (url.includes('always-fail')) {\n    return { ok: false, status: 500 };\n  }\n  return { ok: true, json: async () => ({ success: true }) };\n};\n\ntest('fetchWithRetry succeeds on first try', async () => {\n  callCount = 0;\n  const result = await fetchWithRetry('https://api.test.com/ok', 3);\n  assert.deepStrictEqual(result, { success: true });\n  assert.strictEqual(callCount, 1);\n});\n\ntest('fetchWithRetry retries and eventually succeeds', async () => {\n  callCount = 0;\n  const result = await fetchWithRetry('https://api.test.com/fail-twice', 3);\n  assert.deepStrictEqual(result, { success: true });\n  assert.strictEqual(callCount, 3);\n});\n\ntest('fetchWithRetry throws after max retries', async () => {\n  callCount = 0;\n  await assert.rejects(\n    async () => fetchWithRetry('https://api.test.com/always-fail', 2),\n    /error|failed|retries/i\n  );\n  assert.strictEqual(callCount, 3); // initial + 2 retries\n});",
-      "solutionHint": "Loop up to maxRetries+1 times, return on ok, throw after loop"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nglobalThis.fetch = async (u, o) => { captured = { u, o }; return new Response('ok'); };\n\ntest('adds headers', async () => {\n  await fetchWithHeaders('https://test.com', new Headers({ 'X-Custom': 'value' }));\n  assert.strictEqual(captured.o.headers.get('X-Custom'), 'value');\n});",
+      "solutionHint": "Pass Headers object in options.headers"
     },
     {
       "id": "task-004",
-      "docTag": "post-json",
-      "difficulty": "easy",
-      "description": "Write a function postJson(url, data) that sends a POST request with JSON body and returns the response data.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedOptions;\nglobalThis.fetch = async (url, options) => {\n  capturedOptions = options;\n  return { ok: true, json: async () => ({ success: true }) };\n};\n\ntest('postJson sends POST request with correct headers', async () => {\n  await postJson('https://api.test.com/users', { name: 'John' });\n  assert.strictEqual(capturedOptions.method, 'POST');\n  assert.strictEqual(capturedOptions.headers['Content-Type'], 'application/json');\n});\n\ntest('postJson stringifies the body', async () => {\n  await postJson('https://api.test.com/users', { name: 'John' });\n  assert.strictEqual(capturedOptions.body, JSON.stringify({ name: 'John' }));\n});\n\ntest('postJson returns response data', async () => {\n  const result = await postJson('https://api.test.com/users', {});\n  assert.deepStrictEqual(result, { success: true });\n});",
-      "solutionHint": "Use method: POST, set Content-Type header, JSON.stringify the body"
+      "docTag": "fetch-basics",
+      "description": "Write a function conditionalFetch(url, condition) that only fetches if condition is truthy, else returns null.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet called = false;\nglobalThis.fetch = async () => { called = true; return new Response('ok'); };\n\ntest('fetches when true', async () => {\n  const result = await conditionalFetch('https://test.com', true);\n  assert.ok(result);\n  assert.strictEqual(called, true);\n});\n\ntest('skips when false', async () => {\n  called = false;\n  const result = await conditionalFetch('https://test.com', false);\n  assert.strictEqual(result, null);\n  assert.strictEqual(called, false);\n});",
+      "solutionHint": "If/else around fetch based on condition"
     },
     {
       "id": "task-005",
-      "docTag": "post-json",
-      "difficulty": "medium",
-      "description": "Write a function putJson(url, data) that sends a PUT request with JSON body and returns the response data.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedOptions;\nglobalThis.fetch = async (url, options) => {\n  capturedOptions = options;\n  return { ok: true, json: async () => ({ updated: true }) };\n};\n\ntest('putJson sends PUT request', async () => {\n  await putJson('https://api.test.com/users/1', { name: 'Jane' });\n  assert.strictEqual(capturedOptions.method, 'PUT');\n});\n\ntest('putJson sets correct Content-Type', async () => {\n  await putJson('https://api.test.com/users/1', { name: 'Jane' });\n  assert.strictEqual(capturedOptions.headers['Content-Type'], 'application/json');\n});\n\ntest('putJson returns response data', async () => {\n  const result = await putJson('https://api.test.com/users/1', { name: 'Jane' });\n  assert.deepStrictEqual(result, { updated: true });\n});",
-      "solutionHint": "Same as POST but with method: PUT"
+      "docTag": "response-consume",
+      "description": "Write a function getJson(url) that fetches and parses JSON body.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nglobalThis.fetch = async (u) => {\n  captured = u;\n  return new Response(JSON.stringify({ key: 'value' }));\n};\n\ntest('parses json', async () => {\n  const result = await getJson('https://test.com');\n  assert.deepStrictEqual(result, { key: 'value' });\n});",
+      "solutionHint": "await response.json()"
     },
     {
       "id": "task-006",
-      "docTag": "post-json",
-      "difficulty": "medium",
-      "description": "Write a function deleteResource(url) that sends a DELETE request and returns true if successful (2xx status), false otherwise.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedOptions;\nglobalThis.fetch = async (url, options) => {\n  capturedOptions = options;\n  if (url.includes('exists')) {\n    return { ok: true, status: 204 };\n  }\n  return { ok: false, status: 404 };\n};\n\ntest('deleteResource sends DELETE request', async () => {\n  await deleteResource('https://api.test.com/users/exists');\n  assert.strictEqual(capturedOptions.method, 'DELETE');\n});\n\ntest('deleteResource returns true on success', async () => {\n  const result = await deleteResource('https://api.test.com/users/exists');\n  assert.strictEqual(result, true);\n});\n\ntest('deleteResource returns false on failure', async () => {\n  const result = await deleteResource('https://api.test.com/users/missing');\n  assert.strictEqual(result, false);\n});",
-      "solutionHint": "Use method: DELETE, return res.ok"
+      "docTag": "response-consume",
+      "description": "Write a function getText(url) that fetches and returns response text only if status < 400.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nglobalThis.fetch = async () => new Response('hello');\n\ntest('returns text', async () => {\n  const result = await getText('https://test.com');\n  assert.strictEqual(result, 'hello');\n});",
+      "solutionHint": "If response.ok then await response.text()"
     },
     {
       "id": "task-007",
-      "docTag": "headers",
-      "difficulty": "easy",
-      "description": "Write a function getContentType(url) that fetches a URL and returns the content-type header value.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  headers: {\n    get: (name) => name.toLowerCase() === 'content-type' ? 'application/json; charset=utf-8' : null\n  }\n});\n\ntest('getContentType returns content-type header', async () => {\n  const result = await getContentType('https://api.test.com');\n  assert.strictEqual(result, 'application/json; charset=utf-8');\n});",
-      "solutionHint": "Use res.headers.get(\"content-type\")"
+      "docTag": "response-consume",
+      "description": "Write a function streamAll(url) that reads entire response.body via async iterator and concatenates chunks.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet chunks = [];\nglobalThis.Response = class extends globalThis.Response {\n  get body() { return { [Symbol.asyncIterator]: async function*() { yield* chunks; } }; }\n};\nchunks = ['hel', 'lo'];\n\ntest('streams all', async () => {\n  const result = await streamAll('https://test.com');\n  assert.strictEqual(result, 'hello');\n});",
+      "solutionHint": "Use for await...of response.body then join chunks"
     },
     {
       "id": "task-008",
-      "docTag": "headers",
-      "difficulty": "medium",
-      "description": "Write a function fetchWithAuth(url, token) that fetches a URL with an Authorization Bearer header and returns the JSON data.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedOptions;\nglobalThis.fetch = async (url, options) => {\n  capturedOptions = options;\n  return { ok: true, json: async () => ({ authenticated: true }) };\n};\n\ntest('fetchWithAuth sends Authorization header', async () => {\n  await fetchWithAuth('https://api.test.com/private', 'abc123');\n  assert.strictEqual(capturedOptions.headers['Authorization'], 'Bearer abc123');\n});\n\ntest('fetchWithAuth returns JSON data', async () => {\n  const result = await fetchWithAuth('https://api.test.com/private', 'xyz');\n  assert.deepStrictEqual(result, { authenticated: true });\n});",
-      "solutionHint": "Set headers: { Authorization: \"Bearer \" + token }"
+      "docTag": "stream-methods",
+      "description": "Write a function streamForEach(url, fn) that applies fn to each chunk in response.body.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet fnCalls = [];\nglobalThis.fetch = async () => {\n  const body = { [Symbol.asyncIterator]: async function*() { yield 'a'; yield 'b'; } };\n  return new Response(null, { body });\n};\nconst mockFn = (c) => fnCalls.push(c);\n\ntest('calls fn per chunk', async () => {\n  await streamForEach('https://test.com', mockFn);\n  assert.deepStrictEqual(fnCalls, ['a', 'b']);\n});",
+      "solutionHint": "await response.body.forEach(fn)"
     },
     {
       "id": "task-009",
-      "docTag": "headers",
+      "docTag": "stream-methods",
+      "description": "Write a function streamMap(url, transformFn) that maps chunks and returns array.",
       "difficulty": "medium",
-      "description": "Write a function getResponseHeaders(url) that fetches a URL and returns an object with all response headers as key-value pairs.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  headers: {\n    entries: () => [\n      ['content-type', 'application/json'],\n      ['x-request-id', '12345'],\n      ['cache-control', 'no-cache']\n    ][Symbol.iterator]()\n  }\n});\n\ntest('getResponseHeaders returns all headers as object', async () => {\n  const result = await getResponseHeaders('https://api.test.com');\n  assert.deepStrictEqual(result, {\n    'content-type': 'application/json',\n    'x-request-id': '12345',\n    'cache-control': 'no-cache'\n  });\n});",
-      "solutionHint": "Iterate over res.headers.entries() or use Object.fromEntries"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nglobalThis.fetch = async () => {\n  const body = { [Symbol.asyncIterator]: async function*() { yield 'a'; yield 'b'; } };\n  return new Response(null, { body });\n};\n\ntest('maps chunks', async () => {\n  const result = await streamMap('https://test.com', c => c.toUpperCase());\n  assert.deepStrictEqual(result, ['A', 'B']);\n});",
+      "solutionHint": "await response.body.map(fn).toArray()"
     },
     {
       "id": "task-010",
-      "docTag": "status-codes",
-      "difficulty": "easy",
-      "description": "Write a function checkStatus(url) that fetches a URL and returns an object { status, ok, message } with the status code, ok boolean, and statusText.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => {\n  if (url.includes('success')) {\n    return { status: 200, ok: true, statusText: 'OK' };\n  }\n  return { status: 404, ok: false, statusText: 'Not Found' };\n};\n\ntest('checkStatus returns correct info for 200', async () => {\n  const result = await checkStatus('https://api.test.com/success');\n  assert.strictEqual(result.status, 200);\n  assert.strictEqual(result.ok, true);\n  assert.strictEqual(result.message, 'OK');\n});\n\ntest('checkStatus returns correct info for 404', async () => {\n  const result = await checkStatus('https://api.test.com/notfound');\n  assert.strictEqual(result.status, 404);\n  assert.strictEqual(result.ok, false);\n  assert.strictEqual(result.message, 'Not Found');\n});",
-      "solutionHint": "Return object with res.status, res.ok, res.statusText"
+      "docTag": "stream-methods",
+      "description": "Write a function streamFilter(url, predFn) that filters chunks and concatenates them.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nglobalThis.fetch = async () => {\n  const body = { [Symbol.asyncIterator]: async function*() { yield 'a'; yield 'b'; yield 'a'; } };\n  return new Response(null, { body });\n};\n\ntest('filters and joins', async () => {\n  const result = await streamFilter('https://test.com', c => c === 'a');\n  assert.strictEqual(result, 'aa');\n});",
+      "solutionHint": "await response.body.filter(fn).toArray() then join"
     },
     {
       "id": "task-011",
-      "docTag": "status-codes",
-      "difficulty": "medium",
-      "description": "Write a function getFinalUrl(url) that fetches a URL and returns the final URL after any redirects (use the response url property).",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  url: url.includes('redirect') ? 'https://api.test.com/final-destination' : url\n});\n\ntest('getFinalUrl returns same URL when no redirect', async () => {\n  const result = await getFinalUrl('https://api.test.com/page');\n  assert.strictEqual(result, 'https://api.test.com/page');\n});\n\ntest('getFinalUrl returns final URL after redirect', async () => {\n  const result = await getFinalUrl('https://api.test.com/redirect');\n  assert.strictEqual(result, 'https://api.test.com/final-destination');\n});",
-      "solutionHint": "Return res.url"
+      "docTag": "stream-methods",
+      "description": "Write a function streamReduce(url, reducer, init) that reduces stream chunks.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nglobalThis.fetch = async () => {\n  const body = { [Symbol.asyncIterator]: async function*() { yield 1; yield 2; yield 3; } };\n  return new Response(null, { body });\n};\n\ntest('reduces sum', async () => {\n  const result = await streamReduce('https://test.com', (acc, n) => acc + n, 0);\n  assert.strictEqual(result, 6);\n});",
+      "solutionHint": "await response.body.reduce(reducer, init)"
     },
     {
       "id": "task-012",
-      "docTag": "abort-signal",
+      "docTag": "stream-pipeline",
+      "description": "Write a function pipeToWritable(url, writable) that pipelines response.body to a writable stream.",
       "difficulty": "medium",
-      "description": "Write a function fetchWithTimeout(url, timeoutMs) that fetches a URL but aborts if it takes longer than timeoutMs. Return the JSON data or throw on timeout.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url, options) => {\n  if (url.includes('slow')) {\n    await new Promise(r => setTimeout(r, 100));\n    if (options?.signal?.aborted) {\n      const err = new Error('Aborted');\n      err.name = 'AbortError';\n      throw err;\n    }\n  }\n  return { ok: true, json: async () => ({ data: 'test' }) };\n};\n\ntest('fetchWithTimeout returns data for fast response', async () => {\n  const result = await fetchWithTimeout('https://api.test.com/fast', 200);\n  assert.deepStrictEqual(result, { data: 'test' });\n});\n\ntest('fetchWithTimeout throws on timeout', async () => {\n  await assert.rejects(\n    async () => fetchWithTimeout('https://api.test.com/slow', 10),\n    (err) => err.name === 'AbortError' || /abort|timeout/i.test(err.message)\n  );\n});",
-      "solutionHint": "Create AbortController, setTimeout to abort, pass signal to fetch"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nimport { pipeline } from 'node:stream';\nlet written = [];\nconst mockWritable = new (class { write(c, cb) { written.push(c); cb(); } end(cb) { cb(); } })();\nglobalThis.fetch = async () => {\n  const body = { pipeTo: async (w) => { await pipeline(body, w); } };\n  return new Response(null, { body });\n};\n\ntest('pipelines', async () => {\n  await pipeToWritable('https://test.com', mockWritable);\n  assert.strictEqual(written.length > 0, true);\n});",
+      "solutionHint": "import {pipeline} from 'stream'; await pipeline(response.body, writable)"
     },
     {
       "id": "task-013",
-      "docTag": "abort-signal",
-      "difficulty": "medium",
-      "description": "Write a function createCancellableFetch(url) that returns an object { promise, cancel } where promise resolves to JSON data and cancel() aborts the request.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url, options) => {\n  await new Promise(r => setTimeout(r, 50));\n  if (options?.signal?.aborted) {\n    const err = new Error('Aborted');\n    err.name = 'AbortError';\n    throw err;\n  }\n  return { ok: true, json: async () => ({ data: 'result' }) };\n};\n\ntest('createCancellableFetch returns promise that resolves', async () => {\n  const { promise } = createCancellableFetch('https://api.test.com/data');\n  const result = await promise;\n  assert.deepStrictEqual(result, { data: 'result' });\n});\n\ntest('createCancellableFetch cancel aborts the request', async () => {\n  const { promise, cancel } = createCancellableFetch('https://api.test.com/data');\n  setTimeout(() => cancel(), 10);\n  await assert.rejects(promise, (err) => err.name === 'AbortError');\n});",
-      "solutionHint": "Create AbortController, return { promise: fetch(...).then(r => r.json()), cancel: () => controller.abort() }"
+      "docTag": "stream-pipeline",
+      "description": "Write a function safePipeline(url, transformFn) that pipelines response.body through a transform and handles errors.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet errored = false;\nglobalThis.fetch = async () => new Response('data');\n\ntest('handles no error', async () => {\n  await safePipeline('https://test.com', (c, enc, cb) => cb(null, c.toUpperCase()));\n  assert.strictEqual(errored, false);\n});\n\ntest('handles error', async () => {\n  globalThis.fetch = async () => { throw new Error('fail'); };\n  await safePipeline('https://test.com', () => { throw new Error(); });\n});",
+      "solutionHint": "Use pipeline with callback for err handling"
     },
     {
       "id": "task-014",
-      "docTag": "abort-signal",
-      "difficulty": "hard",
-      "description": "Write a function raceRequests(urls) that fetches all URLs in parallel and returns the JSON data from whichever responds first, cancelling the others.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nconst abortedUrls = [];\nglobalThis.fetch = async (url, options) => {\n  const delay = url.includes('fast') ? 10 : url.includes('medium') ? 50 : 100;\n  await new Promise(r => setTimeout(r, delay));\n  if (options?.signal?.aborted) {\n    abortedUrls.push(url);\n    const err = new Error('Aborted');\n    err.name = 'AbortError';\n    throw err;\n  }\n  return { ok: true, json: async () => ({ winner: url }) };\n};\n\ntest('raceRequests returns fastest response', async () => {\n  abortedUrls.length = 0;\n  const result = await raceRequests([\n    'https://api.test.com/slow',\n    'https://api.test.com/fast',\n    'https://api.test.com/medium'\n  ]);\n  assert.strictEqual(result.winner, 'https://api.test.com/fast');\n});",
-      "solutionHint": "Create one AbortController, pass signal to all fetches, use Promise.race, abort on first resolve"
+      "docTag": "undici-client",
+      "description": "Write a function createClient(baseUrl) that returns a new Undici Client.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nclass MockClient { constructor(u, o) { captured = {u, o}; } async request(p) { return new Response('ok'); } }\nglobalThis.Client = MockClient;\n\ntest('creates client', () => {\n  const client = createClient('https://example.com');\n  assert.ok(client instanceof MockClient);\n  assert.strictEqual(captured.u, 'https://example.com');\n});",
+      "solutionHint": "new Client(baseUrl)"
     },
     {
       "id": "task-015",
-      "docTag": "response-text",
+      "docTag": "undici-client",
+      "description": "Write a function clientGet(client, path) that requests the path with GET.",
       "difficulty": "easy",
-      "description": "Write a function fetchText(url) that fetches a URL and returns the response as plain text.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  text: async () => '<html><body>Hello</body></html>'\n});\n\ntest('fetchText returns text content', async () => {\n  const result = await fetchText('https://example.com');\n  assert.strictEqual(result, '<html><body>Hello</body></html>');\n});",
-      "solutionHint": "Use res.text() instead of res.json()"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nconst mockClient = { request: async (opts) => { captured = opts; return new Response('ok'); } };\n\ntest('requests path', async () => {\n  await clientGet(mockClient, '/api');\n  assert.strictEqual(captured.path, '/api');\n  assert.strictEqual(captured.method, 'GET');\n});",
+      "solutionHint": "await client.request({path, method:'GET'})"
     },
     {
       "id": "task-016",
-      "docTag": "response-text",
+      "docTag": "undici-client",
+      "description": "Write a function pooledRequests(client, paths) that fetches multiple paths sequentially.",
       "difficulty": "medium",
-      "description": "Write a function fetchBlob(url) that fetches a URL and returns the response as a Blob.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nconst mockBlob = { type: 'image/png', size: 1024 };\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  blob: async () => mockBlob\n});\n\ntest('fetchBlob returns blob', async () => {\n  const result = await fetchBlob('https://example.com/image.png');\n  assert.strictEqual(result.type, 'image/png');\n  assert.strictEqual(result.size, 1024);\n});",
-      "solutionHint": "Use res.blob()"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet calls = [];\nconst mockClient = { async request(opts) { calls.push(opts.path); return new Response('ok'); } };\n\ntest('multiple requests', async () => {\n  await pooledRequests(mockClient, ['/1', '/2']);\n  assert.deepStrictEqual(calls, ['/1', '/2']);\n});",
+      "solutionHint": "Loop await client.request({path})"
     },
     {
       "id": "task-017",
-      "docTag": "response-text",
-      "difficulty": "medium",
-      "description": "Write a function fetchAsType(url, type) that fetches a URL and returns the body parsed according to type: \"json\", \"text\", or \"blob\".",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => ({\n  ok: true,\n  json: async () => ({ data: 'json' }),\n  text: async () => 'plain text',\n  blob: async () => ({ type: 'image/png' })\n});\n\ntest('fetchAsType returns json when type is json', async () => {\n  const result = await fetchAsType('https://api.test.com', 'json');\n  assert.deepStrictEqual(result, { data: 'json' });\n});\n\ntest('fetchAsType returns text when type is text', async () => {\n  const result = await fetchAsType('https://api.test.com', 'text');\n  assert.strictEqual(result, 'plain text');\n});\n\ntest('fetchAsType returns blob when type is blob', async () => {\n  const result = await fetchAsType('https://api.test.com', 'blob');\n  assert.strictEqual(result.type, 'image/png');\n});",
-      "solutionHint": "Switch on type and call appropriate res method"
+      "docTag": "proxy-agent",
+      "description": "Write a function createProxyAgent(proxyUrl) that returns new ProxyAgent.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nclass MockProxyAgent { constructor(u) { captured = u; } }\nglobalThis.ProxyAgent = MockProxyAgent;\n\ntest('creates agent', () => {\n  const agent = createProxyAgent('http://proxy');\n  assert.strictEqual(captured, 'http://proxy');\n});",
+      "solutionHint": "new ProxyAgent(proxyUrl)"
     },
     {
       "id": "task-018",
-      "docTag": "basic-get",
-      "difficulty": "hard",
-      "description": "Write a function fetchFirstSuccess(urls) that tries each URL in order until one succeeds (res.ok), returning its JSON. Throw if all fail.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => {\n  if (url.includes('fail')) {\n    return { ok: false, status: 500 };\n  }\n  return { ok: true, json: async () => ({ source: url }) };\n};\n\ntest('fetchFirstSuccess returns first successful response', async () => {\n  const result = await fetchFirstSuccess([\n    'https://api.test.com/fail1',\n    'https://api.test.com/fail2',\n    'https://api.test.com/success'\n  ]);\n  assert.strictEqual(result.source, 'https://api.test.com/success');\n});\n\ntest('fetchFirstSuccess throws when all fail', async () => {\n  await assert.rejects(\n    async () => fetchFirstSuccess([\n      'https://api.test.com/fail1',\n      'https://api.test.com/fail2'\n    ]),\n    /error|failed|all/i\n  );\n});",
-      "solutionHint": "Loop through URLs, return first ok response, throw after loop"
+      "docTag": "proxy-agent",
+      "description": "Write a function fetchViaProxy(url, proxyUrl) that fetches using ProxyAgent.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet capturedOpts;\nglobalThis.fetch = async (u, o) => { capturedOpts = o; return new Response('ok'); };\nclass MockProxyAgent { constructor() {} }\nglobalThis.ProxyAgent = MockProxyAgent;\n\ntest('uses dispatcher', async () => {\n  await fetchViaProxy('https://test.com', 'http://proxy');\n  assert.ok(capturedOpts.dispatcher instanceof MockProxyAgent);\n});",
+      "solutionHint": "const agent = new ProxyAgent(proxyUrl); fetch(url, {dispatcher: agent})"
     },
     {
       "id": "task-019",
-      "docTag": "headers",
+      "docTag": "proxy-agent",
+      "description": "Write a function setGlobalProxy(proxyUrl) that sets ProxyAgent as global fetch dispatcher.",
       "difficulty": "hard",
-      "description": "Write a function fetchWithCustomHeaders(url, headers) that fetches with the given headers object merged with default headers { \"Accept\": \"application/json\" }.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedHeaders;\nglobalThis.fetch = async (url, options) => {\n  capturedHeaders = options?.headers || {};\n  return { ok: true, json: async () => ({}) };\n};\n\ntest('fetchWithCustomHeaders includes default Accept header', async () => {\n  await fetchWithCustomHeaders('https://api.test.com', {});\n  assert.strictEqual(capturedHeaders['Accept'], 'application/json');\n});\n\ntest('fetchWithCustomHeaders merges custom headers', async () => {\n  await fetchWithCustomHeaders('https://api.test.com', { 'X-Custom': 'value' });\n  assert.strictEqual(capturedHeaders['Accept'], 'application/json');\n  assert.strictEqual(capturedHeaders['X-Custom'], 'value');\n});\n\ntest('fetchWithCustomHeaders allows overriding defaults', async () => {\n  await fetchWithCustomHeaders('https://api.test.com', { 'Accept': 'text/html' });\n  assert.strictEqual(capturedHeaders['Accept'], 'text/html');\n});",
-      "solutionHint": "Merge headers with spread: { Accept: \"application/json\", ...headers }"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet originalFetch;\nclass MockProxyAgent { constructor() {} }\nglobalThis.ProxyAgent = MockProxyAgent;\n\ntest('sets global', async () => {\n  setGlobalProxy('http://proxy');\n  originalFetch = globalThis.fetch;\n  assert.ok(globalThis.fetch.toString().includes('dispatcher'));\n});",
+      "solutionHint": "const agent=new ProxyAgent(); replace globalThis.fetch to use {dispatcher:agent}"
     },
     {
       "id": "task-020",
-      "docTag": "status-codes",
+      "docTag": "stream-pipeline",
+      "description": "Write a function pipelineWithTransform(url, transform) that pipelines body through a custom transform stream.",
       "difficulty": "hard",
-      "description": "Write a function categorizeResponse(url) that fetches and returns \"success\" for 2xx, \"redirect\" for 3xx, \"client-error\" for 4xx, \"server-error\" for 5xx.",
-      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.fetch = async (url) => {\n  const status = parseInt(url.split('/').pop());\n  return { status, ok: status >= 200 && status < 300 };\n};\n\ntest('categorizeResponse returns success for 200', async () => {\n  const result = await categorizeResponse('https://api.test.com/200');\n  assert.strictEqual(result, 'success');\n});\n\ntest('categorizeResponse returns redirect for 301', async () => {\n  const result = await categorizeResponse('https://api.test.com/301');\n  assert.strictEqual(result, 'redirect');\n});\n\ntest('categorizeResponse returns client-error for 404', async () => {\n  const result = await categorizeResponse('https://api.test.com/404');\n  assert.strictEqual(result, 'client-error');\n});\n\ntest('categorizeResponse returns server-error for 500', async () => {\n  const result = await categorizeResponse('https://api.test.com/500');\n  assert.strictEqual(result, 'server-error');\n});",
-      "solutionHint": "Check res.status ranges: 200-299, 300-399, 400-499, 500-599"
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet transformCalled = false;\nconst mockTransform = new (class extends TransformStream { transform(c,_,cb){ transformCalled=true; cb(null,c.toUpperCase()); } })();\nglobalThis.fetch = async () => new Response('hello');\n\ntest('pipelines transform', async () => {\n  await pipelineWithTransform('https://test.com', mockTransform);\n  assert.strictEqual(transformCalled, true);\n});",
+      "solutionHint": "pipeline(response.body, transform, ...)"
+    },
+    {
+      "id": "task-021",
+      "docTag": "undici-client",
+      "description": "Write a function clientPost(client, path, body) that POSTs body to path using client.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet captured;\nconst mockClient = { async request(opts) { captured = opts; return new Response('ok'); } };\n\ntest('posts data', async () => {\n  await clientPost(mockClient, '/api', 'data');\n  assert.strictEqual(captured.path, '/api');\n  assert.strictEqual(captured.method, 'POST');\n  assert.strictEqual(captured.body, 'data');\n});",
+      "solutionHint": "client.request({path, method:'POST', body})"
+    },
+    {
+      "id": "task-022",
+      "docTag": "response-consume",
+      "description": "Write a function getFirstChunk(url) that returns the first chunk from response.body.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nlet iter;\nglobalThis.fetch = async () => {\n  iter = (async function*() { yield 'first'; })();\n  return new Response(null, { body: { [Symbol.asyncIterator]: () => iter } });\n};\n\ntest('gets first', async () => {\n  const result = await getFirstChunk('https://test.com');\n  assert.strictEqual(result, 'first');\n});",
+      "solutionHint": "const it=response.body[Symbol.asyncIterator](); const {value}=await it.next();"
+    },
+    {
+      "id": "task-023",
+      "docTag": "stream-methods",
+      "description": "Write a function streamToLines(url) that splits stream chunks by '\\n' into array of lines.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\nglobalThis.fetch = async () => {\n  const body = { map: async (fn) => ({ toArray: async () => ['line1\\n', 'line2'].flatMap(l => l.split('\\n')).filter(Boolean) }) };\n  return new Response(null, { body });\n};\n\ntest('splits lines', async () => {\n  const result = await streamToLines('https://test.com');\n  assert.deepStrictEqual(result, ['line1', 'line2']);\n});",
+      "solutionHint": "Use map to split chunk by '\\n' and flat"
     }
   ]
 }

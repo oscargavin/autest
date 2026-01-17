@@ -1,6 +1,7 @@
+import 'dotenv/config';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { spawn } from 'node:child_process';
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { generateText } from './llm.js';
+import { runTestsInSandbox } from './e2b-runner.js';
 import type { TaskSet, Task, Attempt } from './types.js';
 
 const MAX_ITERATIONS_A = 1;  // A gets one shot (baseline)
@@ -121,66 +122,13 @@ ANALYSIS: [one sentence explaining the root cause]
   return prompt;
 }
 
-async function runTest(code: string, testCode: string): Promise<{ passed: boolean; output: string }> {
-  // Create a temporary test file
-  const fullCode = `${code}\n\n${testCode}`;
-  const testFile = `./generated/temp-test-${Date.now()}.mjs`;
-
-  writeFileSync(testFile, fullCode);
-
-  return new Promise((resolve) => {
-    const proc = spawn('node', ['--test', testFile], {
-      timeout: 30000
-    });
-
-    let stdout = '';
-    let stderr = '';
-
-    proc.stdout.on('data', (data) => { stdout += data.toString(); });
-    proc.stderr.on('data', (data) => { stderr += data.toString(); });
-
-    proc.on('close', (code) => {
-      // Clean up temp file
-      try { require('fs').unlinkSync(testFile); } catch {}
-
-      const output = stdout + stderr;
-      const passed = code === 0;
-
-      resolve({ passed, output });
-    });
-
-    proc.on('error', (err) => {
-      resolve({ passed: false, output: err.message });
-    });
-  });
-}
-
-async function extractCode(response: AsyncIterable<any>): Promise<string> {
-  let fullContent = '';
-
-  for await (const message of response) {
-    // Handle result message (contains final output)
-    if (message.type === 'result' && message.result) {
-      fullContent = message.result;
-      break;
-    }
-    // Handle assistant message (streaming)
-    if (message.type === 'assistant' && message.message?.content) {
-      for (const block of message.message.content) {
-        if (block.type === 'text') {
-          fullContent += block.text;
-        }
-      }
-    }
-  }
-
-  // Extract code from markdown code blocks if present
-  const codeBlockMatch = fullContent.match(/```(?:javascript|js)?\s*([\s\S]*?)```/);
+async function extractCode(response: string): Promise<string> {
+  const codeBlockMatch = response.match(/```(?:javascript|js)?\s*([\s\S]*?)```/);
   if (codeBlockMatch) {
     return codeBlockMatch[1].trim();
   }
 
-  return fullContent.trim();
+  return response.trim();
 }
 
 async function runTaskVariant(
@@ -222,16 +170,13 @@ async function runTaskVariant(
     }
 
     try {
-      const response = query({
-        prompt,
-        options: {
-          model: 'claude-sonnet-4-5',
-          permissionMode: 'bypassPermissions' // no interactive prompts needed
-        }
-      });
+      const response = await generateText(
+        'You are a helpful coding assistant that writes concise JavaScript functions.',
+        prompt
+      );
 
       currentCode = await extractCode(response);
-      const testResult = await runTest(currentCode, task.testCode);
+      const testResult = await runTestsInSandbox(currentCode, task.testCode);
 
       const attempt: Attempt = {
         taskId: task.id,
