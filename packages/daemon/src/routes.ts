@@ -189,4 +189,38 @@ export function registerRoutes(fastify: FastifyInstance, queue: JobQueue) {
 
     return { training: stats };
   });
+
+  // Download SFT training data
+  fastify.get<{
+    Params: { library: string };
+  }>('/api/training/:library/sft.jsonl', async (request, reply) => {
+    const { library } = request.params;
+    const sftFile = `./training/${library}/sft.jsonl`;
+
+    if (!existsSync(sftFile)) {
+      return reply.status(404).send({ error: 'SFT data not found' });
+    }
+
+    const content = readFileSync(sftFile, 'utf-8');
+    reply.header('Content-Type', 'application/jsonl');
+    reply.header('Content-Disposition', `attachment; filename="${library.replace('/', '-')}-sft.jsonl"`);
+    return content;
+  });
+
+  // Download DPO training data
+  fastify.get<{
+    Params: { library: string };
+  }>('/api/training/:library/dpo.jsonl', async (request, reply) => {
+    const { library } = request.params;
+    const dpoFile = `./training/${library}/dpo.jsonl`;
+
+    if (!existsSync(dpoFile)) {
+      return reply.status(404).send({ error: 'DPO data not found' });
+    }
+
+    const content = readFileSync(dpoFile, 'utf-8');
+    reply.header('Content-Type', 'application/jsonl');
+    reply.header('Content-Disposition', `attachment; filename="${library.replace('/', '-')}-dpo.jsonl"`);
+    return content;
+  });
 }
