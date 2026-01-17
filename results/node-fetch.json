@@ -1,0 +1,297 @@
+{
+  "library": "node-fetch",
+  "generatedAt": "2026-01-17T12:42:46.099Z",
+  "evaluatedAt": "2026-01-17T12:59:52.990Z",
+  "summary": {
+    "totalTasks": 20,
+    "aFirstPassRate": 95,
+    "bFirstPassRate": 95,
+    "docImpact": 0,
+    "bFailedFirstPass": 1,
+    "bRescuedByRetry": 0,
+    "iterationValue": 0,
+    "bFinalPassRate": 95
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "basic-get",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchJson(url) {\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  return await response.json();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchJson(url) {\n  const res = await fetch(url);\n  if (!res.ok) {\n    throw new Error(`HTTP error! status: ${res.status}`);\n  }\n  return await res.json();\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "basic-get",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchMultiple(urls) {\n  const responses = await Promise.all(urls.map(url => fetch(url)));\n  return await Promise.all(responses.map(response => response.json()));\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchMultiple(urls) {\n  const promises = urls.map(url => fetch(url).then(res => res.json()));\n  return await Promise.all(promises);\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "basic-get",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function fetchWithRetry(url, maxRetries) {\n  let lastError;\n  \n  for (let attempt = 0; attempt <= maxRetries; attempt++) {\n    try {\n      const response = await fetch(url);\n      \n      if (!response.ok) {\n        lastError = new Error(`HTTP error! status: ${response.status}`);\n        if (attempt < maxRetries) {\n          continue;\n        }\n        throw lastError;\n      }\n      \n      return await response.json();\n    } catch (error) {\n      lastError = error;\n      if (attempt >= maxRetries) {\n        throw error;\n      }\n    }\n  }\n}\n\nexport { fetchWithRetry };"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchWithRetry(url, maxRetries) {\n  let lastError;\n  \n  for (let attempt = 0; attempt <= maxRetries; attempt++) {\n    try {\n      const res = await fetch(url);\n      if (res.ok) {\n        return await res.json();\n      }\n      lastError = new Error(`HTTP error! status: ${res.status}`);\n    } catch (error) {\n      lastError = error;\n    }\n  }\n  \n  throw lastError;\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "post-json",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function postJson(url, data) {\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify(data),\n  });\n  return await response.json();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function postJson(url, data) {\n  const res = await fetch(url, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data)\n  });\n  return await res.json();\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "post-json",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function putJson(url, data) {\n  const response = await fetch(url, {\n    method: 'PUT',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify(data),\n  });\n  \n  return await response.json();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function putJson(url, data) {\n  const res = await fetch(url, {\n    method: 'PUT',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data)\n  });\n  return await res.json();\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "post-json",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function deleteResource(url) {\n  try {\n    const response = await fetch(url, { method: 'DELETE' });\n    return response.ok;\n  } catch {\n    return false;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function deleteResource(url) {\n  const res = await fetch(url, {\n    method: 'DELETE'\n  });\n  return res.ok;\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "headers",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function getContentType(url) {\n  const response = await fetch(url);\n  return response.headers.get('content-type');\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function getContentType(url) {\n  const res = await fetch(url);\n  return res.headers.get('content-type');\n}\n\nexport { getContentType };"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "headers",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchWithAuth(url, token) {\n  const response = await fetch(url, {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  });\n  return await response.json();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchWithAuth(url, token) {\n  const res = await fetch(url, {\n    headers: { 'Authorization': `Bearer ${token}` }\n  });\n  return await res.json();\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "headers",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function getResponseHeaders(url) {\n  const response = await fetch(url);\n  const headers = {};\n  response.headers.forEach((value, key) => {\n    headers[key] = value;\n  });\n  return headers;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "async function getResponseHeaders(url) {\n  const res = await fetch(url);\n  const headers = {};\n  res.headers.forEach((value, key) => {\n    headers[key] = value;\n  });\n  return headers;\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "status-codes",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function checkStatus(url) {\n  const response = await fetch(url);\n  return {\n    status: response.status,\n    ok: response.ok,\n    message: response.statusText\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function checkStatus(url) {\n  const res = await fetch(url);\n  return {\n    status: res.status,\n    ok: res.ok,\n    message: res.statusText\n  };\n}\n\nexport { checkStatus };"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "status-codes",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function getFinalUrl(url) {\n  const response = await fetch(url);\n  return response.url;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function getFinalUrl(url) {\n  const res = await fetch(url);\n  return res.url;\n}"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "abort-signal",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchWithTimeout(url, timeoutMs) {\n  const controller = new AbortController();\n  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);\n  \n  try {\n    const response = await fetch(url, { signal: controller.signal });\n    const data = await response.json();\n    clearTimeout(timeoutId);\n    return data;\n  } catch (error) {\n    clearTimeout(timeoutId);\n    if (error.name === 'AbortError') {\n      throw new Error('Request timeout');\n    }\n    throw error;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchWithTimeout(url, timeoutMs) {\n  const controller = new AbortController();\n  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);\n\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    const data = await res.json();\n    clearTimeout(timeoutId);\n    return data;\n  } catch (err) {\n    clearTimeout(timeoutId);\n    if (err.name === 'AbortError') {\n      throw new Error('Request timeout');\n    }\n    throw err;\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "abort-signal",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createCancellableFetch(url) {\n  const controller = new AbortController();\n  \n  const promise = fetch(url, { signal: controller.signal })\n    .then(response => response.json());\n  \n  const cancel = () => controller.abort();\n  \n  return { promise, cancel };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "function createCancellableFetch(url) {\n  const controller = new AbortController();\n  \n  const promise = fetch(url, { signal: controller.signal })\n    .then(res => res.json());\n  \n  const cancel = () => controller.abort();\n  \n  return { promise, cancel };\n}\n\nexport { createCancellableFetch };"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "abort-signal",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function raceRequests(urls) {\n  const controller = new AbortController();\n  \n  const fetchPromises = urls.map(url =>\n    fetch(url, { signal: controller.signal })\n      .then(response => response.json())\n  );\n  \n  try {\n    const result = await Promise.race(fetchPromises);\n    controller.abort();\n    return result;\n  } catch (error) {\n    controller.abort();\n    throw error;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function raceRequests(urls) {\n  const controllers = urls.map(() => new AbortController());\n  \n  try {\n    const promise = Promise.race(\n      urls.map((url, index) =>\n        fetch(url, { signal: controllers[index].signal })\n          .then(res => res.json())\n          .then(data => ({ index, data }))\n      )\n    );\n    \n    const result = await promise;\n    \n    // Cancel all other requests\n    controllers.forEach((controller, index) => {\n      if (index !== result.index) {\n        controller.abort();\n      }\n    });\n    \n    return result.data;\n  } catch (err) {\n    // Cancel all requests on error\n    controllers.forEach(controller => controller.abort());\n    throw err;\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "response-text",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchText(url) {\n  const response = await fetch(url);\n  return await response.text();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchText(url) {\n  const res = await fetch(url);\n  return await res.text();\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "response-text",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchBlob(url) {\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  return await response.blob();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchBlob(url) {\n  const res = await fetch(url);\n  const blob = await res.blob();\n  return blob;\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "response-text",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchAsType(url, type) {\n  const response = await fetch(url);\n  \n  if (type === 'json') {\n    return await response.json();\n  } else if (type === 'text') {\n    return await response.text();\n  } else if (type === 'blob') {\n    return await response.blob();\n  }\n  \n  throw new Error(`Unsupported type: ${type}`);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchAsType(url, type) {\n  const res = await fetch(url);\n  \n  if (type === 'json') {\n    return await res.json();\n  } else if (type === 'text') {\n    return await res.text();\n  } else if (type === 'blob') {\n    return await res.blob();\n  }\n}\n\nexport { fetchAsType };"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "basic-get",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchFirstSuccess(urls) {\n  let lastError;\n  \n  for (const url of urls) {\n    try {\n      const response = await fetch(url);\n      if (response.ok) {\n        return await response.json();\n      }\n      lastError = new Error(`Request failed with status ${response.status}`);\n    } catch (error) {\n      lastError = error;\n    }\n  }\n  \n  throw lastError || new Error('All requests failed');\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchFirstSuccess(urls) {\n  for (const url of urls) {\n    const res = await fetch(url);\n    if (res.ok) {\n      return await res.json();\n    }\n  }\n  throw new Error('All requests failed');\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "headers",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function fetchWithCustomHeaders(url, headers) {\n  const defaultHeaders = { \"Accept\": \"application/json\" };\n  const mergedHeaders = { ...defaultHeaders, ...headers };\n  \n  const response = await fetch(url, {\n    headers: mergedHeaders\n  });\n  \n  return response;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function fetchWithCustomHeaders(url, headers) {\n  const mergedHeaders = {\n    \"Accept\": \"application/json\",\n    ...headers\n  };\n  \n  return await fetch(url, {\n    headers: mergedHeaders\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "status-codes",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function categorizeResponse(url) {\n  const response = await fetch(url);\n  const status = response.status;\n  \n  if (status >= 200 && status < 300) {\n    return \"success\";\n  } else if (status >= 300 && status < 400) {\n    return \"redirect\";\n  } else if (status >= 400 && status < 500) {\n    return \"client-error\";\n  } else if (status >= 500 && status < 600) {\n    return \"server-error\";\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "async function categorizeResponse(url) {\n  const res = await fetch(url);\n  const status = res.status;\n  \n  if (status >= 200 && status < 300) {\n    return \"success\";\n  } else if (status >= 300 && status < 400) {\n    return \"redirect\";\n  } else if (status >= 400 && status < 500) {\n    return \"client-error\";\n  } else if (status >= 500 && status < 600) {\n    return \"server-error\";\n  }\n}"
+      }
+    }
+  ]
+}

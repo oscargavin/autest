@@ -1,0 +1,271 @@
+{
+  "library": "tanstack-devtools",
+  "libraryId": "/tanstack/devtools",
+  "generatedAt": "2026-01-17T13:50:29.289Z",
+  "docs": [
+    {
+      "id": "event-client-basics",
+      "title": "Event Client Basics",
+      "content": "The EventClient class enables type-safe communication between your application and devtools plugins. You define an event map interface with event names prefixed by your plugin ID, then extend EventClient with your custom types. Events can carry typed payloads or be void for simple notifications.",
+      "codeExamples": [
+        "import { EventClient } from '@tanstack/devtools-event-client'\n\ninterface MyEvents {\n  'plugin:state-update': { count: number }\n  'plugin:reset': void\n}\n\nclass MyEventClient extends EventClient<MyEvents> {\n  constructor() {\n    super({ pluginId: 'plugin', debug: true })\n  }\n}\n\nexport const myClient = new MyEventClient()",
+        "myClient.emit('state-update', { count: 42 })\nmyClient.emit('reset', undefined)"
+      ]
+    },
+    {
+      "id": "event-listening",
+      "title": "Event Listening and Subscription",
+      "content": "Event clients provide subscription methods to listen for specific events or all plugin events. The `on` method subscribes to a specific event type and returns a cleanup function. The `onAllPluginEvents` method captures all events from the plugin for logging or debugging purposes.",
+      "codeExamples": [
+        "const cleanup = counterClient.on('state-update', (event) => {\n  console.log('State:', event.payload)\n})\n\n// Later: cleanup()",
+        "const cleanupAll = counterClient.onAllPluginEvents((event) => {\n  console.log(`Event: ${event.type}`)\n})\n\n// Later: cleanupAll()"
+      ]
+    },
+    {
+      "id": "server-event-bus",
+      "title": "Server Event Bus",
+      "content": "ServerEventBus manages server-side event communication via WebSocket and SSE endpoints. It can broadcast events to all connected clients and listen for client messages. The server runs on a configurable port (default 42069) and supports graceful shutdown.",
+      "codeExamples": [
+        "import { ServerEventBus } from '@tanstack/devtools-event-bus/server'\n\nconst bus = new ServerEventBus({ port: 42069, debug: true })\nbus.start()\n\nbus.on('client:message', (event) => {\n  console.log('Received:', event)\n})",
+        "bus.broadcast({\n  type: 'server:response',\n  payload: { message: 'Hello clients' }\n})\n\nprocess.on('SIGINT', () => {\n  bus.stop()\n  process.exit(0)\n})"
+      ]
+    },
+    {
+      "id": "client-event-bus",
+      "title": "Client Event Bus",
+      "content": "ClientEventBus connects to the server event bus and enables cross-tab communication. It handles connection lifecycle events and supports both sending events to the server and broadcasting to other tabs via BroadcastChannel.",
+      "codeExamples": [
+        "import { ClientEventBus } from '@tanstack/devtools-event-bus/client'\n\nconst eventBus = new ClientEventBus({\n  connectToServerBus: true,\n  debug: true,\n  port: 42069\n})\n\neventBus.start()",
+        "eventBus.on('connected', () => console.log('Connected'))\neventBus.send({ type: 'my-app:event', payload: { data: 'value' } })\neventBus.stop()"
+      ]
+    },
+    {
+      "id": "plugin-configuration",
+      "title": "Plugin Configuration",
+      "content": "Plugins are configured with an id, name, and render function. The name can be a string or function that receives the mount element. The render function receives the element and current theme to generate the plugin's UI.",
+      "codeExamples": [
+        "const plugin = {\n  id: 'my-plugin',\n  name: 'My Plugin',\n  defaultOpen: true,\n  render: (el, theme) => {\n    el.innerHTML = `<div>Plugin UI (${theme} mode)</div>`\n  }\n}",
+        "const dynamicPlugin = {\n  id: 'dynamic',\n  name: (el) => { el.innerText = 'Dynamic Name' },\n  render: (el) => { el.innerHTML = '<div>Content</div>' }\n}"
+      ]
+    },
+    {
+      "id": "react-devtools-integration",
+      "title": "React Devtools Integration",
+      "content": "TanStackDevtools component accepts a plugins array and configuration options. Each plugin specifies its panel component and optional settings like defaultOpen. Multiple TanStack library devtools can be composed together.",
+      "codeExamples": [
+        "import { TanStackDevtools } from '@tanstack/react-devtools'\n\nfunction App() {\n  return (\n    <>\n      <YourApp />\n      <TanStackDevtools plugins={[{\n        name: 'My Plugin',\n        render: <MyPanel />,\n        defaultOpen: true\n      }]} />\n    </>\n  )\n}"
+      ]
+    },
+    {
+      "id": "devtools-core",
+      "title": "Devtools Core API",
+      "content": "TanStackDevtoolsCore provides the framework-agnostic core for managing devtools instances. It supports dynamic configuration updates, mounting/unmounting to DOM elements, and integrating with the event bus system. Configuration includes position, theme, hotkeys, and behavior options.",
+      "codeExamples": [
+        "import { TanStackDevtoolsCore } from '@tanstack/devtools'\n\nconst devtools = new TanStackDevtoolsCore({\n  config: {\n    defaultOpen: false,\n    position: 'bottom-right',\n    theme: 'dark',\n    openHotkey: ['Shift', 'A']\n  },\n  plugins: [/* ... */]\n})\n\ndevtools.mount(container)",
+        "devtools.setConfig({\n  config: { theme: 'light', position: 'top-right' }\n})\n\ndevtools.unmount()"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "event-client-basics",
+      "description": "Create an EventClient class with typed event map",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet emittedEvents = [];\nclass MockEventClient {\n  constructor(config) {\n    this.config = config;\n  }\n  emit(eventName, payload) {\n    emittedEvents.push({ eventName, payload });\n  }\n}\nglobalThis.EventClient = MockEventClient;\n\ntest('EventClient class is created with correct config', () => {\n  const { EventClient } = globalThis;\n  class TestClient extends EventClient {\n    constructor() {\n      super({ pluginId: 'test-plugin', debug: true });\n    }\n  }\n  const client = new TestClient();\n  assert.strictEqual(client.config.pluginId, 'test-plugin');\n  assert.strictEqual(client.config.debug, true);\n});\n\ntest('EventClient emits events with correct structure', () => {\n  emittedEvents = [];\n  const { EventClient } = globalThis;\n  class CounterClient extends EventClient {\n    constructor() {\n      super({ pluginId: 'counter' });\n    }\n  }\n  const client = new CounterClient();\n  client.emit('state-update', { count: 5 });\n  assert.strictEqual(emittedEvents.length, 1);\n  assert.strictEqual(emittedEvents[0].eventName, 'state-update');\n  assert.strictEqual(emittedEvents[0].payload.count, 5);\n});\n\ntest('EventClient handles void events', () => {\n  emittedEvents = [];\n  const { EventClient } = globalThis;\n  class ResetClient extends EventClient {\n    constructor() {\n      super({ pluginId: 'reset' });\n    }\n  }\n  const client = new ResetClient();\n  client.emit('reset', undefined);\n  assert.strictEqual(emittedEvents.length, 1);\n  assert.strictEqual(emittedEvents[0].eventName, 'reset');\n  assert.strictEqual(emittedEvents[0].payload, undefined);\n});",
+      "solutionHint": "Extend EventClient base class and call super with config object containing pluginId"
+    },
+    {
+      "id": "task-002",
+      "docTag": "event-client-basics",
+      "description": "Implement a counter that emits state-update events",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet emittedEvents = [];\nclass MockEventClient {\n  constructor(config) { this.config = config; }\n  emit(eventName, payload) {\n    emittedEvents.push({ eventName, payload });\n  }\n}\nglobalThis.EventClient = MockEventClient;\n\ntest('Counter increments and emits event', () => {\n  emittedEvents = [];\n  const { EventClient } = globalThis;\n  class CounterClient extends EventClient {\n    constructor() { super({ pluginId: 'counter' }); }\n  }\n  const client = new CounterClient();\n  \n  function createCounter(eventClient) {\n    let count = 0;\n    return {\n      increment() {\n        count++;\n        eventClient.emit('state-update', { count, timestamp: Date.now() });\n      },\n      getCount: () => count\n    };\n  }\n  \n  const counter = createCounter(client);\n  counter.increment();\n  assert.strictEqual(counter.getCount(), 1);\n  assert.strictEqual(emittedEvents.length, 1);\n  assert.strictEqual(emittedEvents[0].payload.count, 1);\n});\n\ntest('Counter tracks history in emitted events', () => {\n  emittedEvents = [];\n  const { EventClient } = globalThis;\n  class CounterClient extends EventClient {\n    constructor() { super({ pluginId: 'counter' }); }\n  }\n  const client = new CounterClient();\n  \n  function createCounter(eventClient) {\n    let count = 0;\n    const history = [];\n    return {\n      increment() {\n        count++;\n        history.push(count);\n        eventClient.emit('state-update', { count, history: [...history] });\n      }\n    };\n  }\n  \n  const counter = createCounter(client);\n  counter.increment();\n  counter.increment();\n  assert.strictEqual(emittedEvents.length, 2);\n  assert.deepStrictEqual(emittedEvents[1].payload.history, [1, 2]);\n});",
+      "solutionHint": "Create counter object with increment method that emits state-update event with count and history"
+    },
+    {
+      "id": "task-003",
+      "docTag": "event-client-basics",
+      "description": "Create EventClient with multiple event types",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet emittedEvents = [];\nclass MockEventClient {\n  constructor(config) { this.config = config; }\n  emit(eventName, payload) {\n    emittedEvents.push({ eventName, payload });\n  }\n}\nglobalThis.EventClient = MockEventClient;\n\ntest('EventClient handles multiple event types', () => {\n  emittedEvents = [];\n  const { EventClient } = globalThis;\n  class MultiEventClient extends EventClient {\n    constructor() { super({ pluginId: 'multi' }); }\n  }\n  const client = new MultiEventClient();\n  \n  client.emit('increment', undefined);\n  client.emit('decrement', undefined);\n  client.emit('reset', undefined);\n  client.emit('state-update', { count: 0 });\n  \n  assert.strictEqual(emittedEvents.length, 4);\n  assert.strictEqual(emittedEvents[0].eventName, 'increment');\n  assert.strictEqual(emittedEvents[1].eventName, 'decrement');\n  assert.strictEqual(emittedEvents[2].eventName, 'reset');\n  assert.strictEqual(emittedEvents[3].eventName, 'state-update');\n});",
+      "solutionHint": "Emit different event types (increment, decrement, reset, state-update) from the same client"
+    },
+    {
+      "id": "task-004",
+      "docTag": "event-listening",
+      "description": "Subscribe to specific event with cleanup function",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockEventClient {\n  constructor() { this.listeners = {}; }\n  on(eventName, callback) {\n    if (!this.listeners[eventName]) this.listeners[eventName] = [];\n    this.listeners[eventName].push(callback);\n    return () => {\n      this.listeners[eventName] = this.listeners[eventName].filter(cb => cb !== callback);\n    };\n  }\n  emit(eventName, payload) {\n    if (this.listeners[eventName]) {\n      this.listeners[eventName].forEach(cb => cb({ type: eventName, payload }));\n    }\n  }\n}\n\ntest('Subscribe to event and receive updates', () => {\n  const client = new MockEventClient();\n  let received = null;\n  const cleanup = client.on('state-update', (event) => {\n    received = event.payload;\n  });\n  client.emit('state-update', { count: 10 });\n  assert.deepStrictEqual(received, { count: 10 });\n  cleanup();\n});\n\ntest('Cleanup unsubscribes from events', () => {\n  const client = new MockEventClient();\n  let callCount = 0;\n  const cleanup = client.on('test-event', () => { callCount++; });\n  client.emit('test-event', {});\n  assert.strictEqual(callCount, 1);\n  cleanup();\n  client.emit('test-event', {});\n  assert.strictEqual(callCount, 1);\n});",
+      "solutionHint": "Implement on() method that adds listener and returns cleanup function to remove it"
+    },
+    {
+      "id": "task-005",
+      "docTag": "event-listening",
+      "description": "Implement onAllPluginEvents to capture all events",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockEventClient {\n  constructor(config) {\n    this.pluginId = config.pluginId;\n    this.allEventListeners = [];\n  }\n  onAllPluginEvents(callback) {\n    this.allEventListeners.push(callback);\n    return () => {\n      this.allEventListeners = this.allEventListeners.filter(cb => cb !== callback);\n    };\n  }\n  emit(eventName, payload) {\n    const event = { type: `${this.pluginId}:${eventName}`, payload };\n    this.allEventListeners.forEach(cb => cb(event));\n  }\n}\n\ntest('onAllPluginEvents captures all event types', () => {\n  const client = new MockEventClient({ pluginId: 'test' });\n  const events = [];\n  const cleanup = client.onAllPluginEvents((event) => {\n    events.push(event);\n  });\n  \n  client.emit('increment', undefined);\n  client.emit('state-update', { count: 1 });\n  client.emit('reset', undefined);\n  \n  assert.strictEqual(events.length, 3);\n  assert.strictEqual(events[0].type, 'test:increment');\n  assert.strictEqual(events[1].type, 'test:state-update');\n  assert.strictEqual(events[2].type, 'test:reset');\n  cleanup();\n});\n\ntest('onAllPluginEvents cleanup stops receiving events', () => {\n  const client = new MockEventClient({ pluginId: 'test' });\n  const events = [];\n  const cleanup = client.onAllPluginEvents((event) => events.push(event));\n  \n  client.emit('event1', {});\n  cleanup();\n  client.emit('event2', {});\n  \n  assert.strictEqual(events.length, 1);\n});",
+      "solutionHint": "Store all event listeners in array and notify them on any emit, return cleanup function"
+    },
+    {
+      "id": "task-006",
+      "docTag": "event-listening",
+      "description": "Build event log system tracking last N events",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockEventClient {\n  constructor() { this.allEventListeners = []; }\n  onAllPluginEvents(callback) {\n    this.allEventListeners.push(callback);\n    return () => {\n      this.allEventListeners = this.allEventListeners.filter(cb => cb !== callback);\n    };\n  }\n  emit(eventName, payload) {\n    this.allEventListeners.forEach(cb => cb({ type: eventName, payload }));\n  }\n}\n\ntest('Event log keeps last N events', () => {\n  const client = new MockEventClient();\n  \n  function createEventLog(maxEvents = 5) {\n    const events = [];\n    const cleanup = client.onAllPluginEvents((event) => {\n      events.push(event);\n      if (events.length > maxEvents) {\n        events.shift();\n      }\n    });\n    return { events, cleanup };\n  }\n  \n  const log = createEventLog(3);\n  client.emit('event1', {});\n  client.emit('event2', {});\n  client.emit('event3', {});\n  client.emit('event4', {});\n  \n  assert.strictEqual(log.events.length, 3);\n  assert.strictEqual(log.events[0].type, 'event2');\n  assert.strictEqual(log.events[2].type, 'event4');\n  log.cleanup();\n});\n\ntest('Event log with timestamps', () => {\n  const client = new MockEventClient();\n  const events = [];\n  client.onAllPluginEvents((event) => {\n    events.push({ ...event, timestamp: Date.now() });\n  });\n  \n  client.emit('test', { data: 'value' });\n  assert.strictEqual(events.length, 1);\n  assert.ok(events[0].timestamp > 0);\n  assert.strictEqual(events[0].payload.data, 'value');\n});",
+      "solutionHint": "Use onAllPluginEvents and maintain array, use shift() to remove oldest when exceeding limit"
+    },
+    {
+      "id": "task-007",
+      "docTag": "server-event-bus",
+      "description": "Initialize ServerEventBus with configuration",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockServerEventBus {\n  constructor(config) {\n    this.config = config;\n    this.started = false;\n  }\n  start() { this.started = true; }\n  stop() { this.started = false; }\n}\nglobalThis.ServerEventBus = MockServerEventBus;\n\ntest('ServerEventBus initializes with config', () => {\n  const { ServerEventBus } = globalThis;\n  const bus = new ServerEventBus({ port: 42069, debug: true });\n  assert.strictEqual(bus.config.port, 42069);\n  assert.strictEqual(bus.config.debug, true);\n});\n\ntest('ServerEventBus starts and stops', () => {\n  const { ServerEventBus } = globalThis;\n  const bus = new ServerEventBus({ port: 42069 });\n  assert.strictEqual(bus.started, false);\n  bus.start();\n  assert.strictEqual(bus.started, true);\n  bus.stop();\n  assert.strictEqual(bus.started, false);\n});",
+      "solutionHint": "Create ServerEventBus instance with port and debug config, call start() method"
+    },
+    {
+      "id": "task-008",
+      "docTag": "server-event-bus",
+      "description": "Broadcast events to all connected clients",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockServerEventBus {\n  constructor() {\n    this.clients = [];\n    this.broadcasts = [];\n  }\n  addClient(id) { this.clients.push(id); }\n  broadcast(event) {\n    this.broadcasts.push(event);\n  }\n}\n\ntest('Broadcast sends event to all clients', () => {\n  const bus = new MockServerEventBus();\n  bus.addClient('client1');\n  bus.addClient('client2');\n  \n  bus.broadcast({\n    type: 'server:response',\n    payload: { message: 'Hello clients', timestamp: Date.now() }\n  });\n  \n  assert.strictEqual(bus.broadcasts.length, 1);\n  assert.strictEqual(bus.broadcasts[0].type, 'server:response');\n  assert.strictEqual(bus.broadcasts[0].payload.message, 'Hello clients');\n});\n\ntest('Multiple broadcasts are queued', () => {\n  const bus = new MockServerEventBus();\n  bus.broadcast({ type: 'event1', payload: { data: 1 } });\n  bus.broadcast({ type: 'event2', payload: { data: 2 } });\n  \n  assert.strictEqual(bus.broadcasts.length, 2);\n  assert.strictEqual(bus.broadcasts[0].payload.data, 1);\n  assert.strictEqual(bus.broadcasts[1].payload.data, 2);\n});",
+      "solutionHint": "Call broadcast() method with event object containing type and payload"
+    },
+    {
+      "id": "task-009",
+      "docTag": "server-event-bus",
+      "description": "Listen for client messages and respond",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockServerEventBus {\n  constructor() {\n    this.listeners = {};\n    this.broadcasts = [];\n  }\n  on(eventName, callback) {\n    if (!this.listeners[eventName]) this.listeners[eventName] = [];\n    this.listeners[eventName].push(callback);\n  }\n  emit(eventName, event) {\n    if (this.listeners[eventName]) {\n      this.listeners[eventName].forEach(cb => cb(event));\n    }\n  }\n  broadcast(event) { this.broadcasts.push(event); }\n}\n\ntest('Listen for client messages and broadcast response', () => {\n  const bus = new MockServerEventBus();\n  \n  bus.on('client:message', (event) => {\n    bus.broadcast({\n      type: 'server:response',\n      payload: {\n        message: 'Event received',\n        originalType: event.type\n      }\n    });\n  });\n  \n  bus.emit('client:message', { type: 'client:hello', payload: {} });\n  \n  assert.strictEqual(bus.broadcasts.length, 1);\n  assert.strictEqual(bus.broadcasts[0].type, 'server:response');\n  assert.strictEqual(bus.broadcasts[0].payload.originalType, 'client:hello');\n});",
+      "solutionHint": "Use on('client:message') to listen and broadcast response inside the handler"
+    },
+    {
+      "id": "task-010",
+      "docTag": "server-event-bus",
+      "description": "Implement graceful shutdown with cleanup",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockServerEventBus {\n  constructor() {\n    this.started = false;\n    this.cleanupHandlers = [];\n  }\n  start() { this.started = true; }\n  stop() {\n    this.started = false;\n    this.cleanupHandlers.forEach(handler => handler());\n  }\n  onShutdown(handler) { this.cleanupHandlers.push(handler); }\n}\n\nlet exitCalled = false;\nlet exitCode = null;\nglobalThis.process = {\n  on: (event, handler) => {\n    if (event === 'SIGINT') globalThis.__sigintHandler = handler;\n  },\n  exit: (code) => { exitCalled = true; exitCode = code; }\n};\n\ntest('Graceful shutdown stops bus on SIGINT', () => {\n  const bus = new MockServerEventBus();\n  bus.start();\n  \n  globalThis.process.on('SIGINT', () => {\n    bus.stop();\n    globalThis.process.exit(0);\n  });\n  \n  assert.strictEqual(bus.started, true);\n  globalThis.__sigintHandler();\n  assert.strictEqual(bus.started, false);\n  assert.strictEqual(exitCalled, true);\n  assert.strictEqual(exitCode, 0);\n});\n\ntest('Cleanup handlers run on stop', () => {\n  const bus = new MockServerEventBus();\n  let cleanupRan = false;\n  bus.onShutdown(() => { cleanupRan = true; });\n  bus.stop();\n  assert.strictEqual(cleanupRan, true);\n});",
+      "solutionHint": "Listen for process SIGINT event, call bus.stop() and process.exit(0) in handler"
+    },
+    {
+      "id": "task-011",
+      "docTag": "client-event-bus",
+      "description": "Initialize and start ClientEventBus",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockClientEventBus {\n  constructor(config) {\n    this.config = config;\n    this.started = false;\n  }\n  start() { this.started = true; }\n  stop() { this.started = false; }\n}\nglobalThis.ClientEventBus = MockClientEventBus;\n\ntest('ClientEventBus initializes with config', () => {\n  const { ClientEventBus } = globalThis;\n  const bus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: true,\n    port: 42069\n  });\n  assert.strictEqual(bus.config.connectToServerBus, true);\n  assert.strictEqual(bus.config.port, 42069);\n});\n\ntest('ClientEventBus starts and stops', () => {\n  const { ClientEventBus } = globalThis;\n  const bus = new ClientEventBus({ port: 42069 });\n  bus.start();\n  assert.strictEqual(bus.started, true);\n  bus.stop();\n  assert.strictEqual(bus.started, false);\n});",
+      "solutionHint": "Create ClientEventBus with config object including connectToServerBus and port"
+    },
+    {
+      "id": "task-012",
+      "docTag": "client-event-bus",
+      "description": "Send events to server",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockClientEventBus {\n  constructor() { this.sentEvents = []; }\n  send(event) { this.sentEvents.push(event); }\n}\n\ntest('Send custom event to server', () => {\n  const bus = new MockClientEventBus();\n  bus.send({\n    type: 'my-app:custom-event',\n    payload: {\n      userId: '123',\n      action: 'user-login',\n      timestamp: Date.now()\n    }\n  });\n  \n  assert.strictEqual(bus.sentEvents.length, 1);\n  assert.strictEqual(bus.sentEvents[0].type, 'my-app:custom-event');\n  assert.strictEqual(bus.sentEvents[0].payload.userId, '123');\n});\n\ntest('Send multiple events sequentially', () => {\n  const bus = new MockClientEventBus();\n  bus.send({ type: 'event1', payload: { data: 1 } });\n  bus.send({ type: 'event2', payload: { data: 2 } });\n  \n  assert.strictEqual(bus.sentEvents.length, 2);\n  assert.strictEqual(bus.sentEvents[1].payload.data, 2);\n});",
+      "solutionHint": "Use send() method with event object containing type and payload"
+    },
+    {
+      "id": "task-013",
+      "docTag": "client-event-bus",
+      "description": "Handle connection lifecycle events",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockClientEventBus {\n  constructor() { this.listeners = {}; }\n  on(eventName, callback) {\n    if (!this.listeners[eventName]) this.listeners[eventName] = [];\n    this.listeners[eventName].push(callback);\n  }\n  emit(eventName) {\n    if (this.listeners[eventName]) {\n      this.listeners[eventName].forEach(cb => cb());\n    }\n  }\n}\n\ntest('Listen for connection status events', () => {\n  const bus = new MockClientEventBus();\n  let connected = false;\n  let disconnected = false;\n  \n  bus.on('connected', () => { connected = true; });\n  bus.on('disconnected', () => { disconnected = true; });\n  \n  bus.emit('connected');\n  assert.strictEqual(connected, true);\n  \n  bus.emit('disconnected');\n  assert.strictEqual(disconnected, true);\n});\n\ntest('Multiple listeners for same event', () => {\n  const bus = new MockClientEventBus();\n  let count = 0;\n  bus.on('connected', () => count++);\n  bus.on('connected', () => count++);\n  bus.emit('connected');\n  assert.strictEqual(count, 2);\n});",
+      "solutionHint": "Use on() method to listen for 'connected' and 'disconnected' events"
+    },
+    {
+      "id": "task-014",
+      "docTag": "client-event-bus",
+      "description": "Implement cleanup on window unload",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockClientEventBus {\n  constructor() { this.started = false; }\n  start() { this.started = true; }\n  stop() { this.started = false; }\n}\n\nlet unloadHandler = null;\nglobalThis.window = {\n  addEventListener: (event, handler) => {\n    if (event === 'beforeunload') unloadHandler = handler;\n  }\n};\n\ntest('Cleanup bus on window unload', () => {\n  const bus = new MockClientEventBus();\n  bus.start();\n  \n  globalThis.window.addEventListener('beforeunload', () => {\n    bus.stop();\n  });\n  \n  assert.strictEqual(bus.started, true);\n  unloadHandler();\n  assert.strictEqual(bus.started, false);\n});\n\ntest('Unload handler is registered', () => {\n  globalThis.window.addEventListener('beforeunload', () => {});\n  assert.ok(unloadHandler !== null);\n});",
+      "solutionHint": "Add beforeunload event listener to window that calls bus.stop()"
+    },
+    {
+      "id": "task-015",
+      "docTag": "plugin-configuration",
+      "description": "Create plugin with basic configuration",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('Plugin has required properties', () => {\n  const plugin = {\n    id: 'my-plugin',\n    name: 'My Plugin',\n    defaultOpen: true,\n    render: (el, theme) => {\n      el.innerHTML = `<div>Plugin UI (${theme} mode)</div>`;\n    }\n  };\n  \n  assert.strictEqual(plugin.id, 'my-plugin');\n  assert.strictEqual(plugin.name, 'My Plugin');\n  assert.strictEqual(plugin.defaultOpen, true);\n  assert.strictEqual(typeof plugin.render, 'function');\n});\n\ntest('Plugin render function works', () => {\n  const plugin = {\n    id: 'test',\n    name: 'Test',\n    render: (el, theme) => {\n      el.innerHTML = `<div>${theme}</div>`;\n    }\n  };\n  \n  const mockEl = { innerHTML: '' };\n  plugin.render(mockEl, 'dark');\n  assert.strictEqual(mockEl.innerHTML, '<div>dark</div>');\n});",
+      "solutionHint": "Create object with id, name, defaultOpen, and render function properties"
+    },
+    {
+      "id": "task-016",
+      "docTag": "plugin-configuration",
+      "description": "Implement plugin with dynamic name function",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('Plugin name as function sets element text', () => {\n  const plugin = {\n    id: 'dynamic',\n    name: (el) => {\n      el.innerText = 'Dynamic Plugin Name';\n    },\n    render: (el) => {\n      el.innerHTML = '<div>Content</div>';\n    }\n  };\n  \n  const mockEl = { innerText: '' };\n  plugin.name(mockEl);\n  assert.strictEqual(mockEl.innerText, 'Dynamic Plugin Name');\n});\n\ntest('Plugin with theme-aware name', () => {\n  const plugin = {\n    id: 'theme-aware',\n    name: (el, theme) => {\n      el.innerText = `Plugin (${theme || 'light'} mode)`;\n    },\n    render: (el) => {}\n  };\n  \n  const mockEl = { innerText: '' };\n  plugin.name(mockEl, 'dark');\n  assert.strictEqual(mockEl.innerText, 'Plugin (dark mode)');\n});",
+      "solutionHint": "Set name to function that receives element and sets its innerText property"
+    },
+    {
+      "id": "task-017",
+      "docTag": "plugin-configuration",
+      "description": "Build plugin render with theme-aware styling",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('Plugin render applies theme-based styling', () => {\n  const plugin = {\n    id: 'themed',\n    name: 'Themed Plugin',\n    render: (el, theme) => {\n      const bgColor = theme === 'dark' ? '#1a1a1a' : '#ffffff';\n      const textColor = theme === 'dark' ? '#ffffff' : '#000000';\n      el.innerHTML = `\n        <div style=\"background: ${bgColor}; color: ${textColor}; padding: 20px;\">\n          <h2>Plugin Panel</h2>\n          <p>Theme: ${theme}</p>\n        </div>\n      `;\n    }\n  };\n  \n  const mockEl = { innerHTML: '' };\n  plugin.render(mockEl, 'dark');\n  assert.ok(mockEl.innerHTML.includes('#1a1a1a'));\n  assert.ok(mockEl.innerHTML.includes('Theme: dark'));\n});\n\ntest('Plugin render switches theme styles', () => {\n  const plugin = {\n    id: 'switch',\n    render: (el, theme) => {\n      const bg = theme === 'dark' ? '#1a1a1a' : '#fff';\n      el.innerHTML = `<div style=\"background: ${bg}\"></div>`;\n    }\n  };\n  \n  const mockEl = { innerHTML: '' };\n  plugin.render(mockEl, 'light');\n  assert.ok(mockEl.innerHTML.includes('#fff'));\n  plugin.render(mockEl, 'dark');\n  assert.ok(mockEl.innerHTML.includes('#1a1a1a'));\n});",
+      "solutionHint": "In render function, conditionally set background and text colors based on theme parameter"
+    },
+    {
+      "id": "task-018",
+      "docTag": "react-devtools-integration",
+      "description": "Configure TanStackDevtools with single plugin",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet renderedPlugins = [];\nglobalThis.TanStackDevtools = ({ plugins }) => {\n  renderedPlugins = plugins;\n  return null;\n};\n\ntest('TanStackDevtools receives plugins array', () => {\n  const { TanStackDevtools } = globalThis;\n  const MyPanel = { type: 'MyPanel' };\n  \n  TanStackDevtools({\n    plugins: [{\n      name: 'My Plugin',\n      render: MyPanel,\n      defaultOpen: true\n    }]\n  });\n  \n  assert.strictEqual(renderedPlugins.length, 1);\n  assert.strictEqual(renderedPlugins[0].name, 'My Plugin');\n  assert.strictEqual(renderedPlugins[0].defaultOpen, true);\n});",
+      "solutionHint": "Pass plugins array to TanStackDevtools component with name, render, and defaultOpen"
+    },
+    {
+      "id": "task-019",
+      "docTag": "react-devtools-integration",
+      "description": "Configure multiple TanStack library devtools",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet renderedPlugins = [];\nglobalThis.TanStackDevtools = ({ plugins }) => {\n  renderedPlugins = plugins;\n  return null;\n};\n\ntest('Multiple plugins are registered', () => {\n  const { TanStackDevtools } = globalThis;\n  const QueryPanel = { type: 'QueryPanel' };\n  const RouterPanel = { type: 'RouterPanel' };\n  const FormPanel = { type: 'FormPanel' };\n  \n  TanStackDevtools({\n    plugins: [\n      { name: 'TanStack Query', render: QueryPanel },\n      { name: 'TanStack Router', render: RouterPanel },\n      { name: 'TanStack Form', render: FormPanel }\n    ]\n  });\n  \n  assert.strictEqual(renderedPlugins.length, 3);\n  assert.strictEqual(renderedPlugins[0].name, 'TanStack Query');\n  assert.strictEqual(renderedPlugins[1].name, 'TanStack Router');\n  assert.strictEqual(renderedPlugins[2].name, 'TanStack Form');\n});\n\ntest('Plugins have different panel components', () => {\n  const { TanStackDevtools } = globalThis;\n  TanStackDevtools({\n    plugins: [\n      { name: 'Plugin1', render: { type: 'Panel1' } },\n      { name: 'Plugin2', render: { type: 'Panel2' } }\n    ]\n  });\n  \n  assert.notStrictEqual(renderedPlugins[0].render.type, renderedPlugins[1].render.type);\n});",
+      "solutionHint": "Pass array of multiple plugin objects, each with unique name and render component"
+    },
+    {
+      "id": "task-020",
+      "docTag": "react-devtools-integration",
+      "description": "Create custom plugin panel with React hooks",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet effectCallbacks = [];\nlet stateValues = [];\nglobalThis.useEffect = (callback, deps) => {\n  effectCallbacks.push({ callback, deps });\n  return callback;\n};\nglobalThis.useState = (initial) => {\n  const index = stateValues.length;\n  stateValues.push(initial);\n  const setState = (newValue) => { stateValues[index] = newValue; };\n  return [stateValues[index], setState];\n};\n\ntest('Plugin panel uses useEffect for subscriptions', () => {\n  effectCallbacks = [];\n  const { useEffect } = globalThis;\n  \n  function MyPanel() {\n    useEffect(() => {\n      const cleanup = () => {};\n      return cleanup;\n    }, []);\n  }\n  \n  MyPanel();\n  assert.strictEqual(effectCallbacks.length, 1);\n  assert.deepStrictEqual(effectCallbacks[0].deps, []);\n});\n\ntest('Plugin panel manages state', () => {\n  stateValues = [];\n  const { useState } = globalThis;\n  \n  function CounterPanel() {\n    const [count, setCount] = useState(0);\n    const [events, setEvents] = useState([]);\n    return { count, setCount, events, setEvents };\n  }\n  \n  const panel = CounterPanel();\n  assert.strictEqual(panel.count, 0);\n  assert.deepStrictEqual(panel.events, []);\n  panel.setCount(5);\n  assert.strictEqual(stateValues[0], 5);\n});",
+      "solutionHint": "Use useState for state and useEffect with cleanup function for event subscriptions"
+    },
+    {
+      "id": "task-021",
+      "docTag": "devtools-core",
+      "description": "Initialize TanStackDevtoolsCore with config",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockDevtoolsCore {\n  constructor(options) {\n    this.config = options.config;\n    this.plugins = options.plugins || [];\n    this.mounted = false;\n  }\n  mount(container) { this.mounted = true; this.container = container; }\n  unmount() { this.mounted = false; }\n}\nglobalThis.TanStackDevtoolsCore = MockDevtoolsCore;\n\ntest('DevtoolsCore initializes with config', () => {\n  const { TanStackDevtoolsCore } = globalThis;\n  const devtools = new TanStackDevtoolsCore({\n    config: {\n      defaultOpen: false,\n      position: 'bottom-right',\n      theme: 'dark',\n      openHotkey: ['Shift', 'A']\n    },\n    plugins: []\n  });\n  \n  assert.strictEqual(devtools.config.defaultOpen, false);\n  assert.strictEqual(devtools.config.position, 'bottom-right');\n  assert.strictEqual(devtools.config.theme, 'dark');\n  assert.deepStrictEqual(devtools.config.openHotkey, ['Shift', 'A']);\n});",
+      "solutionHint": "Create TanStackDevtoolsCore instance with config object containing defaultOpen, position, theme, openHotkey"
+    },
+    {
+      "id": "task-022",
+      "docTag": "devtools-core",
+      "description": "Mount and unmount devtools to DOM",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockDevtoolsCore {\n  constructor(options) {\n    this.config = options.config;\n    this.mounted = false;\n    this.container = null;\n  }\n  mount(container) {\n    this.mounted = true;\n    this.container = container;\n  }\n  unmount() {\n    this.mounted = false;\n    this.container = null;\n  }\n}\n\ntest('DevtoolsCore mounts to container', () => {\n  const devtools = new MockDevtoolsCore({ config: {} });\n  const container = { id: 'devtools-root' };\n  \n  devtools.mount(container);\n  assert.strictEqual(devtools.mounted, true);\n  assert.strictEqual(devtools.container.id, 'devtools-root');\n});\n\ntest('DevtoolsCore unmounts and cleans up', () => {\n  const devtools = new MockDevtoolsCore({ config: {} });\n  const container = { id: 'devtools-root' };\n  \n  devtools.mount(container);\n  devtools.unmount();\n  assert.strictEqual(devtools.mounted, false);\n  assert.strictEqual(devtools.container, null);\n});",
+      "solutionHint": "Call mount() with container element, then unmount() for cleanup"
+    },
+    {
+      "id": "task-023",
+      "docTag": "devtools-core",
+      "description": "Update devtools configuration dynamically",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockDevtoolsCore {\n  constructor(options) { this.config = options.config; }\n  setConfig(options) {\n    this.config = { ...this.config, ...options.config };\n  }\n}\n\ntest('setConfig updates configuration', () => {\n  const devtools = new MockDevtoolsCore({\n    config: { theme: 'dark', position: 'bottom-right' }\n  });\n  \n  devtools.setConfig({\n    config: { theme: 'light', position: 'top-right' }\n  });\n  \n  assert.strictEqual(devtools.config.theme, 'light');\n  assert.strictEqual(devtools.config.position, 'top-right');\n});\n\ntest('setConfig merges with existing config', () => {\n  const devtools = new MockDevtoolsCore({\n    config: { theme: 'dark', position: 'bottom-right', defaultOpen: false }\n  });\n  \n  devtools.setConfig({ config: { theme: 'light' } });\n  \n  assert.strictEqual(devtools.config.theme, 'light');\n  assert.strictEqual(devtools.config.position, 'bottom-right');\n  assert.strictEqual(devtools.config.defaultOpen, false);\n});",
+      "solutionHint": "Call setConfig() with config object to merge new values with existing configuration"
+    },
+    {
+      "id": "task-024",
+      "docTag": "devtools-core",
+      "description": "Integrate devtools with event bus system",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockDevtoolsCore {\n  constructor(options) {\n    this.config = options.config;\n    this.eventBusConfig = options.eventBusConfig;\n    this.eventBus = null;\n    if (this.eventBusConfig?.connectToServerBus) {\n      this.eventBus = {\n        connected: false,\n        connect: () => { this.eventBus.connected = true; },\n        disconnect: () => { this.eventBus.connected = false; }\n      };\n    }\n  }\n  mount(container) {\n    if (this.eventBus) this.eventBus.connect();\n  }\n  unmount() {\n    if (this.eventBus) this.eventBus.disconnect();\n  }\n}\n\ntest('Devtools connects to event bus on mount', () => {\n  const devtools = new MockDevtoolsCore({\n    config: { theme: 'dark' },\n    eventBusConfig: {\n      connectToServerBus: true,\n      debug: false\n    }\n  });\n  \n  assert.strictEqual(devtools.eventBus.connected, false);\n  devtools.mount({});\n  assert.strictEqual(devtools.eventBus.connected, true);\n});\n\ntest('Devtools disconnects event bus on unmount', () => {\n  const devtools = new MockDevtoolsCore({\n    config: {},\n    eventBusConfig: { connectToServerBus: true }\n  });\n  \n  devtools.mount({});\n  assert.strictEqual(devtools.eventBus.connected, true);\n  devtools.unmount();\n  assert.strictEqual(devtools.eventBus.connected, false);\n});\n\ntest('Devtools without event bus config', () => {\n  const devtools = new MockDevtoolsCore({\n    config: {},\n    eventBusConfig: { connectToServerBus: false }\n  });\n  \n  assert.strictEqual(devtools.eventBus, null);\n});",
+      "solutionHint": "Initialize event bus in constructor based on eventBusConfig, connect on mount, disconnect on unmount"
+    },
+    {
+      "id": "task-025",
+      "docTag": "devtools-core",
+      "description": "Register plugins with render functions",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nclass MockDevtoolsCore {\n  constructor(options) {\n    this.plugins = options.plugins || [];\n    this.renderedPlugins = [];\n  }\n  mount(container) {\n    this.plugins.forEach(plugin => {\n      const pluginEl = { innerHTML: '', textContent: '' };\n      if (typeof plugin.name === 'function') {\n        plugin.name(pluginEl, 'dark');\n      }\n      plugin.render(pluginEl, 'dark');\n      this.renderedPlugins.push({ id: plugin.id, element: pluginEl });\n    });\n  }\n}\n\ntest('Plugins are rendered on mount', () => {\n  const devtools = new MockDevtoolsCore({\n    config: {},\n    plugins: [\n      {\n        id: 'plugin1',\n        name: 'Plugin 1',\n        render: (el, theme) => {\n          el.innerHTML = `<div>Plugin 1 (${theme})</div>`;\n        }\n      },\n      {\n        id: 'plugin2',\n        name: (el) => { el.textContent = 'Plugin 2'; },\n        render: (el) => {\n          el.innerHTML = '<div>Plugin 2</div>';\n        }\n      }\n    ]\n  });\n  \n  devtools.mount({});\n  assert.strictEqual(devtools.renderedPlugins.length, 2);\n  assert.ok(devtools.renderedPlugins[0].element.innerHTML.includes('Plugin 1'));\n  assert.ok(devtools.renderedPlugins[1].element.innerHTML.includes('Plugin 2'));\n});\n\ntest('Plugin render receives theme parameter', () => {\n  const devtools = new MockDevtoolsCore({\n    config: {},\n    plugins: [{\n      id: 'themed',\n      name: 'Themed',\n      render: (el, theme) => {\n        el.innerHTML = `<div class=\"${theme}\">Content</div>`;\n      }\n    }]\n  });\n  \n  devtools.mount({});\n  assert.ok(devtools.renderedPlugins[0].element.innerHTML.includes('class=\"dark\"'));\n});",
+      "solutionHint": "Loop through plugins array on mount, call name function if applicable, then call render with element and theme"
+    }
+  ]
+}

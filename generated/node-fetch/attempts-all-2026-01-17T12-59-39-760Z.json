@@ -1,0 +1,380 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchJson(url) {\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  return await response.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchJson returns parsed JSON for successful response\nok 1 - fetchJson returns parsed JSON for successful response\n  ---\n  duration_ms: 0.662375\n  ...\n# Subtest: fetchJson throws error for non-ok response\nok 2 - fetchJson throws error for non-ok response\n  ---\n  duration_ms: 0.262833\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.695667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:56:53.472Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchJson(url) {\n  const res = await fetch(url);\n  if (!res.ok) {\n    throw new Error(`HTTP error! status: ${res.status}`);\n  }\n  return await res.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchJson returns parsed JSON for successful response\nok 1 - fetchJson returns parsed JSON for successful response\n  ---\n  duration_ms: 0.662458\n  ...\n# Subtest: fetchJson throws error for non-ok response\nok 2 - fetchJson throws error for non-ok response\n  ---\n  duration_ms: 0.270709\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.351042\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:56:57.547Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchMultiple(urls) {\n  const responses = await Promise.all(urls.map(url => fetch(url)));\n  return await Promise.all(responses.map(response => response.json()));\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchMultiple returns all results in order\nok 1 - fetchMultiple returns all results in order\n  ---\n  duration_ms: 0.713417\n  ...\n# Subtest: fetchMultiple handles empty array\nok 2 - fetchMultiple handles empty array\n  ---\n  duration_ms: 0.06725\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.323458\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:01.061Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchMultiple(urls) {\n  const promises = urls.map(url => fetch(url).then(res => res.json()));\n  return await Promise.all(promises);\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchMultiple returns all results in order\nok 1 - fetchMultiple returns all results in order\n  ---\n  duration_ms: 0.701125\n  ...\n# Subtest: fetchMultiple handles empty array\nok 2 - fetchMultiple handles empty array\n  ---\n  duration_ms: 0.064666\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.404084\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:03.774Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function fetchWithRetry(url, maxRetries) {\n  let lastError;\n  \n  for (let attempt = 0; attempt <= maxRetries; attempt++) {\n    try {\n      const response = await fetch(url);\n      \n      if (!response.ok) {\n        lastError = new Error(`HTTP error! status: ${response.status}`);\n        if (attempt < maxRetries) {\n          continue;\n        }\n        throw lastError;\n      }\n      \n      return await response.json();\n    } catch (error) {\n      lastError = error;\n      if (attempt >= maxRetries) {\n        throw error;\n      }\n    }\n  }\n}\n\nexport { fetchWithRetry };",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithRetry succeeds on first try\nok 1 - fetchWithRetry succeeds on first try\n  ---\n  duration_ms: 0.655208\n  ...\n# Subtest: fetchWithRetry retries and eventually succeeds\nok 2 - fetchWithRetry retries and eventually succeeds\n  ---\n  duration_ms: 0.136417\n  ...\n# Subtest: fetchWithRetry throws after max retries\nok 3 - fetchWithRetry throws after max retries\n  ---\n  duration_ms: 0.26425\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.327\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:07.742Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchWithRetry(url, maxRetries) {\n  let lastError;\n  \n  for (let attempt = 0; attempt <= maxRetries; attempt++) {\n    try {\n      const res = await fetch(url);\n      if (res.ok) {\n        return await res.json();\n      }\n      lastError = new Error(`HTTP error! status: ${res.status}`);\n    } catch (error) {\n      lastError = error;\n    }\n  }\n  \n  throw lastError;\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithRetry succeeds on first try\nok 1 - fetchWithRetry succeeds on first try\n  ---\n  duration_ms: 0.678\n  ...\n# Subtest: fetchWithRetry retries and eventually succeeds\nok 2 - fetchWithRetry retries and eventually succeeds\n  ---\n  duration_ms: 0.137625\n  ...\n# Subtest: fetchWithRetry throws after max retries\nok 3 - fetchWithRetry throws after max retries\n  ---\n  duration_ms: 0.289667\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.740209\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:11.602Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function postJson(url, data) {\n  const response = await fetch(url, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify(data),\n  });\n  return await response.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: postJson sends POST request with correct headers\nok 1 - postJson sends POST request with correct headers\n  ---\n  duration_ms: 0.403292\n  ...\n# Subtest: postJson stringifies the body\nok 2 - postJson stringifies the body\n  ---\n  duration_ms: 0.122083\n  ...\n# Subtest: postJson returns response data\nok 3 - postJson returns response data\n  ---\n  duration_ms: 0.323292\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.265625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:14.902Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function postJson(url, data) {\n  const res = await fetch(url, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data)\n  });\n  return await res.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: postJson sends POST request with correct headers\nok 1 - postJson sends POST request with correct headers\n  ---\n  duration_ms: 0.436542\n  ...\n# Subtest: postJson stringifies the body\nok 2 - postJson stringifies the body\n  ---\n  duration_ms: 0.128417\n  ...\n# Subtest: postJson returns response data\nok 3 - postJson returns response data\n  ---\n  duration_ms: 0.330958\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.61425\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:18.236Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function putJson(url, data) {\n  const response = await fetch(url, {\n    method: 'PUT',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify(data),\n  });\n  \n  return await response.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: putJson sends PUT request\nok 1 - putJson sends PUT request\n  ---\n  duration_ms: 0.401833\n  ...\n# Subtest: putJson sets correct Content-Type\nok 2 - putJson sets correct Content-Type\n  ---\n  duration_ms: 0.118916\n  ...\n# Subtest: putJson returns response data\nok 3 - putJson returns response data\n  ---\n  duration_ms: 0.3345\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.11025\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:21.680Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function putJson(url, data) {\n  const res = await fetch(url, {\n    method: 'PUT',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify(data)\n  });\n  return await res.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: putJson sends PUT request\nok 1 - putJson sends PUT request\n  ---\n  duration_ms: 0.390334\n  ...\n# Subtest: putJson sets correct Content-Type\nok 2 - putJson sets correct Content-Type\n  ---\n  duration_ms: 0.123625\n  ...\n# Subtest: putJson returns response data\nok 3 - putJson returns response data\n  ---\n  duration_ms: 0.315542\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.960666\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:25.468Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function deleteResource(url) {\n  try {\n    const response = await fetch(url, { method: 'DELETE' });\n    return response.ok;\n  } catch {\n    return false;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: deleteResource sends DELETE request\nok 1 - deleteResource sends DELETE request\n  ---\n  duration_ms: 0.422708\n  ...\n# Subtest: deleteResource returns true on success\nok 2 - deleteResource returns true on success\n  ---\n  duration_ms: 0.122209\n  ...\n# Subtest: deleteResource returns false on failure\nok 3 - deleteResource returns false on failure\n  ---\n  duration_ms: 0.057583\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.718\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:28.560Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function deleteResource(url) {\n  const res = await fetch(url, {\n    method: 'DELETE'\n  });\n  return res.ok;\n}",
+    "testOutput": "TAP version 13\n# Subtest: deleteResource sends DELETE request\nok 1 - deleteResource sends DELETE request\n  ---\n  duration_ms: 0.375917\n  ...\n# Subtest: deleteResource returns true on success\nok 2 - deleteResource returns true on success\n  ---\n  duration_ms: 0.115792\n  ...\n# Subtest: deleteResource returns false on failure\nok 3 - deleteResource returns false on failure\n  ---\n  duration_ms: 0.053833\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.025917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:31.062Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function getContentType(url) {\n  const response = await fetch(url);\n  return response.headers.get('content-type');\n}",
+    "testOutput": "TAP version 13\n# Subtest: getContentType returns content-type header\nok 1 - getContentType returns content-type header\n  ---\n  duration_ms: 0.397625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.085166\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:34.236Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function getContentType(url) {\n  const res = await fetch(url);\n  return res.headers.get('content-type');\n}\n\nexport { getContentType };",
+    "testOutput": "TAP version 13\n# Subtest: getContentType returns content-type header\nok 1 - getContentType returns content-type header\n  ---\n  duration_ms: 0.4095\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.432708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:37.529Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchWithAuth(url, token) {\n  const response = await fetch(url, {\n    headers: {\n      'Authorization': `Bearer ${token}`\n    }\n  });\n  return await response.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithAuth sends Authorization header\nok 1 - fetchWithAuth sends Authorization header\n  ---\n  duration_ms: 0.423709\n  ...\n# Subtest: fetchWithAuth returns JSON data\nok 2 - fetchWithAuth returns JSON data\n  ---\n  duration_ms: 0.321083\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.457542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:41.637Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchWithAuth(url, token) {\n  const res = await fetch(url, {\n    headers: { 'Authorization': `Bearer ${token}` }\n  });\n  return await res.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithAuth sends Authorization header\nok 1 - fetchWithAuth sends Authorization header\n  ---\n  duration_ms: 0.41575\n  ...\n# Subtest: fetchWithAuth returns JSON data\nok 2 - fetchWithAuth returns JSON data\n  ---\n  duration_ms: 0.319583\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.78325\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:57:44.949Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function getResponseHeaders(url) {\n  const response = await fetch(url);\n  const headers = {};\n  response.headers.forEach((value, key) => {\n    headers[key] = value;\n  });\n  return headers;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getResponseHeaders returns all headers as object\nnot ok 1 - getResponseHeaders returns all headers as object\n  ---\n  duration_ms: 0.431\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654674382.mjs:24:1'\n  failureType: 'testCodeFailure'\n  error: 'response.headers.forEach is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    getResponseHeaders (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654674382.mjs:4:20)\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654674382.mjs:25:18)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.852167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T12:57:54.472Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function getResponseHeaders(url) {\n  const res = await fetch(url);\n  const headers = {};\n  for (const [key, value] of res.headers) {\n    headers[key] = value;\n  }\n  return headers;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getResponseHeaders returns all headers as object\nnot ok 1 - getResponseHeaders returns all headers as object\n  ---\n  duration_ms: 0.46525\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654678716.mjs:24:1'\n  failureType: 'testCodeFailure'\n  error: 'res.headers is not iterable'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    getResponseHeaders (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654678716.mjs:4:34)\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654678716.mjs:25:18)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.686792\n",
+    "passed": false,
+    "timestamp": "2026-01-17T12:57:58.805Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 2,
+    "code": "async function getResponseHeaders(url) {\n  const res = await fetch(url);\n  const headers = {};\n  res.headers.forEach((value, key) => {\n    headers[key] = value;\n  });\n  return headers;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getResponseHeaders returns all headers as object\nnot ok 1 - getResponseHeaders returns all headers as object\n  ---\n  duration_ms: 0.433709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654682581.mjs:24:1'\n  failureType: 'testCodeFailure'\n  error: 'res.headers.forEach is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    getResponseHeaders (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654682581.mjs:4:15)\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654682581.mjs:25:18)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.166167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T12:58:02.668Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 3,
+    "code": "async function getResponseHeaders(url) {\n  const res = await fetch(url);\n  const headers = {};\n  res.headers.forEach((value, key) => {\n    headers[key] = value;\n  });\n  return headers;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getResponseHeaders returns all headers as object\nnot ok 1 - getResponseHeaders returns all headers as object\n  ---\n  duration_ms: 0.450417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654687580.mjs:24:1'\n  failureType: 'testCodeFailure'\n  error: 'res.headers.forEach is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    getResponseHeaders (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654687580.mjs:4:15)\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768654687580.mjs:25:18)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.014\n",
+    "passed": false,
+    "timestamp": "2026-01-17T12:58:07.675Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function checkStatus(url) {\n  const response = await fetch(url);\n  return {\n    status: response.status,\n    ok: response.ok,\n    message: response.statusText\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: checkStatus returns correct info for 200\nok 1 - checkStatus returns correct info for 200\n  ---\n  duration_ms: 0.406833\n  ...\n# Subtest: checkStatus returns correct info for 404\nok 2 - checkStatus returns correct info for 404\n  ---\n  duration_ms: 0.067416\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.032\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:11.168Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function checkStatus(url) {\n  const res = await fetch(url);\n  return {\n    status: res.status,\n    ok: res.ok,\n    message: res.statusText\n  };\n}\n\nexport { checkStatus };",
+    "testOutput": "TAP version 13\n# Subtest: checkStatus returns correct info for 200\nok 1 - checkStatus returns correct info for 200\n  ---\n  duration_ms: 0.4125\n  ...\n# Subtest: checkStatus returns correct info for 404\nok 2 - checkStatus returns correct info for 404\n  ---\n  duration_ms: 0.069917\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.134833\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:23.549Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function getFinalUrl(url) {\n  const response = await fetch(url);\n  return response.url;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getFinalUrl returns same URL when no redirect\nok 1 - getFinalUrl returns same URL when no redirect\n  ---\n  duration_ms: 0.415459\n  ...\n# Subtest: getFinalUrl returns final URL after redirect\nok 2 - getFinalUrl returns final URL after redirect\n  ---\n  duration_ms: 0.065708\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.903458\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:26.366Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function getFinalUrl(url) {\n  const res = await fetch(url);\n  return res.url;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getFinalUrl returns same URL when no redirect\nok 1 - getFinalUrl returns same URL when no redirect\n  ---\n  duration_ms: 0.4095\n  ...\n# Subtest: getFinalUrl returns final URL after redirect\nok 2 - getFinalUrl returns final URL after redirect\n  ---\n  duration_ms: 0.065458\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.537\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:28.803Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchWithTimeout(url, timeoutMs) {\n  const controller = new AbortController();\n  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);\n  \n  try {\n    const response = await fetch(url, { signal: controller.signal });\n    const data = await response.json();\n    clearTimeout(timeoutId);\n    return data;\n  } catch (error) {\n    clearTimeout(timeoutId);\n    if (error.name === 'AbortError') {\n      throw new Error('Request timeout');\n    }\n    throw error;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithTimeout returns data for fast response\nok 1 - fetchWithTimeout returns data for fast response\n  ---\n  duration_ms: 0.713\n  ...\n# Subtest: fetchWithTimeout throws on timeout\nok 2 - fetchWithTimeout throws on timeout\n  ---\n  duration_ms: 101.433416\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 146.793458\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:33.189Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function fetchWithTimeout(url, timeoutMs) {\n  const controller = new AbortController();\n  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);\n\n  try {\n    const res = await fetch(url, { signal: controller.signal });\n    const data = await res.json();\n    clearTimeout(timeoutId);\n    return data;\n  } catch (err) {\n    clearTimeout(timeoutId);\n    if (err.name === 'AbortError') {\n      throw new Error('Request timeout');\n    }\n    throw err;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithTimeout returns data for fast response\nok 1 - fetchWithTimeout returns data for fast response\n  ---\n  duration_ms: 0.787833\n  ...\n# Subtest: fetchWithTimeout throws on timeout\nok 2 - fetchWithTimeout throws on timeout\n  ---\n  duration_ms: 101.89\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 147.460208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:36.910Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createCancellableFetch(url) {\n  const controller = new AbortController();\n  \n  const promise = fetch(url, { signal: controller.signal })\n    .then(response => response.json());\n  \n  const cancel = () => controller.abort();\n  \n  return { promise, cancel };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createCancellableFetch returns promise that resolves\nok 1 - createCancellableFetch returns promise that resolves\n  ---\n  duration_ms: 51.542333\n  ...\n# Subtest: createCancellableFetch cancel aborts the request\nok 2 - createCancellableFetch cancel aborts the request\n  ---\n  duration_ms: 51.409625\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 148.354416\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:40.384Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "function createCancellableFetch(url) {\n  const controller = new AbortController();\n  \n  const promise = fetch(url, { signal: controller.signal })\n    .then(res => res.json());\n  \n  const cancel = () => controller.abort();\n  \n  return { promise, cancel };\n}\n\nexport { createCancellableFetch };",
+    "testOutput": "TAP version 13\n# Subtest: createCancellableFetch returns promise that resolves\nok 1 - createCancellableFetch returns promise that resolves\n  ---\n  duration_ms: 51.625417\n  ...\n# Subtest: createCancellableFetch cancel aborts the request\nok 2 - createCancellableFetch cancel aborts the request\n  ---\n  duration_ms: 51.330834\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 147.930417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:45.542Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function raceRequests(urls) {\n  const controller = new AbortController();\n  \n  const fetchPromises = urls.map(url =>\n    fetch(url, { signal: controller.signal })\n      .then(response => response.json())\n  );\n  \n  try {\n    const result = await Promise.race(fetchPromises);\n    controller.abort();\n    return result;\n  } catch (error) {\n    controller.abort();\n    throw error;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: raceRequests returns fastest response\nok 1 - raceRequests returns fastest response\n  ---\n  duration_ms: 12.049292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 146.7765\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:49.745Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function raceRequests(urls) {\n  const controllers = urls.map(() => new AbortController());\n  \n  try {\n    const promise = Promise.race(\n      urls.map((url, index) =>\n        fetch(url, { signal: controllers[index].signal })\n          .then(res => res.json())\n          .then(data => ({ index, data }))\n      )\n    );\n    \n    const result = await promise;\n    \n    // Cancel all other requests\n    controllers.forEach((controller, index) => {\n      if (index !== result.index) {\n        controller.abort();\n      }\n    });\n    \n    return result.data;\n  } catch (err) {\n    // Cancel all requests on error\n    controllers.forEach(controller => controller.abort());\n    throw err;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: raceRequests returns fastest response\nok 1 - raceRequests returns fastest response\n  ---\n  duration_ms: 11.970375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 145.635583\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:54.878Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchText(url) {\n  const response = await fetch(url);\n  return await response.text();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchText returns text content\nok 1 - fetchText returns text content\n  ---\n  duration_ms: 0.410125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.721125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:58:57.754Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchText(url) {\n  const res = await fetch(url);\n  return await res.text();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchText returns text content\nok 1 - fetchText returns text content\n  ---\n  duration_ms: 0.420792\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.154125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:00.596Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchBlob(url) {\n  const response = await fetch(url);\n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  return await response.blob();\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchBlob returns blob\nok 1 - fetchBlob returns blob\n  ---\n  duration_ms: 0.418625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.133625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:04.562Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchBlob(url) {\n  const res = await fetch(url);\n  const blob = await res.blob();\n  return blob;\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchBlob returns blob\nok 1 - fetchBlob returns blob\n  ---\n  duration_ms: 0.425667\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.053041\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:08.307Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchAsType(url, type) {\n  const response = await fetch(url);\n  \n  if (type === 'json') {\n    return await response.json();\n  } else if (type === 'text') {\n    return await response.text();\n  } else if (type === 'blob') {\n    return await response.blob();\n  }\n  \n  throw new Error(`Unsupported type: ${type}`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchAsType returns json when type is json\nok 1 - fetchAsType returns json when type is json\n  ---\n  duration_ms: 0.681584\n  ...\n# Subtest: fetchAsType returns text when type is text\nok 2 - fetchAsType returns text when type is text\n  ---\n  duration_ms: 0.149916\n  ...\n# Subtest: fetchAsType returns blob when type is blob\nok 3 - fetchAsType returns blob when type is blob\n  ---\n  duration_ms: 0.065209\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.607875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:12.400Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchAsType(url, type) {\n  const res = await fetch(url);\n  \n  if (type === 'json') {\n    return await res.json();\n  } else if (type === 'text') {\n    return await res.text();\n  } else if (type === 'blob') {\n    return await res.blob();\n  }\n}\n\nexport { fetchAsType };",
+    "testOutput": "TAP version 13\n# Subtest: fetchAsType returns json when type is json\nok 1 - fetchAsType returns json when type is json\n  ---\n  duration_ms: 0.653334\n  ...\n# Subtest: fetchAsType returns text when type is text\nok 2 - fetchAsType returns text when type is text\n  ---\n  duration_ms: 0.137583\n  ...\n# Subtest: fetchAsType returns blob when type is blob\nok 3 - fetchAsType returns blob when type is blob\n  ---\n  duration_ms: 0.069833\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.959542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:16.322Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchFirstSuccess(urls) {\n  let lastError;\n  \n  for (const url of urls) {\n    try {\n      const response = await fetch(url);\n      if (response.ok) {\n        return await response.json();\n      }\n      lastError = new Error(`Request failed with status ${response.status}`);\n    } catch (error) {\n      lastError = error;\n    }\n  }\n  \n  throw lastError || new Error('All requests failed');\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchFirstSuccess returns first successful response\nok 1 - fetchFirstSuccess returns first successful response\n  ---\n  duration_ms: 0.455959\n  ...\n# Subtest: fetchFirstSuccess throws when all fail\nok 2 - fetchFirstSuccess throws when all fail\n  ---\n  duration_ms: 0.262833\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.291208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:20.551Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchFirstSuccess(urls) {\n  for (const url of urls) {\n    const res = await fetch(url);\n    if (res.ok) {\n      return await res.json();\n    }\n  }\n  throw new Error('All requests failed');\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchFirstSuccess returns first successful response\nok 1 - fetchFirstSuccess returns first successful response\n  ---\n  duration_ms: 0.435833\n  ...\n# Subtest: fetchFirstSuccess throws when all fail\nok 2 - fetchFirstSuccess throws when all fail\n  ---\n  duration_ms: 0.267542\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.380084\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:24.818Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function fetchWithCustomHeaders(url, headers) {\n  const defaultHeaders = { \"Accept\": \"application/json\" };\n  const mergedHeaders = { ...defaultHeaders, ...headers };\n  \n  const response = await fetch(url, {\n    headers: mergedHeaders\n  });\n  \n  return response;\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithCustomHeaders includes default Accept header\nok 1 - fetchWithCustomHeaders includes default Accept header\n  ---\n  duration_ms: 0.373875\n  ...\n# Subtest: fetchWithCustomHeaders merges custom headers\nok 2 - fetchWithCustomHeaders merges custom headers\n  ---\n  duration_ms: 0.121625\n  ...\n# Subtest: fetchWithCustomHeaders allows overriding defaults\nok 3 - fetchWithCustomHeaders allows overriding defaults\n  ---\n  duration_ms: 0.055\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.304583\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:28.117Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function fetchWithCustomHeaders(url, headers) {\n  const mergedHeaders = {\n    \"Accept\": \"application/json\",\n    ...headers\n  };\n  \n  return await fetch(url, {\n    headers: mergedHeaders\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: fetchWithCustomHeaders includes default Accept header\nok 1 - fetchWithCustomHeaders includes default Accept header\n  ---\n  duration_ms: 0.371166\n  ...\n# Subtest: fetchWithCustomHeaders merges custom headers\nok 2 - fetchWithCustomHeaders merges custom headers\n  ---\n  duration_ms: 0.1175\n  ...\n# Subtest: fetchWithCustomHeaders allows overriding defaults\nok 3 - fetchWithCustomHeaders allows overriding defaults\n  ---\n  duration_ms: 0.05625\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.087666\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:31.613Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function categorizeResponse(url) {\n  const response = await fetch(url);\n  const status = response.status;\n  \n  if (status >= 200 && status < 300) {\n    return \"success\";\n  } else if (status >= 300 && status < 400) {\n    return \"redirect\";\n  } else if (status >= 400 && status < 500) {\n    return \"client-error\";\n  } else if (status >= 500 && status < 600) {\n    return \"server-error\";\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: categorizeResponse returns success for 200\nok 1 - categorizeResponse returns success for 200\n  ---\n  duration_ms: 0.386458\n  ...\n# Subtest: categorizeResponse returns redirect for 301\nok 2 - categorizeResponse returns redirect for 301\n  ---\n  duration_ms: 0.062666\n  ...\n# Subtest: categorizeResponse returns client-error for 404\nok 3 - categorizeResponse returns client-error for 404\n  ---\n  duration_ms: 0.056375\n  ...\n# Subtest: categorizeResponse returns server-error for 500\nok 4 - categorizeResponse returns server-error for 500\n  ---\n  duration_ms: 0.093209\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.188708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:35.709Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "async function categorizeResponse(url) {\n  const res = await fetch(url);\n  const status = res.status;\n  \n  if (status >= 200 && status < 300) {\n    return \"success\";\n  } else if (status >= 300 && status < 400) {\n    return \"redirect\";\n  } else if (status >= 400 && status < 500) {\n    return \"client-error\";\n  } else if (status >= 500 && status < 600) {\n    return \"server-error\";\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: categorizeResponse returns success for 200\nok 1 - categorizeResponse returns success for 200\n  ---\n  duration_ms: 0.404042\n  ...\n# Subtest: categorizeResponse returns redirect for 301\nok 2 - categorizeResponse returns redirect for 301\n  ---\n  duration_ms: 0.063458\n  ...\n# Subtest: categorizeResponse returns client-error for 404\nok 3 - categorizeResponse returns client-error for 404\n  ---\n  duration_ms: 0.057583\n  ...\n# Subtest: categorizeResponse returns server-error for 500\nok 4 - categorizeResponse returns server-error for 500\n  ---\n  duration_ms: 0.098542\n  ...\n1..4\n# tests 4\n# suites 0\n# pass 4\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.205083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T12:59:39.760Z"
+  }
+]

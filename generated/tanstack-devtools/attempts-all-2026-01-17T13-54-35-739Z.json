@@ -1,0 +1,452 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export class EventClient {\n  constructor() {\n    this.listeners = new Map();\n  }\n\n  on(event, callback) {\n    if (!this.listeners.has(event)) {\n      this.listeners.set(event, new Set());\n    }\n    this.listeners.get(event).add(callback);\n    \n    return () => {\n      const callbacks = this.listeners.get(event);\n      if (callbacks) {\n        callbacks.delete(callback);\n        if (callbacks.size === 0) {\n          this.listeners.delete(event);\n        }\n      }\n    };\n  }\n\n  emit(event, data) {\n    const callbacks = this.listeners.get(event);\n    if (callbacks) {\n      callbacks.forEach(callback => callback(data));\n    }\n  }\n\n  off(event, callback) {\n    if (!callback) {\n      this.listeners.delete(event);\n    } else {\n      const callbacks = this.listeners.get(event);\n      if (callbacks) {\n        callbacks.delete(callback);\n        if (callbacks.size === 0) {\n          this.listeners.delete(event);\n        }\n      }\n    }\n  }\n\n  once(event, callback) {\n    const wrapper = (data) => {\n      callback(data);\n      this.off(event, wrapper);\n    };\n    return this.on(event, wrapper);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: EventClient class is created with correct config\nok 1 - EventClient class is created with correct config\n  ---\n  duration_ms: 0.368083\n  ...\n# Subtest: EventClient emits events with correct structure\nok 2 - EventClient emits events with correct structure\n  ---\n  duration_ms: 0.131334\n  ...\n# Subtest: EventClient handles void events\nok 3 - EventClient handles void events\n  ---\n  duration_ms: 0.063166\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.318875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:50:46.992Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createEventClient(pluginId, eventMap) {\n  class TypedEventClient extends EventClient {\n    constructor() {\n      super({ pluginId, debug: false })\n    }\n  }\n  \n  return new TypedEventClient()\n}",
+    "testOutput": "TAP version 13\n# Subtest: EventClient class is created with correct config\nok 1 - EventClient class is created with correct config\n  ---\n  duration_ms: 0.37425\n  ...\n# Subtest: EventClient emits events with correct structure\nok 2 - EventClient emits events with correct structure\n  ---\n  duration_ms: 0.132\n  ...\n# Subtest: EventClient handles void events\nok 3 - EventClient handles void events\n  ---\n  duration_ms: 0.065042\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.417917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:50:50.613Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { EventEmitter } from 'events';\n\nexport function createCounter(initialValue = 0) {\n  const emitter = new EventEmitter();\n  let count = initialValue;\n\n  return {\n    increment() {\n      count++;\n      emitter.emit('update', count);\n      return count;\n    },\n    decrement() {\n      count--;\n      emitter.emit('update', count);\n      return count;\n    },\n    getValue() {\n      return count;\n    },\n    on(event, listener) {\n      emitter.on(event, listener);\n    },\n    off(event, listener) {\n      emitter.off(event, listener);\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Counter increments and emits event\nok 1 - Counter increments and emits event\n  ---\n  duration_ms: 0.439292\n  ...\n# Subtest: Counter tracks history in emitted events\nok 2 - Counter tracks history in emitted events\n  ---\n  duration_ms: 0.341541\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.145417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:50:55.514Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createCounter() {\n  class CounterEvents extends EventClient {\n    constructor() {\n      super({ pluginId: 'counter', debug: false })\n    }\n  }\n\n  const client = new CounterEvents()\n  let count = 0\n\n  return {\n    increment() {\n      count++\n      client.emit('state-update', { count })\n    },\n    decrement() {\n      count--\n      client.emit('state-update', { count })\n    },\n    reset() {\n      count = 0\n      client.emit('state-update', { count })\n    },\n    getCount() {\n      return count\n    },\n    on(event, handler) {\n      return client.on(event, handler)\n    }\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: Counter increments and emits event\nok 1 - Counter increments and emits event\n  ---\n  duration_ms: 0.47325\n  ...\n# Subtest: Counter tracks history in emitted events\nok 2 - Counter tracks history in emitted events\n  ---\n  duration_ms: 0.3525\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.5845\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:00.198Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export class EventClient {\n  constructor() {\n    this.listeners = new Map();\n  }\n\n  on(eventType, callback) {\n    if (!this.listeners.has(eventType)) {\n      this.listeners.set(eventType, []);\n    }\n    this.listeners.get(eventType).push(callback);\n  }\n\n  off(eventType, callback) {\n    if (!this.listeners.has(eventType)) {\n      return;\n    }\n    const callbacks = this.listeners.get(eventType);\n    const index = callbacks.indexOf(callback);\n    if (index !== -1) {\n      callbacks.splice(index, 1);\n    }\n  }\n\n  emit(eventType, ...args) {\n    if (!this.listeners.has(eventType)) {\n      return;\n    }\n    const callbacks = this.listeners.get(eventType);\n    for (const callback of callbacks) {\n      callback(...args);\n    }\n  }\n\n  once(eventType, callback) {\n    const onceCallback = (...args) => {\n      callback(...args);\n      this.off(eventType, onceCallback);\n    };\n    this.on(eventType, onceCallback);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: EventClient handles multiple event types\nok 1 - EventClient handles multiple event types\n  ---\n  duration_ms: 0.37\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.405708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:05.400Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createEventClient() {\n  class MyEventClient extends EventClient {\n    constructor() {\n      super({ pluginId: 'my-plugin', debug: false })\n    }\n  }\n  \n  return new MyEventClient()\n}",
+    "testOutput": "TAP version 13\n# Subtest: EventClient handles multiple event types\nok 1 - EventClient handles multiple event types\n  ---\n  duration_ms: 0.37425\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.390792\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:08.863Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function subscribe(eventEmitter, eventName, callback) {\n  eventEmitter.on(eventName, callback);\n  \n  return () => {\n    eventEmitter.off(eventName, callback);\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Subscribe to event and receive updates\nok 1 - Subscribe to event and receive updates\n  ---\n  duration_ms: 0.671667\n  ...\n# Subtest: Cleanup unsubscribes from events\nok 2 - Cleanup unsubscribes from events\n  ---\n  duration_ms: 0.081875\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.824083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:12.298Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function subscribeToEvent(eventClient, eventType, callback) {\n  return eventClient.on(eventType, callback)\n}",
+    "testOutput": "TAP version 13\n# Subtest: Subscribe to event and receive updates\nok 1 - Subscribe to event and receive updates\n  ---\n  duration_ms: 0.76325\n  ...\n# Subtest: Cleanup unsubscribes from events\nok 2 - Cleanup unsubscribes from events\n  ---\n  duration_ms: 0.086583\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.436666\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:16.037Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function onAllPluginEvents(plugin, callback) {\n  const events = new Map();\n  \n  const originalEmit = plugin.emit;\n  plugin.emit = function(eventName, ...args) {\n    if (!events.has(eventName)) {\n      events.set(eventName, []);\n    }\n    events.get(eventName).push(args);\n    callback(eventName, ...args);\n    return originalEmit.call(this, eventName, ...args);\n  };\n  \n  return () => {\n    plugin.emit = originalEmit;\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: onAllPluginEvents captures all event types\nok 1 - onAllPluginEvents captures all event types\n  ---\n  duration_ms: 0.438584\n  ...\n# Subtest: onAllPluginEvents cleanup stops receiving events\nok 2 - onAllPluginEvents cleanup stops receiving events\n  ---\n  duration_ms: 0.071167\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.659208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:21.660Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function onAllPluginEvents(callback) {\n  const events = ['state-update', 'error', 'initialized', 'reset'];\n  const cleanups = [];\n\n  for (const eventType of events) {\n    const cleanup = this.on(eventType, callback);\n    cleanups.push(cleanup);\n  }\n\n  return () => {\n    for (const cleanup of cleanups) {\n      cleanup();\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: onAllPluginEvents captures all event types\nok 1 - onAllPluginEvents captures all event types\n  ---\n  duration_ms: 0.439041\n  ...\n# Subtest: onAllPluginEvents cleanup stops receiving events\nok 2 - onAllPluginEvents cleanup stops receiving events\n  ---\n  duration_ms: 0.071458\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.811958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:25.918Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export class EventLog {\n  constructor(maxSize) {\n    this.maxSize = maxSize;\n    this.events = [];\n  }\n\n  add(event) {\n    this.events.push(event);\n    if (this.events.length > this.maxSize) {\n      this.events.shift();\n    }\n  }\n\n  getEvents() {\n    return [...this.events];\n  }\n\n  clear() {\n    this.events = [];\n  }\n\n  size() {\n    return this.events.length;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: Event log keeps last N events\nok 1 - Event log keeps last N events\n  ---\n  duration_ms: 0.449167\n  ...\n# Subtest: Event log with timestamps\nok 2 - Event log with timestamps\n  ---\n  duration_ms: 0.101375\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.251208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:31.460Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createEventLog(maxEvents) {\n  const events = [];\n  \n  return {\n    log(event) {\n      events.push(event);\n      if (events.length > maxEvents) {\n        events.shift();\n      }\n    },\n    \n    getEvents() {\n      return [...events];\n    },\n    \n    clear() {\n      events.length = 0;\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Event log keeps last N events\nok 1 - Event log keeps last N events\n  ---\n  duration_ms: 0.460916\n  ...\n# Subtest: Event log with timestamps\nok 2 - Event log with timestamps\n  ---\n  duration_ms: 0.1035\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.004834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:36.366Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function initializeServerEventBus(config = {}) {\n  const eventBus = {\n    events: new Map(),\n    config: {\n      maxListeners: config.maxListeners || 10,\n      async: config.async !== false,\n      ...config\n    },\n    \n    on(event, handler) {\n      if (!this.events.has(event)) {\n        this.events.set(event, []);\n      }\n      const handlers = this.events.get(event);\n      if (handlers.length >= this.config.maxListeners) {\n        throw new Error(`Max listeners (${this.config.maxListeners}) exceeded for event: ${event}`);\n      }\n      handlers.push(handler);\n      return this;\n    },\n    \n    off(event, handler) {\n      if (!this.events.has(event)) return this;\n      const handlers = this.events.get(event);\n      const index = handlers.indexOf(handler);\n      if (index > -1) {\n        handlers.splice(index, 1);\n      }\n      return this;\n    },\n    \n    async emit(event, ...args) {\n      if (!this.events.has(event)) return this;\n      const handlers = this.events.get(event);\n      \n      if (this.config.async) {\n        await Promise.all(handlers.map(handler => handler(...args)));\n      } else {\n        for (const handler of handlers) {\n          await handler(...args);\n        }\n      }\n      return this;\n    },\n    \n    once(event, handler) {\n      const onceHandler = (...args) => {\n        this.off(event, onceHandler);\n        return handler(...args);\n      };\n      return this.on(event, onceHandler);\n    },\n    \n    removeAllListeners(event) {\n      if (event) {\n        this.events.delete(event);\n      } else {\n        this.events.clear();\n      }\n      return this;\n    }\n  };\n  \n  return eventBus;\n}",
+    "testOutput": "TAP version 13\n# Subtest: ServerEventBus initializes with config\nok 1 - ServerEventBus initializes with config\n  ---\n  duration_ms: 0.410708\n  ...\n# Subtest: ServerEventBus starts and stops\nok 2 - ServerEventBus starts and stops\n  ---\n  duration_ms: 0.072541\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.343917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:44.703Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initializeServerEventBus(config) {\n  const bus = new ServerEventBus(config);\n  bus.start();\n  return bus;\n}",
+    "testOutput": "TAP version 13\n# Subtest: ServerEventBus initializes with config\nok 1 - ServerEventBus initializes with config\n  ---\n  duration_ms: 0.396833\n  ...\n# Subtest: ServerEventBus starts and stops\nok 2 - ServerEventBus starts and stops\n  ---\n  duration_ms: 0.07325\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.835625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:48.319Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { EventEmitter } from 'events';\n\nconst eventEmitter = new EventEmitter();\nconst clients = new Set();\n\nexport function addClient(client) {\n  clients.add(client);\n}\n\nexport function removeClient(client) {\n  clients.delete(client);\n}\n\nexport function broadcast(event, data) {\n  clients.forEach(client => {\n    if (typeof client.emit === 'function') {\n      client.emit(event, data);\n    } else if (typeof client.send === 'function') {\n      client.send(JSON.stringify({ event, data }));\n    } else if (typeof client === 'function') {\n      client(event, data);\n    }\n  });\n}\n\nexport function getClients() {\n  return clients;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Broadcast sends event to all clients\nok 1 - Broadcast sends event to all clients\n  ---\n  duration_ms: 0.437166\n  ...\n# Subtest: Multiple broadcasts are queued\nok 2 - Multiple broadcasts are queued\n  ---\n  duration_ms: 0.068375\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.149041\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:51:53.233Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function broadcastToClients(bus, event) {\n  bus.broadcast(event)\n}",
+    "testOutput": "TAP version 13\n# Subtest: Broadcast sends event to all clients\nok 1 - Broadcast sends event to all clients\n  ---\n  duration_ms: 0.419875\n  ...\n# Subtest: Multiple broadcasts are queued\nok 2 - Multiple broadcasts are queued\n  ---\n  duration_ms: 0.069666\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.411875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:03.978Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createMessageHandler() {\n  const handlers = new Map();\n  \n  return {\n    on(event, callback) {\n      handlers.set(event, callback);\n    },\n    \n    async handleMessage(message) {\n      const handler = handlers.get(message.type);\n      if (handler) {\n        return await handler(message.data);\n      }\n      return null;\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Listen for client messages and broadcast response\nok 1 - Listen for client messages and broadcast response\n  ---\n  duration_ms: 0.377041\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.184542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:08.275Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function listenAndRespond(bus) {\n  bus.on('client:message', (event) => {\n    bus.broadcast({\n      type: 'server:response',\n      payload: { message: 'Hello clients' }\n    })\n  })\n}",
+    "testOutput": "TAP version 13\n# Subtest: Listen for client messages and broadcast response\nok 1 - Listen for client messages and broadcast response\n  ---\n  duration_ms: 0.384917\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.072083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:11.808Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "/**\n * Creates a graceful shutdown handler that performs cleanup operations\n * @param {Object} options - Configuration options\n * @param {Function[]} options.cleanupTasks - Array of async cleanup functions\n * @param {number} options.timeout - Timeout in ms for cleanup (default: 10000)\n * @returns {Function} Shutdown handler function\n */\nexport async function gracefulShutdown(options = {}) {\n  const { cleanupTasks = [], timeout = 10000 } = options;\n  \n  const executeCleanup = async () => {\n    const cleanupPromise = Promise.all(\n      cleanupTasks.map(task => \n        Promise.resolve(task()).catch(err => {\n          console.error('Cleanup task failed:', err);\n        })\n      )\n    );\n    \n    const timeoutPromise = new Promise((resolve) => \n      setTimeout(() => resolve(), timeout)\n    );\n    \n    await Promise.race([cleanupPromise, timeoutPromise]);\n  };\n  \n  return executeCleanup;\n}\n\n/**\n * Sets up graceful shutdown handlers for common signals\n * @param {Function[]} cleanupTasks - Array of async cleanup functions\n * @param {number} timeout - Timeout in ms for cleanup\n */\nexport function setupGracefulShutdown(cleanupTasks = [], timeout = 10000) {\n  let isShuttingDown = false;\n  \n  const shutdown = async (signal) => {\n    if (isShuttingDown) {\n      return;\n    }\n    \n    isShuttingDown = true;\n    console.log(`Received ${signal}, starting graceful shutdown...`);\n    \n    const handler = await gracefulShutdown({ cleanupTasks, timeout });\n    await handler();\n    \n    console.log('Cleanup completed, exiting...');\n    process.exit(0);\n  };\n  \n  process.on('SIGTERM', () => shutdown('SIGTERM'));\n  process.on('SIGINT', () => shutdown('SIGINT'));\n  \n  return shutdown;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Graceful shutdown stops bus on SIGINT\nok 1 - Graceful shutdown stops bus on SIGINT\n  ---\n  duration_ms: 0.43075\n  ...\n# Subtest: Cleanup handlers run on stop\nok 2 - Cleanup handlers run on stop\n  ---\n  duration_ms: 0.069542\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.966875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:21.490Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function gracefulShutdown(bus) {\n  await bus.stop()\n  process.exit(0)\n}",
+    "testOutput": "TAP version 13\n# Subtest: Graceful shutdown stops bus on SIGINT\nok 1 - Graceful shutdown stops bus on SIGINT\n  ---\n  duration_ms: 0.423\n  ...\n# Subtest: Cleanup handlers run on stop\nok 2 - Cleanup handlers run on stop\n  ---\n  duration_ms: 0.072458\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.082375\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:24.616Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { EventEmitter } from 'events';\n\nclass ClientEventBus extends EventEmitter {\n  constructor() {\n    super();\n    this.started = false;\n  }\n\n  start() {\n    if (!this.started) {\n      this.started = true;\n      this.emit('started');\n    }\n    return this;\n  }\n}\n\nexport async function initializeAndStartClientEventBus() {\n  const eventBus = new ClientEventBus();\n  eventBus.start();\n  return eventBus;\n}",
+    "testOutput": "TAP version 13\n# Subtest: ClientEventBus initializes with config\nok 1 - ClientEventBus initializes with config\n  ---\n  duration_ms: 0.431958\n  ...\n# Subtest: ClientEventBus starts and stops\nok 2 - ClientEventBus starts and stops\n  ---\n  duration_ms: 0.076083\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.776166\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:28.819Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initializeAndStartClientEventBus() {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: true,\n    port: 42069\n  })\n  \n  eventBus.start()\n  \n  return eventBus\n}",
+    "testOutput": "TAP version 13\n# Subtest: ClientEventBus initializes with config\nok 1 - ClientEventBus initializes with config\n  ---\n  duration_ms: 0.412\n  ...\n# Subtest: ClientEventBus starts and stops\nok 2 - ClientEventBus starts and stops\n  ---\n  duration_ms: 0.073041\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.880459\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:33.126Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { EventEmitter } from 'events';\n\nexport async function sendEventsToServer(events, serverUrl) {\n  if (!events || !Array.isArray(events) || events.length === 0) {\n    throw new Error('Events must be a non-empty array');\n  }\n  \n  if (!serverUrl || typeof serverUrl !== 'string') {\n    throw new Error('Server URL must be a valid string');\n  }\n\n  const response = await fetch(serverUrl, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify({ events }),\n  });\n\n  if (!response.ok) {\n    throw new Error(`Server responded with status: ${response.status}`);\n  }\n\n  return await response.json();\n}",
+    "testOutput": "TAP version 13\n# Subtest: Send custom event to server\nok 1 - Send custom event to server\n  ---\n  duration_ms: 0.406584\n  ...\n# Subtest: Send multiple events sequentially\nok 2 - Send multiple events sequentially\n  ---\n  duration_ms: 0.066583\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.984167\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:38.056Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function sendEventToServer(eventType, payload, options = {}) {\n  const { port = 42069, debug = false } = options;\n  \n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug,\n    port\n  });\n\n  return new Promise((resolve, reject) => {\n    const timeout = setTimeout(() => {\n      eventBus.stop();\n      reject(new Error('Connection timeout'));\n    }, options.timeout || 5000);\n\n    eventBus.on('connected', () => {\n      clearTimeout(timeout);\n      eventBus.send({ type: eventType, payload });\n      eventBus.stop();\n      resolve();\n    });\n\n    eventBus.on('error', (error) => {\n      clearTimeout(timeout);\n      eventBus.stop();\n      reject(error);\n    });\n\n    eventBus.start();\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: Send custom event to server\nok 1 - Send custom event to server\n  ---\n  duration_ms: 0.405417\n  ...\n# Subtest: Send multiple events sequentially\nok 2 - Send multiple events sequentially\n  ---\n  duration_ms: 0.067041\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.09175\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:45.597Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function handleConnectionLifecycle(connection) {\n  return new Promise((resolve, reject) => {\n    const events = [];\n    \n    connection.on('connecting', () => {\n      events.push('connecting');\n    });\n    \n    connection.on('connected', () => {\n      events.push('connected');\n    });\n    \n    connection.on('disconnecting', () => {\n      events.push('disconnecting');\n    });\n    \n    connection.on('disconnected', () => {\n      events.push('disconnected');\n      resolve(events);\n    });\n    \n    connection.on('error', (error) => {\n      events.push('error');\n      reject(error);\n    });\n    \n    connection.connect();\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: Listen for connection status events\nok 1 - Listen for connection status events\n  ---\n  duration_ms: 0.427208\n  ...\n# Subtest: Multiple listeners for same event\nok 2 - Multiple listeners for same event\n  ---\n  duration_ms: 0.067875\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.267625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:51.389Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function handleConnectionLifecycle(port = 42069) {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: true,\n    port: port\n  })\n\n  const events = []\n\n  eventBus.on('connected', () => {\n    events.push('connected')\n  })\n\n  eventBus.on('disconnected', () => {\n    events.push('disconnected')\n  })\n\n  eventBus.start()\n\n  return {\n    eventBus,\n    events,\n    stop: () => eventBus.stop()\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: Listen for connection status events\nok 1 - Listen for connection status events\n  ---\n  duration_ms: 0.416125\n  ...\n# Subtest: Multiple listeners for same event\nok 2 - Multiple listeners for same event\n  ---\n  duration_ms: 0.069625\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.037666\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:55.550Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function setupCleanup(callback) {\n  if (typeof window !== 'undefined') {\n    window.addEventListener('unload', callback);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: Cleanup bus on window unload\nok 1 - Cleanup bus on window unload\n  ---\n  duration_ms: 0.407166\n  ...\n# Subtest: Unload handler is registered\nok 2 - Unload handler is registered\n  ---\n  duration_ms: 0.08075\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.505083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:52:59.051Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function cleanupOnWindowUnload() {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: false,\n    port: 42069\n  })\n\n  eventBus.start()\n\n  window.addEventListener('beforeunload', () => {\n    eventBus.stop()\n  })\n\n  return eventBus\n}",
+    "testOutput": "TAP version 13\n# Subtest: Cleanup bus on window unload\nok 1 - Cleanup bus on window unload\n  ---\n  duration_ms: 0.408958\n  ...\n# Subtest: Unload handler is registered\nok 2 - Unload handler is registered\n  ---\n  duration_ms: 0.080542\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.738083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:02.929Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createPlugin(config = {}) {\n  return {\n    name: config.name || 'default-plugin',\n    version: config.version || '1.0.0',\n    enabled: config.enabled !== undefined ? config.enabled : true,\n    options: config.options || {},\n    async initialize() {\n      if (!this.enabled) {\n        return false;\n      }\n      return true;\n    },\n    async execute(data) {\n      if (!this.enabled) {\n        throw new Error('Plugin is not enabled');\n      }\n      return data;\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin has required properties\nok 1 - Plugin has required properties\n  ---\n  duration_ms: 0.397917\n  ...\n# Subtest: Plugin render function works\nok 2 - Plugin render function works\n  ---\n  duration_ms: 0.074\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.431417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:07.319Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createPlugin(id, name, render, defaultOpen = false) {\n  return {\n    id,\n    name,\n    defaultOpen,\n    render\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin has required properties\nok 1 - Plugin has required properties\n  ---\n  duration_ms: 0.4005\n  ...\n# Subtest: Plugin render function works\nok 2 - Plugin render function works\n  ---\n  duration_ms: 0.072542\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.293041\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:10.525Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function pluginWithDynamicName(name) {\n  return {\n    name,\n    setup(build) {\n      // Plugin setup logic\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin name as function sets element text\nok 1 - Plugin name as function sets element text\n  ---\n  duration_ms: 0.402708\n  ...\n# Subtest: Plugin with theme-aware name\nok 2 - Plugin with theme-aware name\n  ---\n  duration_ms: 0.073542\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.810042\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:14.111Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function implementPluginWithDynamicName() {\n  return {\n    id: 'dynamic-name-plugin',\n    name: (el) => {\n      el.innerText = 'Dynamic Name';\n    },\n    render: (el, theme) => {\n      el.innerHTML = `<div>Plugin content (${theme} mode)</div>`;\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin name as function sets element text\nok 1 - Plugin name as function sets element text\n  ---\n  duration_ms: 0.397791\n  ...\n# Subtest: Plugin with theme-aware name\nok 2 - Plugin with theme-aware name\n  ---\n  duration_ms: 0.072916\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.35225\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:17.390Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { readFile, writeFile } from 'fs/promises';\nimport { join } from 'path';\n\nexport async function renderWithTheme(pluginPath, themePath, outputPath) {\n  const [pluginContent, themeConfig] = await Promise.all([\n    readFile(pluginPath, 'utf-8'),\n    readFile(themePath, 'utf-8')\n  ]);\n  \n  const theme = JSON.parse(themeConfig);\n  \n  let rendered = pluginContent;\n  for (const [key, value] of Object.entries(theme)) {\n    const regex = new RegExp(`{{\\\\s*${key}\\\\s*}}`, 'g');\n    rendered = rendered.replace(regex, value);\n  }\n  \n  await writeFile(outputPath, rendered, 'utf-8');\n  return rendered;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin render applies theme-based styling\nok 1 - Plugin render applies theme-based styling\n  ---\n  duration_ms: 0.464041\n  ...\n# Subtest: Plugin render switches theme styles\nok 2 - Plugin render switches theme styles\n  ---\n  duration_ms: 0.083292\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.04475\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:22.904Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function buildPluginRender(plugin) {\n  return (el, theme) => {\n    if (typeof plugin.name === 'function') {\n      plugin.name(el);\n    } else if (typeof plugin.name === 'string') {\n      el.innerText = plugin.name;\n    }\n    \n    if (typeof plugin.render === 'function') {\n      plugin.render(el, theme);\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin render applies theme-based styling\nok 1 - Plugin render applies theme-based styling\n  ---\n  duration_ms: 0.425\n  ...\n# Subtest: Plugin render switches theme styles\nok 2 - Plugin render switches theme styles\n  ---\n  duration_ms: 0.076042\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.844875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:26.748Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function configureTanStackDevtools(plugin) {\n  return {\n    plugins: [plugin],\n    enabled: true\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: TanStackDevtools receives plugins array\nok 1 - TanStackDevtools receives plugins array\n  ---\n  duration_ms: 0.351334\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.099292\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:29.721Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function configureTanStackDevtools(pluginConfig) {\n  return {\n    plugins: [pluginConfig]\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: TanStackDevtools receives plugins array\nok 1 - TanStackDevtools receives plugins array\n  ---\n  duration_ms: 0.342375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.214958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:32.892Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function configureDevtools(libraries) {\n  const devtools = {};\n  \n  libraries.forEach(library => {\n    devtools[library] = {\n      enabled: true,\n      position: 'bottom-right',\n      initialIsOpen: false,\n      panelProps: {},\n      closeButtonProps: {},\n      toggleButtonProps: {},\n      errorTypes: ['active', 'inactive'],\n      client: null\n    };\n  });\n  \n  return devtools;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Multiple plugins are registered\nok 1 - Multiple plugins are registered\n  ---\n  duration_ms: 0.402208\n  ...\n# Subtest: Plugins have different panel components\nok 2 - Plugins have different panel components\n  ---\n  duration_ms: 0.077125\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.447292\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:38.022Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function configureMultipleDevtools(plugins) {\n  return {\n    plugins: plugins.map(plugin => ({\n      name: plugin.name,\n      render: plugin.render,\n      ...(plugin.defaultOpen !== undefined && { defaultOpen: plugin.defaultOpen })\n    }))\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Multiple plugins are registered\nok 1 - Multiple plugins are registered\n  ---\n  duration_ms: 0.411375\n  ...\n# Subtest: Plugins have different panel components\nok 2 - Plugins have different panel components\n  ---\n  duration_ms: 0.087333\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.626208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:41.886Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import React, { useState, useEffect, useCallback } from 'react';\n\nexport function CustomPluginPanel({ title, initialData, onDataChange }) {\n  const [data, setData] = useState(initialData || {});\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    if (onDataChange) {\n      onDataChange(data);\n    }\n  }, [data, onDataChange]);\n\n  const updateData = useCallback((key, value) => {\n    setData(prevData => ({\n      ...prevData,\n      [key]: value\n    }));\n  }, []);\n\n  const resetData = useCallback(() => {\n    setData(initialData || {});\n    setError(null);\n  }, [initialData]);\n\n  const loadData = useCallback(async (fetchFn) => {\n    setIsLoading(true);\n    setError(null);\n    try {\n      const result = await fetchFn();\n      setData(result);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setIsLoading(false);\n    }\n  }, []);\n\n  return {\n    data,\n    isLoading,\n    error,\n    updateData,\n    resetData,\n    loadData,\n    setData\n  };\n}\n\nexport function usePluginPanel(initialData, onDataChange) {\n  const [data, setData] = useState(initialData || {});\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    if (onDataChange) {\n      onDataChange(data);\n    }\n  }, [data, onDataChange]);\n\n  const updateData = useCallback((key, value) => {\n    setData(prevData => ({\n      ...prevData,\n      [key]: value\n    }));\n  }, []);\n\n  const resetData = useCallback(() => {\n    setData(initialData || {});\n    setError(null);\n  }, [initialData]);\n\n  const loadData = useCallback(async (fetchFn) => {\n    setIsLoading(true);\n    setError(null);\n    try {\n      const result = await fetchFn();\n      setData(result);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setIsLoading(false);\n    }\n  }, []);\n\n  return {\n    data,\n    isLoading,\n    error,\n    updateData,\n    resetData,\n    loadData,\n    setData\n  };\n}",
+    "testOutput": "TAP version 13\n# node:internal/modules/package_json_reader:268\n#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);\n#         ^\n# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'react' imported from /Users/oscargavin/Documents/projects/autest/generated/temp-test-1768658030932.mjs\n#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:268:9)\n#     at packageResolve (node:internal/modules/esm/resolve:768:81)\n#     at moduleResolve (node:internal/modules/esm/resolve:854:18)\n#     at defaultResolve (node:internal/modules/esm/resolve:984:11)\n#     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)\n#     at \\#cachedDefaultResolve (node:internal/modules/esm/loader:634:25)\n#     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)\n#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)\n#     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {\n#   code: 'ERR_MODULE_NOT_FOUND'\n# }\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768658030932.mjs\nnot ok 1 - generated/temp-test-1768658030932.mjs\n  ---\n  duration_ms: 37.924667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768658030932.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.9055\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:53:51.023Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createCustomPluginPanel(pluginName, PanelComponent, options = {}) {\n  return {\n    name: pluginName,\n    render: PanelComponent,\n    defaultOpen: options.defaultOpen ?? false\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugin panel uses useEffect for subscriptions\nok 1 - Plugin panel uses useEffect for subscriptions\n  ---\n  duration_ms: 0.625459\n  ...\n# Subtest: Plugin panel manages state\nok 2 - Plugin panel manages state\n  ---\n  duration_ms: 0.109792\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.645542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:53:54.384Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { TanStackDevtoolsCore } from '@tanstack/devtools-core';\n\nexport async function initializeTanStackDevtools(config) {\n  const devtools = new TanStackDevtoolsCore(config);\n  await devtools.start();\n  return devtools;\n}",
+    "testOutput": "TAP version 13\n# node:internal/modules/package_json_reader:268\n#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);\n#         ^\n# Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@tanstack/devtools-core' imported from /Users/oscargavin/Documents/projects/autest/generated/temp-test-1768658037958.mjs\n#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:268:9)\n#     at packageResolve (node:internal/modules/esm/resolve:768:81)\n#     at moduleResolve (node:internal/modules/esm/resolve:854:18)\n#     at defaultResolve (node:internal/modules/esm/resolve:984:11)\n#     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:685:12)\n#     at \\#cachedDefaultResolve (node:internal/modules/esm/loader:634:25)\n#     at ModuleLoader.resolve (node:internal/modules/esm/loader:617:38)\n#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:273:38)\n#     at ModuleJob._link (node:internal/modules/esm/module_job:135:49) {\n#   code: 'ERR_MODULE_NOT_FOUND'\n# }\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768658037958.mjs\nnot ok 1 - generated/temp-test-1768658037958.mjs\n  ---\n  duration_ms: 35.762291\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768658037958.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.760834\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:53:58.047Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initializeTanStackDevtoolsCore(config) {\n  const devtools = new TanStackDevtoolsCore({\n    config: config\n  });\n  \n  return devtools;\n}",
+    "testOutput": "TAP version 13\n# Subtest: DevtoolsCore initializes with config\nok 1 - DevtoolsCore initializes with config\n  ---\n  duration_ms: 0.622833\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.296\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:01.103Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function mountDevtools(devtools, container) {\n  container.appendChild(devtools);\n}\n\nexport function unmountDevtools(devtools) {\n  devtools.parentNode?.removeChild(devtools);\n}",
+    "testOutput": "TAP version 13\n# Subtest: DevtoolsCore mounts to container\nok 1 - DevtoolsCore mounts to container\n  ---\n  duration_ms: 0.563\n  ...\n# Subtest: DevtoolsCore unmounts and cleans up\nok 2 - DevtoolsCore unmounts and cleans up\n  ---\n  duration_ms: 0.087292\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.908208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:04.848Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function mountAndUnmountDevtools(container) {\n  const devtools = new TanStackDevtoolsCore({\n    config: {\n      defaultOpen: false,\n      position: 'bottom-right',\n      theme: 'dark',\n      openHotkey: ['Shift', 'A']\n    },\n    plugins: []\n  });\n\n  devtools.mount(container);\n  devtools.unmount();\n}",
+    "testOutput": "TAP version 13\n# Subtest: DevtoolsCore mounts to container\nok 1 - DevtoolsCore mounts to container\n  ---\n  duration_ms: 0.404125\n  ...\n# Subtest: DevtoolsCore unmounts and cleans up\nok 2 - DevtoolsCore unmounts and cleans up\n  ---\n  duration_ms: 0.071292\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.006791\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:08.280Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "a",
+    "iteration": 1,
+    "code": "/**\n * Updates devtools configuration dynamically\n * @param {Object} config - The configuration object to update\n * @param {Object} updates - The updates to apply\n * @returns {Object} The updated configuration\n */\nexport async function updateDevtoolsConfig(config, updates) {\n  return {\n    ...config,\n    ...updates,\n    ...(config.nested && updates.nested && {\n      nested: {\n        ...config.nested,\n        ...updates.nested\n      }\n    })\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: setConfig updates configuration\nok 1 - setConfig updates configuration\n  ---\n  duration_ms: 0.402834\n  ...\n# Subtest: setConfig merges with existing config\nok 2 - setConfig merges with existing config\n  ---\n  duration_ms: 0.07025\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.472958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:12.909Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function updateDevtoolsConfig(devtools, newConfig) {\n  devtools.setConfig({\n    config: newConfig\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: setConfig updates configuration\nok 1 - setConfig updates configuration\n  ---\n  duration_ms: 0.396541\n  ...\n# Subtest: setConfig merges with existing config\nok 2 - setConfig merges with existing config\n  ---\n  duration_ms: 0.069417\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.08725\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:16.594Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { EventEmitter } from 'events';\n\nexport function integrateDevtools(eventBus, devtools) {\n  if (!eventBus || !devtools) {\n    throw new Error('eventBus and devtools are required');\n  }\n\n  const originalEmit = eventBus.emit.bind(eventBus);\n  \n  eventBus.emit = function(eventName, ...args) {\n    const timestamp = Date.now();\n    \n    if (typeof devtools.logEvent === 'function') {\n      devtools.logEvent({\n        name: eventName,\n        args,\n        timestamp\n      });\n    }\n    \n    return originalEmit(eventName, ...args);\n  };\n\n  const originalOn = eventBus.on.bind(eventBus);\n  \n  eventBus.on = function(eventName, listener) {\n    if (typeof devtools.registerListener === 'function') {\n      devtools.registerListener({\n        event: eventName,\n        listener\n      });\n    }\n    \n    return originalOn(eventName, listener);\n  };\n\n  return eventBus;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Devtools connects to event bus on mount\nok 1 - Devtools connects to event bus on mount\n  ---\n  duration_ms: 0.386542\n  ...\n# Subtest: Devtools disconnects event bus on unmount\nok 2 - Devtools disconnects event bus on unmount\n  ---\n  duration_ms: 0.121666\n  ...\n# Subtest: Devtools without event bus config\nok 3 - Devtools without event bus config\n  ---\n  duration_ms: 0.05125\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.935917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:22.739Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function integrateDevtoolsWithEventBus(eventBus, config = {}) {\n  const devtools = new TanStackDevtoolsCore({\n    config: {\n      defaultOpen: false,\n      position: 'bottom-right',\n      theme: 'dark',\n      openHotkey: ['Shift', 'A'],\n      ...config\n    },\n    plugins: []\n  });\n\n  eventBus.on('devtools:mount', (container) => {\n    devtools.mount(container);\n  });\n\n  eventBus.on('devtools:unmount', () => {\n    devtools.unmount();\n  });\n\n  eventBus.on('devtools:setConfig', (newConfig) => {\n    devtools.setConfig({ config: newConfig });\n  });\n\n  return devtools;\n}",
+    "testOutput": "TAP version 13\n# Subtest: Devtools connects to event bus on mount\nok 1 - Devtools connects to event bus on mount\n  ---\n  duration_ms: 0.432584\n  ...\n# Subtest: Devtools disconnects event bus on unmount\nok 2 - Devtools disconnects event bus on unmount\n  ---\n  duration_ms: 0.147\n  ...\n# Subtest: Devtools without event bus config\nok 3 - Devtools without event bus config\n  ---\n  duration_ms: 0.055041\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.785083\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:27.377Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function registerPlugins(plugins) {\n  const registeredPlugins = [];\n  \n  for (const plugin of plugins) {\n    if (plugin && typeof plugin.render === 'function') {\n      registeredPlugins.push(plugin);\n    }\n  }\n  \n  return {\n    plugins: registeredPlugins,\n    async render(data) {\n      const results = [];\n      for (const plugin of registeredPlugins) {\n        results.push(await plugin.render(data));\n      }\n      return results;\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugins are rendered on mount\nok 1 - Plugins are rendered on mount\n  ---\n  duration_ms: 0.462167\n  ...\n# Subtest: Plugin render receives theme parameter\nok 2 - Plugin render receives theme parameter\n  ---\n  duration_ms: 0.074958\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.650791\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:31.844Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function registerPlugins(devtools, plugins) {\n  plugins.forEach(plugin => {\n    if (plugin.render && typeof plugin.render === 'function') {\n      devtools.registerPlugin(plugin);\n    }\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: Plugins are rendered on mount\nok 1 - Plugins are rendered on mount\n  ---\n  duration_ms: 0.468208\n  ...\n# Subtest: Plugin render receives theme parameter\nok 2 - Plugin render receives theme parameter\n  ---\n  duration_ms: 0.076334\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.8045\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:54:35.739Z"
+  }
+]

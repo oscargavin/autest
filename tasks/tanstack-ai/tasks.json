@@ -1,0 +1,270 @@
+{
+  "library": "tanstack-ai",
+  "libraryId": "/tanstack/ai",
+  "generatedAt": "2026-01-17T13:39:27.403Z",
+  "docs": [
+    {
+      "id": "usechat-hook",
+      "title": "useChat Hook Basics",
+      "content": "The useChat hook from @tanstack/ai-react manages chat state including messages, loading states, and errors. It connects to a server endpoint via fetchServerSentEvents and automatically handles streaming responses. The hook returns messages, sendMessage, isLoading, error, reload, and stop utilities.",
+      "codeExamples": [
+        "import { useChat, fetchServerSentEvents } from '@tanstack/ai-react';\n\nconst { messages, sendMessage, isLoading } = useChat({\n  connection: fetchServerSentEvents('/api/chat')\n});",
+        "const handleSubmit = (e) => {\n  e.preventDefault();\n  if (input.trim() && !isLoading) {\n    sendMessage(input);\n    setInput('');\n  }\n};"
+      ]
+    },
+    {
+      "id": "message-parts",
+      "title": "Message Parts Structure",
+      "content": "Messages contain an array of parts with different types: 'text' for regular content, 'thinking' for model reasoning (UI-only), 'tool-call' for function invocations, and 'tool-result' for execution outputs. Each part type has a specific structure with type-specific properties like content, arguments, or output.",
+      "codeExamples": [
+        "type MessagePart = TextPart | ThinkingPart | ToolCallPart | ToolResultPart;\n\ninterface TextPart {\n  type: 'text';\n  content: string;\n}\n\ninterface ThinkingPart {\n  type: 'thinking';\n  content: string;\n}",
+        "message.parts.map((part) => {\n  if (part.type === 'text') return <span>{part.content}</span>;\n  if (part.type === 'thinking') return <em>{part.content}</em>;\n  return null;\n})"
+      ]
+    },
+    {
+      "id": "server-streaming",
+      "title": "Server-Side Streaming with SSE",
+      "content": "Server endpoints use the chat function with an adapter and convert streams to SSE responses using toServerSentEventsResponse. The server accepts POST requests with messages, processes them through an AI adapter, and returns a stream with proper Content-Type and Cache-Control headers.",
+      "codeExamples": [
+        "import { chat, toServerSentEventsResponse } from '@tanstack/ai';\nimport { openaiText } from '@tanstack/ai-openai';\n\nexport async function POST(request) {\n  const { messages } = await request.json();\n  const stream = chat({ adapter: openaiText('gpt-4o'), messages });\n  return toServerSentEventsResponse(stream);\n}"
+      ]
+    },
+    {
+      "id": "provider-adapters",
+      "title": "Provider Adapters Configuration",
+      "content": "TanStack AI supports multiple providers through tree-shakeable adapters: openaiText, anthropicText, geminiText, and ollamaText. Each adapter accepts configuration like API keys or host URLs and returns a provider instance that can be passed to the chat function.",
+      "codeExamples": [
+        "import { openaiText } from '@tanstack/ai-openai';\nimport { anthropicText } from '@tanstack/ai-anthropic';\nimport { ollamaText } from '@tanstack/ai-ollama';\n\nconst openai = openaiText({ apiKey: process.env.OPENAI_API_KEY });\nconst claude = anthropicText({ apiKey: process.env.ANTHROPIC_API_KEY });\nconst ollama = ollamaText({ host: 'http://localhost:11434' });",
+        "const stream = chat({\n  adapter: openaiText({ apiKey: key }),\n  model: 'gpt-4o',\n  messages\n});"
+      ]
+    },
+    {
+      "id": "tool-definition",
+      "title": "Tool Definition with Zod",
+      "content": "Tools are defined using toolDefinition with name, description, and Zod schemas for input/output validation. The definition can be implemented for server-side (.server()) or client-side (.client()) execution, enabling isomorphic tool usage across environments.",
+      "codeExamples": [
+        "import { toolDefinition } from '@tanstack/ai';\nimport { z } from 'zod';\n\nconst getWeatherDef = toolDefinition({\n  name: 'get_weather',\n  description: 'Get weather for a location',\n  inputSchema: z.object({\n    location: z.string(),\n    unit: z.enum(['celsius', 'fahrenheit']).optional()\n  }),\n  outputSchema: z.object({\n    temperature: z.number(),\n    conditions: z.string()\n  })\n});",
+        "const getWeatherServer = getWeatherDef.server(async ({ location, unit }) => {\n  const data = await fetchWeather(location, unit);\n  return { temperature: data.temp, conditions: data.cond };\n});"
+      ]
+    },
+    {
+      "id": "connection-adapters",
+      "title": "Connection Adapters",
+      "content": "Connection adapters handle client-server communication. fetchServerSentEvents creates a POST connection to an SSE endpoint, while stream() connects to server functions. Both adapters handle streaming responses and parse chunks automatically.",
+      "codeExamples": [
+        "import { useChat, fetchServerSentEvents } from '@tanstack/ai-react';\n\nconst chat = useChat({\n  connection: fetchServerSentEvents('/api/chat')\n});",
+        "import { useChat, stream } from '@tanstack/ai-react';\n\nconst chat = useChat({\n  connection: stream((messages) => serverChatFunction({ messages }))\n});"
+      ]
+    },
+    {
+      "id": "chat-callbacks",
+      "title": "Chat Lifecycle Callbacks",
+      "content": "The useChat hook supports lifecycle callbacks: onChunk for processing individual stream chunks, onFinish for handling completed messages, and onError for error handling. These callbacks enable analytics, logging, and custom side effects during chat interactions.",
+      "codeExamples": [
+        "const { messages, sendMessage } = useChat({\n  connection: fetchServerSentEvents('/api/chat'),\n  onChunk: (chunk) => {\n    if (chunk.type === 'content') console.log('Token:', chunk.delta);\n  },\n  onFinish: (message) => {\n    console.log('Complete:', message);\n  },\n  onError: (error) => {\n    console.error('Error:', error);\n  }\n});"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "usechat-hook",
+      "description": "Create a basic useChat implementation that connects to an endpoint",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedConnection;\nglobalThis.useChat = ({ connection }) => {\n  capturedConnection = connection;\n  return { messages: [], sendMessage: () => {}, isLoading: false };\n};\n\nglobalThis.fetchServerSentEvents = (endpoint) => ({ endpoint, type: 'sse' });\n\ntest('useChat connects to /api/chat endpoint', () => {\n  const { useChat, fetchServerSentEvents } = globalThis;\n  const chat = useChat({ connection: fetchServerSentEvents('/api/chat') });\n  \n  assert.strictEqual(capturedConnection.endpoint, '/api/chat');\n  assert.strictEqual(capturedConnection.type, 'sse');\n});\n\ntest('useChat returns required properties', () => {\n  const { useChat, fetchServerSentEvents } = globalThis;\n  const chat = useChat({ connection: fetchServerSentEvents('/api/chat') });\n  \n  assert.ok(Array.isArray(chat.messages));\n  assert.strictEqual(typeof chat.sendMessage, 'function');\n  assert.strictEqual(typeof chat.isLoading, 'boolean');\n});",
+      "solutionHint": "Use fetchServerSentEvents to create a connection and pass it to useChat"
+    },
+    {
+      "id": "task-002",
+      "docTag": "usechat-hook",
+      "description": "Implement message sending with loading state check",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet sentMessages = [];\nglobalThis.sendMessage = (msg, isLoading) => {\n  if (!isLoading && msg.trim()) {\n    sentMessages.push(msg);\n    return true;\n  }\n  return false;\n};\n\ntest('sendMessage sends valid non-empty messages when not loading', () => {\n  sentMessages = [];\n  const result = globalThis.sendMessage('Hello', false);\n  \n  assert.strictEqual(result, true);\n  assert.strictEqual(sentMessages.length, 1);\n  assert.strictEqual(sentMessages[0], 'Hello');\n});\n\ntest('sendMessage blocks when loading', () => {\n  sentMessages = [];\n  const result = globalThis.sendMessage('Hello', true);\n  \n  assert.strictEqual(result, false);\n  assert.strictEqual(sentMessages.length, 0);\n});\n\ntest('sendMessage blocks empty messages', () => {\n  sentMessages = [];\n  const result = globalThis.sendMessage('   ', false);\n  \n  assert.strictEqual(result, false);\n  assert.strictEqual(sentMessages.length, 0);\n});",
+      "solutionHint": "Check both isLoading flag and trim the input before sending"
+    },
+    {
+      "id": "task-003",
+      "docTag": "usechat-hook",
+      "description": "Configure useChat with lifecycle callbacks",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedCallbacks = {};\nglobalThis.useChat = (config) => {\n  capturedCallbacks = {\n    onChunk: config.onChunk,\n    onFinish: config.onFinish,\n    onError: config.onError\n  };\n  return { messages: [] };\n};\n\ntest('useChat accepts onChunk callback', () => {\n  const onChunk = (chunk) => {};\n  globalThis.useChat({ connection: {}, onChunk });\n  \n  assert.strictEqual(capturedCallbacks.onChunk, onChunk);\n});\n\ntest('useChat accepts onFinish callback', () => {\n  const onFinish = (msg) => {};\n  globalThis.useChat({ connection: {}, onFinish });\n  \n  assert.strictEqual(capturedCallbacks.onFinish, onFinish);\n});\n\ntest('useChat accepts onError callback', () => {\n  const onError = (err) => {};\n  globalThis.useChat({ connection: {}, onError });\n  \n  assert.strictEqual(capturedCallbacks.onError, onError);\n});",
+      "solutionHint": "Pass onChunk, onFinish, and onError as options to useChat"
+    },
+    {
+      "id": "task-004",
+      "docTag": "message-parts",
+      "description": "Parse and render text message parts",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.renderMessagePart = (part) => {\n  if (part.type === 'text') {\n    return { tag: 'span', content: part.content };\n  }\n  return null;\n};\n\ntest('renders text parts correctly', () => {\n  const part = { type: 'text', content: 'Hello world' };\n  const result = globalThis.renderMessagePart(part);\n  \n  assert.strictEqual(result.tag, 'span');\n  assert.strictEqual(result.content, 'Hello world');\n});\n\ntest('returns null for unknown part types', () => {\n  const part = { type: 'unknown', content: 'test' };\n  const result = globalThis.renderMessagePart(part);\n  \n  assert.strictEqual(result, null);\n});",
+      "solutionHint": "Check part.type and return appropriate structure for text parts"
+    },
+    {
+      "id": "task-005",
+      "docTag": "message-parts",
+      "description": "Handle thinking message parts with special styling",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.renderThinkingPart = (part) => {\n  if (part.type === 'thinking') {\n    return { tag: 'em', prefix: '💭', content: part.content, className: 'italic' };\n  }\n  return null;\n};\n\ntest('renders thinking parts with emoji and styling', () => {\n  const part = { type: 'thinking', content: 'Analyzing the request' };\n  const result = globalThis.renderThinkingPart(part);\n  \n  assert.strictEqual(result.tag, 'em');\n  assert.strictEqual(result.prefix, '💭');\n  assert.strictEqual(result.content, 'Analyzing the request');\n  assert.strictEqual(result.className, 'italic');\n});\n\ntest('returns null for non-thinking parts', () => {\n  const part = { type: 'text', content: 'test' };\n  const result = globalThis.renderThinkingPart(part);\n  \n  assert.strictEqual(result, null);\n});",
+      "solutionHint": "Check for type === 'thinking' and add visual indicators"
+    },
+    {
+      "id": "task-006",
+      "docTag": "message-parts",
+      "description": "Map over message parts and filter by type",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.extractTextContent = (parts) => {\n  return parts\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join('');\n};\n\ntest('extracts text from mixed message parts', () => {\n  const parts = [\n    { type: 'text', content: 'Hello ' },\n    { type: 'thinking', content: 'processing' },\n    { type: 'text', content: 'world' }\n  ];\n  const result = globalThis.extractTextContent(parts);\n  \n  assert.strictEqual(result, 'Hello world');\n});\n\ntest('returns empty string when no text parts', () => {\n  const parts = [\n    { type: 'thinking', content: 'thinking' },\n    { type: 'tool-call', name: 'test' }\n  ];\n  const result = globalThis.extractTextContent(parts);\n  \n  assert.strictEqual(result, '');\n});",
+      "solutionHint": "Filter parts by type === 'text', then map to content and join"
+    },
+    {
+      "id": "task-007",
+      "docTag": "message-parts",
+      "description": "Validate message part structure with type guards",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.isTextPart = (part) => {\n  return part && part.type === 'text' && typeof part.content === 'string';\n};\n\nglobalThis.isThinkingPart = (part) => {\n  return part && part.type === 'thinking' && typeof part.content === 'string';\n};\n\ntest('validates text parts correctly', () => {\n  assert.strictEqual(globalThis.isTextPart({ type: 'text', content: 'hi' }), true);\n  assert.strictEqual(globalThis.isTextPart({ type: 'thinking', content: 'hi' }), false);\n  assert.strictEqual(globalThis.isTextPart({ type: 'text' }), false);\n});\n\ntest('validates thinking parts correctly', () => {\n  assert.strictEqual(globalThis.isThinkingPart({ type: 'thinking', content: 'test' }), true);\n  assert.strictEqual(globalThis.isThinkingPart({ type: 'text', content: 'test' }), false);\n  assert.strictEqual(globalThis.isThinkingPart({ type: 'thinking' }), false);\n});",
+      "solutionHint": "Check both type property and content type for validation"
+    },
+    {
+      "id": "task-008",
+      "docTag": "server-streaming",
+      "description": "Create a basic POST handler that returns SSE response",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.toServerSentEventsResponse = (stream) => {\n  return {\n    stream,\n    headers: {\n      'Content-Type': 'text/event-stream',\n      'Cache-Control': 'no-cache',\n      'Connection': 'keep-alive'\n    }\n  };\n};\n\ntest('creates SSE response with correct headers', () => {\n  const stream = { data: 'test' };\n  const response = globalThis.toServerSentEventsResponse(stream);\n  \n  assert.strictEqual(response.headers['Content-Type'], 'text/event-stream');\n  assert.strictEqual(response.headers['Cache-Control'], 'no-cache');\n  assert.strictEqual(response.headers['Connection'], 'keep-alive');\n});\n\ntest('includes the stream in response', () => {\n  const stream = { data: 'test' };\n  const response = globalThis.toServerSentEventsResponse(stream);\n  \n  assert.strictEqual(response.stream, stream);\n});",
+      "solutionHint": "Return response with stream and proper SSE headers"
+    },
+    {
+      "id": "task-009",
+      "docTag": "server-streaming",
+      "description": "Parse JSON from request body and extract messages",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.parseRequestMessages = async (request) => {\n  const body = await request.json();\n  return body.messages || [];\n};\n\ntest('extracts messages from request body', async () => {\n  const request = {\n    json: async () => ({ messages: [{ role: 'user', content: 'Hi' }] })\n  };\n  const messages = await globalThis.parseRequestMessages(request);\n  \n  assert.strictEqual(messages.length, 1);\n  assert.strictEqual(messages[0].role, 'user');\n  assert.strictEqual(messages[0].content, 'Hi');\n});\n\ntest('returns empty array when no messages', async () => {\n  const request = { json: async () => ({}) };\n  const messages = await globalThis.parseRequestMessages(request);\n  \n  assert.strictEqual(messages.length, 0);\n});",
+      "solutionHint": "Use await request.json() and extract the messages property"
+    },
+    {
+      "id": "task-010",
+      "docTag": "server-streaming",
+      "description": "Build complete POST handler with chat and SSE conversion",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedChatConfig;\nglobalThis.chat = (config) => {\n  capturedChatConfig = config;\n  return { type: 'stream', data: 'chunks' };\n};\n\nglobalThis.toServerSentEventsResponse = (stream) => ({\n  stream,\n  headers: { 'Content-Type': 'text/event-stream' }\n});\n\nglobalThis.POST = async (request) => {\n  const { messages } = await request.json();\n  const adapter = { name: 'openai' };\n  const stream = globalThis.chat({ adapter, messages });\n  return globalThis.toServerSentEventsResponse(stream);\n};\n\ntest('POST handler processes request and returns SSE', async () => {\n  const request = {\n    json: async () => ({ messages: [{ role: 'user', content: 'Hi' }] })\n  };\n  const response = await globalThis.POST(request);\n  \n  assert.strictEqual(response.headers['Content-Type'], 'text/event-stream');\n  assert.strictEqual(capturedChatConfig.messages[0].content, 'Hi');\n});\n\ntest('passes adapter to chat function', async () => {\n  const request = { json: async () => ({ messages: [] }) };\n  await globalThis.POST(request);\n  \n  assert.strictEqual(capturedChatConfig.adapter.name, 'openai');\n});",
+      "solutionHint": "Parse request, call chat with adapter and messages, convert to SSE"
+    },
+    {
+      "id": "task-011",
+      "docTag": "provider-adapters",
+      "description": "Create OpenAI adapter with API key configuration",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.openaiText = (config) => {\n  return {\n    provider: 'openai',\n    apiKey: typeof config === 'string' ? config : config.apiKey,\n    baseURL: typeof config === 'object' ? config.baseURL : undefined\n  };\n};\n\ntest('creates OpenAI adapter with API key string', () => {\n  const adapter = globalThis.openaiText('sk-test123');\n  \n  assert.strictEqual(adapter.provider, 'openai');\n  assert.strictEqual(adapter.apiKey, 'sk-test123');\n});\n\ntest('creates OpenAI adapter with config object', () => {\n  const adapter = globalThis.openaiText({ apiKey: 'sk-test123' });\n  \n  assert.strictEqual(adapter.provider, 'openai');\n  assert.strictEqual(adapter.apiKey, 'sk-test123');\n});",
+      "solutionHint": "Accept API key as string or object with apiKey property"
+    },
+    {
+      "id": "task-012",
+      "docTag": "provider-adapters",
+      "description": "Create Anthropic adapter with configuration",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.anthropicText = (config) => {\n  return {\n    provider: 'anthropic',\n    apiKey: config.apiKey,\n    baseURL: config.baseURL || 'https://api.anthropic.com'\n  };\n};\n\ntest('creates Anthropic adapter with API key', () => {\n  const adapter = globalThis.anthropicText({ apiKey: 'sk-ant-test' });\n  \n  assert.strictEqual(adapter.provider, 'anthropic');\n  assert.strictEqual(adapter.apiKey, 'sk-ant-test');\n});\n\ntest('uses default base URL when not provided', () => {\n  const adapter = globalThis.anthropicText({ apiKey: 'sk-ant-test' });\n  \n  assert.strictEqual(adapter.baseURL, 'https://api.anthropic.com');\n});",
+      "solutionHint": "Accept config object with apiKey and optional baseURL"
+    },
+    {
+      "id": "task-013",
+      "docTag": "provider-adapters",
+      "description": "Create Ollama adapter with host configuration",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.ollamaText = (config) => {\n  const host = typeof config === 'string' ? config : config?.host;\n  return {\n    provider: 'ollama',\n    host: host || 'http://localhost:11434'\n  };\n};\n\ntest('creates Ollama adapter with default localhost', () => {\n  const adapter = globalThis.ollamaText();\n  \n  assert.strictEqual(adapter.provider, 'ollama');\n  assert.strictEqual(adapter.host, 'http://localhost:11434');\n});\n\ntest('creates Ollama adapter with custom host string', () => {\n  const adapter = globalThis.ollamaText('http://192.168.1.100:11434');\n  \n  assert.strictEqual(adapter.host, 'http://192.168.1.100:11434');\n});\n\ntest('creates Ollama adapter with host in config object', () => {\n  const adapter = globalThis.ollamaText({ host: 'http://server:11434' });\n  \n  assert.strictEqual(adapter.host, 'http://server:11434');\n});",
+      "solutionHint": "Accept host as string or object, default to localhost:11434"
+    },
+    {
+      "id": "task-014",
+      "docTag": "provider-adapters",
+      "description": "Implement provider selection logic for multi-provider support",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.openaiText = (config) => ({ provider: 'openai', apiKey: config.apiKey });\nglobalThis.anthropicText = (config) => ({ provider: 'anthropic', apiKey: config.apiKey });\nglobalThis.geminiText = (config) => ({ provider: 'gemini', apiKey: config.apiKey });\n\nglobalThis.getAdapter = (provider, apiKey) => {\n  const adapters = {\n    openai: globalThis.openaiText,\n    anthropic: globalThis.anthropicText,\n    gemini: globalThis.geminiText\n  };\n  return adapters[provider]({ apiKey });\n};\n\ntest('selects OpenAI adapter', () => {\n  const adapter = globalThis.getAdapter('openai', 'sk-test');\n  assert.strictEqual(adapter.provider, 'openai');\n});\n\ntest('selects Anthropic adapter', () => {\n  const adapter = globalThis.getAdapter('anthropic', 'sk-ant-test');\n  assert.strictEqual(adapter.provider, 'anthropic');\n});\n\ntest('selects Gemini adapter', () => {\n  const adapter = globalThis.getAdapter('gemini', 'ai-test');\n  assert.strictEqual(adapter.provider, 'gemini');\n});",
+      "solutionHint": "Create a mapping object of provider names to adapter functions"
+    },
+    {
+      "id": "task-015",
+      "docTag": "tool-definition",
+      "description": "Define a basic tool with name, description, and schemas",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.toolDefinition = (config) => {\n  return {\n    name: config.name,\n    description: config.description,\n    inputSchema: config.inputSchema,\n    outputSchema: config.outputSchema,\n    server: (fn) => ({ ...config, execute: fn, side: 'server' }),\n    client: (fn) => ({ ...config, execute: fn, side: 'client' })\n  };\n};\n\ntest('creates tool definition with required properties', () => {\n  const tool = globalThis.toolDefinition({\n    name: 'test_tool',\n    description: 'A test tool',\n    inputSchema: { type: 'object' },\n    outputSchema: { type: 'object' }\n  });\n  \n  assert.strictEqual(tool.name, 'test_tool');\n  assert.strictEqual(tool.description, 'A test tool');\n  assert.ok(tool.inputSchema);\n  assert.ok(tool.outputSchema);\n});\n\ntest('tool definition has server and client methods', () => {\n  const tool = globalThis.toolDefinition({\n    name: 'test',\n    description: 'test',\n    inputSchema: {},\n    outputSchema: {}\n  });\n  \n  assert.strictEqual(typeof tool.server, 'function');\n  assert.strictEqual(typeof tool.client, 'function');\n});",
+      "solutionHint": "Return object with name, description, schemas, and server/client methods"
+    },
+    {
+      "id": "task-016",
+      "docTag": "tool-definition",
+      "description": "Create a Zod schema for tool input validation",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.z = {\n  object: (shape) => ({ type: 'object', shape }),\n  string: () => ({ type: 'string', describe: (d) => ({ type: 'string', description: d }) }),\n  number: () => ({ type: 'number' }),\n  enum: (values) => ({ type: 'enum', values })\n};\n\nglobalThis.createWeatherInputSchema = () => {\n  return globalThis.z.object({\n    location: globalThis.z.string().describe('City and state'),\n    unit: globalThis.z.enum(['celsius', 'fahrenheit'])\n  });\n};\n\ntest('creates object schema with location and unit', () => {\n  const schema = globalThis.createWeatherInputSchema();\n  \n  assert.strictEqual(schema.type, 'object');\n  assert.ok(schema.shape.location);\n  assert.ok(schema.shape.unit);\n});\n\ntest('location is a string with description', () => {\n  const schema = globalThis.createWeatherInputSchema();\n  \n  assert.strictEqual(schema.shape.location.type, 'string');\n  assert.strictEqual(schema.shape.location.description, 'City and state');\n});\n\ntest('unit is an enum with celsius and fahrenheit', () => {\n  const schema = globalThis.createWeatherInputSchema();\n  \n  assert.strictEqual(schema.shape.unit.type, 'enum');\n  assert.ok(schema.shape.unit.values.includes('celsius'));\n  assert.ok(schema.shape.unit.values.includes('fahrenheit'));\n});",
+      "solutionHint": "Use z.object with z.string().describe() and z.enum()"
+    },
+    {
+      "id": "task-017",
+      "docTag": "tool-definition",
+      "description": "Implement server-side tool execution handler",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet fetchCalls = [];\nglobalThis.fetch = async (url) => {\n  fetchCalls.push(url);\n  return {\n    json: async () => ({ temperature: 72, conditions: 'sunny', location: 'SF' })\n  };\n};\n\nglobalThis.getWeatherServer = async ({ location, unit }) => {\n  const response = await globalThis.fetch(`https://api.weather.com/v1/current?location=${location}&unit=${unit || 'fahrenheit'}`);\n  const data = await response.json();\n  return {\n    temperature: data.temperature,\n    conditions: data.conditions,\n    location: data.location\n  };\n};\n\ntest('fetches weather data for location', async () => {\n  fetchCalls = [];\n  const result = await globalThis.getWeatherServer({ location: 'SF, CA', unit: 'celsius' });\n  \n  assert.ok(fetchCalls[0].includes('SF, CA'));\n  assert.ok(fetchCalls[0].includes('celsius'));\n});\n\ntest('returns structured weather data', async () => {\n  const result = await globalThis.getWeatherServer({ location: 'SF, CA' });\n  \n  assert.strictEqual(result.temperature, 72);\n  assert.strictEqual(result.conditions, 'sunny');\n  assert.strictEqual(result.location, 'SF');\n});",
+      "solutionHint": "Create async function that fetches data and returns structured output"
+    },
+    {
+      "id": "task-018",
+      "docTag": "tool-definition",
+      "description": "Create tool with needsApproval flag for sensitive operations",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.toolDefinition = (config) => config;\n\ntest('creates tool with needsApproval true', () => {\n  const tool = globalThis.toolDefinition({\n    name: 'delete_data',\n    description: 'Delete user data',\n    needsApproval: true,\n    inputSchema: {},\n    outputSchema: {}\n  });\n  \n  assert.strictEqual(tool.needsApproval, true);\n});\n\ntest('creates tool with needsApproval false', () => {\n  const tool = globalThis.toolDefinition({\n    name: 'read_data',\n    description: 'Read data',\n    needsApproval: false,\n    inputSchema: {},\n    outputSchema: {}\n  });\n  \n  assert.strictEqual(tool.needsApproval, false);\n});",
+      "solutionHint": "Add needsApproval boolean property to tool definition config"
+    },
+    {
+      "id": "task-019",
+      "docTag": "connection-adapters",
+      "description": "Implement fetchServerSentEvents connection adapter",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet fetchCalls = [];\nglobalThis.fetch = async (url, options) => {\n  fetchCalls.push({ url, options });\n  return { ok: true, body: 'stream' };\n};\n\nglobalThis.fetchServerSentEvents = (endpoint) => {\n  return async (messages) => {\n    const response = await globalThis.fetch(endpoint, {\n      method: 'POST',\n      headers: { 'Content-Type': 'application/json' },\n      body: JSON.stringify({ messages })\n    });\n    return response.body;\n  };\n};\n\ntest('creates POST connection to endpoint', async () => {\n  fetchCalls = [];\n  const connection = globalThis.fetchServerSentEvents('/api/chat');\n  await connection([{ role: 'user', content: 'Hi' }]);\n  \n  assert.strictEqual(fetchCalls[0].url, '/api/chat');\n  assert.strictEqual(fetchCalls[0].options.method, 'POST');\n});\n\ntest('sends messages as JSON in request body', async () => {\n  fetchCalls = [];\n  const connection = globalThis.fetchServerSentEvents('/api/chat');\n  await connection([{ role: 'user', content: 'Test' }]);\n  \n  const body = JSON.parse(fetchCalls[0].options.body);\n  assert.strictEqual(body.messages[0].content, 'Test');\n});\n\ntest('sets correct content type header', async () => {\n  fetchCalls = [];\n  const connection = globalThis.fetchServerSentEvents('/api/chat');\n  await connection([]);\n  \n  assert.strictEqual(fetchCalls[0].options.headers['Content-Type'], 'application/json');\n});",
+      "solutionHint": "Return function that POSTs messages as JSON to the endpoint"
+    },
+    {
+      "id": "task-020",
+      "docTag": "connection-adapters",
+      "description": "Create stream connection adapter for server functions",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet serverFnCalls = [];\nconst mockServerFn = ({ messages }) => {\n  serverFnCalls.push(messages);\n  return { type: 'stream', messages };\n};\n\nglobalThis.stream = (serverFn) => {\n  return (messages) => serverFn({ messages });\n};\n\ntest('wraps server function in connection adapter', () => {\n  serverFnCalls = [];\n  const connection = globalThis.stream(mockServerFn);\n  const result = connection([{ role: 'user', content: 'Hi' }]);\n  \n  assert.strictEqual(serverFnCalls.length, 1);\n  assert.strictEqual(serverFnCalls[0][0].content, 'Hi');\n});\n\ntest('returns server function result', () => {\n  const connection = globalThis.stream(mockServerFn);\n  const result = connection([{ role: 'user', content: 'Test' }]);\n  \n  assert.strictEqual(result.type, 'stream');\n  assert.strictEqual(result.messages[0].content, 'Test');\n});",
+      "solutionHint": "Return function that calls serverFn with messages wrapped in object"
+    },
+    {
+      "id": "task-021",
+      "docTag": "chat-callbacks",
+      "description": "Implement onChunk callback to process stream chunks",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedTokens = [];\nglobalThis.onChunk = (chunk) => {\n  if (chunk.type === 'content') {\n    capturedTokens.push(chunk.delta);\n  }\n};\n\ntest('captures content chunks', () => {\n  capturedTokens = [];\n  globalThis.onChunk({ type: 'content', delta: 'Hello' });\n  globalThis.onChunk({ type: 'content', delta: ' world' });\n  \n  assert.strictEqual(capturedTokens.length, 2);\n  assert.strictEqual(capturedTokens[0], 'Hello');\n  assert.strictEqual(capturedTokens[1], ' world');\n});\n\ntest('ignores non-content chunks', () => {\n  capturedTokens = [];\n  globalThis.onChunk({ type: 'metadata', data: 'test' });\n  \n  assert.strictEqual(capturedTokens.length, 0);\n});",
+      "solutionHint": "Check chunk.type === 'content' and collect delta values"
+    },
+    {
+      "id": "task-022",
+      "docTag": "chat-callbacks",
+      "description": "Implement onFinish callback for message completion",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet completedMessages = [];\nglobalThis.onFinish = (message) => {\n  completedMessages.push({\n    id: message.id,\n    content: message.parts.filter(p => p.type === 'text').map(p => p.content).join(''),\n    timestamp: Date.now()\n  });\n};\n\ntest('logs completed message', () => {\n  completedMessages = [];\n  globalThis.onFinish({\n    id: 'msg-1',\n    parts: [{ type: 'text', content: 'Hello world' }]\n  });\n  \n  assert.strictEqual(completedMessages.length, 1);\n  assert.strictEqual(completedMessages[0].id, 'msg-1');\n  assert.strictEqual(completedMessages[0].content, 'Hello world');\n});\n\ntest('extracts text from multiple parts', () => {\n  completedMessages = [];\n  globalThis.onFinish({\n    id: 'msg-2',\n    parts: [\n      { type: 'text', content: 'Hello' },\n      { type: 'thinking', content: 'processing' },\n      { type: 'text', content: ' world' }\n    ]\n  });\n  \n  assert.strictEqual(completedMessages[0].content, 'Hello world');\n});",
+      "solutionHint": "Filter text parts, extract content, and log with timestamp"
+    },
+    {
+      "id": "task-023",
+      "docTag": "chat-callbacks",
+      "description": "Implement onError callback with error logging",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet errorLog = [];\nglobalThis.onError = (error) => {\n  errorLog.push({\n    message: error.message,\n    timestamp: Date.now(),\n    logged: true\n  });\n};\n\ntest('logs error with message', () => {\n  errorLog = [];\n  globalThis.onError({ message: 'Connection failed' });\n  \n  assert.strictEqual(errorLog.length, 1);\n  assert.strictEqual(errorLog[0].message, 'Connection failed');\n  assert.strictEqual(errorLog[0].logged, true);\n});\n\ntest('logs multiple errors', () => {\n  errorLog = [];\n  globalThis.onError({ message: 'Error 1' });\n  globalThis.onError({ message: 'Error 2' });\n  \n  assert.strictEqual(errorLog.length, 2);\n  assert.strictEqual(errorLog[1].message, 'Error 2');\n});",
+      "solutionHint": "Extract error.message and log with timestamp"
+    },
+    {
+      "id": "task-024",
+      "docTag": "chat-callbacks",
+      "description": "Combine all callbacks in useChat configuration",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet events = [];\n\nglobalThis.createChatWithCallbacks = (connection) => {\n  return {\n    connection,\n    onChunk: (chunk) => events.push({ type: 'chunk', chunk }),\n    onFinish: (message) => events.push({ type: 'finish', message }),\n    onError: (error) => events.push({ type: 'error', error })\n  };\n};\n\ntest('creates config with all callbacks', () => {\n  const config = globalThis.createChatWithCallbacks({ url: '/api/chat' });\n  \n  assert.ok(config.connection);\n  assert.strictEqual(typeof config.onChunk, 'function');\n  assert.strictEqual(typeof config.onFinish, 'function');\n  assert.strictEqual(typeof config.onError, 'function');\n});\n\ntest('callbacks log to events array', () => {\n  events = [];\n  const config = globalThis.createChatWithCallbacks({});\n  \n  config.onChunk({ delta: 'test' });\n  config.onFinish({ id: 'msg-1' });\n  config.onError({ message: 'error' });\n  \n  assert.strictEqual(events.length, 3);\n  assert.strictEqual(events[0].type, 'chunk');\n  assert.strictEqual(events[1].type, 'finish');\n  assert.strictEqual(events[2].type, 'error');\n});",
+      "solutionHint": "Return config object with connection and all three callback functions"
+    },
+    {
+      "id": "task-025",
+      "docTag": "server-streaming",
+      "description": "Handle stream errors and send error chunks in SSE format",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet streamOutput = [];\n\nglobalThis.handleStreamWithErrors = async function* (chatFn) {\n  try {\n    for await (const chunk of chatFn()) {\n      streamOutput.push({ type: 'content', data: chunk });\n      yield { type: 'content', data: chunk };\n    }\n    streamOutput.push({ type: 'done' });\n    yield { type: 'done' };\n  } catch (error) {\n    const errorChunk = { type: 'error', error: { message: error.message } };\n    streamOutput.push(errorChunk);\n    yield errorChunk;\n  }\n};\n\ntest('streams chunks and done marker on success', async () => {\n  streamOutput = [];\n  const mockChat = async function* () {\n    yield 'Hello';\n    yield ' world';\n  };\n  \n  const chunks = [];\n  for await (const chunk of globalThis.handleStreamWithErrors(mockChat)) {\n    chunks.push(chunk);\n  }\n  \n  assert.strictEqual(chunks.length, 3);\n  assert.strictEqual(chunks[0].data, 'Hello');\n  assert.strictEqual(chunks[1].data, ' world');\n  assert.strictEqual(chunks[2].type, 'done');\n});\n\ntest('sends error chunk on stream failure', async () => {\n  streamOutput = [];\n  const mockChat = async function* () {\n    yield 'Start';\n    throw new Error('Stream failed');\n  };\n  \n  const chunks = [];\n  for await (const chunk of globalThis.handleStreamWithErrors(mockChat)) {\n    chunks.push(chunk);\n  }\n  \n  assert.strictEqual(chunks[chunks.length - 1].type, 'error');\n  assert.strictEqual(chunks[chunks.length - 1].error.message, 'Stream failed');\n});",
+      "solutionHint": "Use try-catch with async generator to yield chunks and handle errors"
+    }
+  ]
+}

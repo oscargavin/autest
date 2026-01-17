@@ -1,0 +1,389 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createChatHook() {\n  return useChat(fetchServerSentEvents(\"/api/chat\"));\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHook uses fetchServerSentEvents with correct URL\nnot ok 1 - createChatHook uses fetchServerSentEvents with correct URL\n  ---\n  duration_ms: 4.235209\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656502587.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    The expression evaluated to a falsy value:\n    \n      assert.ok(capturedConfig.connection)\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  operator: '=='\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656502587.mjs:21:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 51.124208\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:28:22.682Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createChatHook() {\n  return useChat({\n    connection: fetchServerSentEvents(\"/api/chat\"),\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHook uses fetchServerSentEvents with correct URL\nok 1 - createChatHook uses fetchServerSentEvents with correct URL\n  ---\n  duration_ms: 0.377916\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.062625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:26.535Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function extractTextFromMessages(messages) {\n  return messages\n    .flatMap(message => message.parts || [])\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join('');\n}",
+    "testOutput": "TAP version 13\n# Subtest: extractTextFromMessages returns only text content\nok 1 - extractTextFromMessages returns only text content\n  ---\n  duration_ms: 0.413333\n  ...\n# Subtest: extractTextFromMessages handles empty messages\nok 2 - extractTextFromMessages handles empty messages\n  ---\n  duration_ms: 0.061958\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.201708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:30.287Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function extractTextFromMessages(messages) {\n  return messages\n    .flatMap(msg => msg.parts)\n    .filter(part => part.type === \"text\")\n    .map(part => part.content)\n    .join(\"\");\n}",
+    "testOutput": "TAP version 13\n# Subtest: extractTextFromMessages returns only text content\nok 1 - extractTextFromMessages returns only text content\n  ---\n  duration_ms: 0.433417\n  ...\n# Subtest: extractTextFromMessages handles empty messages\nok 2 - extractTextFromMessages handles empty messages\n  ---\n  duration_ms: 0.065334\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.906667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:33.965Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function useChatWithCallbacks(url, onFinish, onError) {\n  return useChat({\n    api: url,\n    onFinish: onFinish,\n    onError: onError\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: useChatWithCallbacks sets connection URL\nnot ok 1 - useChatWithCallbacks sets connection URL\n  ---\n  duration_ms: 0.364459\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656517451.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'url')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656517451.mjs:21:48)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: useChatWithCallbacks sets onFinish callback\nok 2 - useChatWithCallbacks sets onFinish callback\n  ---\n  duration_ms: 0.15225\n  ...\n# Subtest: useChatWithCallbacks sets onError callback\nok 3 - useChatWithCallbacks sets onError callback\n  ---\n  duration_ms: 0.047292\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 2\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.945417\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:28:37.528Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function useChatWithCallbacks(url, onFinish, onError) {\n  return useChat({\n    connection: fetchServerSentEvents(url),\n    onFinish: onFinish,\n    onError: onError,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: useChatWithCallbacks sets connection URL\nok 1 - useChatWithCallbacks sets connection URL\n  ---\n  duration_ms: 0.368125\n  ...\n# Subtest: useChatWithCallbacks sets onFinish callback\nok 2 - useChatWithCallbacks sets onFinish callback\n  ---\n  duration_ms: 0.106875\n  ...\n# Subtest: useChatWithCallbacks sets onError callback\nok 3 - useChatWithCallbacks sets onError callback\n  ---\n  duration_ms: 0.049375\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.825291\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:45.273Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function hasThinkingParts(messages) {\n  return messages.some(message => \n    message.parts?.some(part => part.type === \"thinking\")\n  );\n}",
+    "testOutput": "TAP version 13\n# Subtest: hasThinkingParts returns true when thinking exists\nok 1 - hasThinkingParts returns true when thinking exists\n  ---\n  duration_ms: 0.42675\n  ...\n# Subtest: hasThinkingParts returns false when no thinking\nok 2 - hasThinkingParts returns false when no thinking\n  ---\n  duration_ms: 0.113209\n  ...\n# Subtest: hasThinkingParts handles empty\nok 3 - hasThinkingParts handles empty\n  ---\n  duration_ms: 0.048375\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.071291\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:48.442Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function hasThinkingParts(messages) {\n  return messages.some(msg => \n    msg.parts.some(part => part.type === \"thinking\")\n  );\n}",
+    "testOutput": "TAP version 13\n# Subtest: hasThinkingParts returns true when thinking exists\nok 1 - hasThinkingParts returns true when thinking exists\n  ---\n  duration_ms: 0.386792\n  ...\n# Subtest: hasThinkingParts returns false when no thinking\nok 2 - hasThinkingParts returns false when no thinking\n  ---\n  duration_ms: 0.116209\n  ...\n# Subtest: hasThinkingParts handles empty\nok 3 - hasThinkingParts handles empty\n  ---\n  duration_ms: 0.047875\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.462834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:51.500Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function* createChatStream(adapter, messages) {\n  const stream = await adapter.chat(messages);\n  for await (const chunk of stream) {\n    yield chunk;\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatStream passes adapter\nnot ok 1 - createChatStream passes adapter\n  ---\n  duration_ms: 0.381334\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656534909.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'adapter')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656534909.mjs:19:35)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: createChatStream passes messages\nnot ok 2 - createChatStream passes messages\n  ---\n  duration_ms: 0.11\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656534909.mjs:22:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'messages')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656534909.mjs:24:39)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n# Subtest: createChatStream returns stream\nnot ok 3 - createChatStream returns stream\n  ---\n  duration_ms: 0.454083\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656534909.mjs:27:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + Object [AsyncGenerator] {}\n    - 'stream'\n    \n  code: 'ERR_TEST_FAILURE'\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 0\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.643167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:28:54.991Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createChatStream(adapter, messages) {\n  return chat({\n    adapter,\n    messages,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatStream passes adapter\nok 1 - createChatStream passes adapter\n  ---\n  duration_ms: 0.366667\n  ...\n# Subtest: createChatStream passes messages\nok 2 - createChatStream passes messages\n  ---\n  duration_ms: 0.266541\n  ...\n# Subtest: createChatStream returns stream\nok 3 - createChatStream returns stream\n  ---\n  duration_ms: 0.052083\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.143417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:28:57.508Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createChatHandler(adapter) {\n  return async (request) => {\n    const { messages } = await request.json();\n    const result = await adapter.chat({ messages });\n    return adapter.toServerSentEventsResponse(result);\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHandler returns async function\nok 1 - createChatHandler returns async function\n  ---\n  duration_ms: 0.400959\n  ...\n# Subtest: handler calls chat with adapter and messages\nnot ok 2 - handler calls chat with adapter and messages\n  ---\n  duration_ms: 0.186208\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:26:1'\n  failureType: 'testCodeFailure'\n  error: 'adapter.chat is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:4:34\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:28:3)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)\n  ...\n# Subtest: handler returns SSE response\nnot ok 3 - handler returns SSE response\n  ---\n  duration_ms: 0.07525\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:33:1'\n  failureType: 'testCodeFailure'\n  error: 'adapter.chat is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:4:34\n    async TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656541315.mjs:35:18)\n    async Test.run (node:internal/test_runner/test:980:9)\n    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 1\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.176041\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:01.405Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function createChatHandler(adapter) {\n  return async function POST(request) {\n    const { messages } = await request.json();\n\n    const stream = chat({\n      adapter,\n      messages,\n    });\n\n    return toServerSentEventsResponse(stream);\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHandler returns async function\nnot ok 1 - createChatHandler returns async function\n  ---\n  duration_ms: 0.841542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:26:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'object'\n    - 'function'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'function'\n  actual: 'object'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:28:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: handler calls chat with adapter and messages\nnot ok 2 - handler calls chat with adapter and messages\n  ---\n  duration_ms: 0.079375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:31:1'\n  failureType: 'testCodeFailure'\n  error: 'handler is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:33:9)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n# Subtest: handler returns SSE response\nnot ok 3 - handler returns SSE response\n  ---\n  duration_ms: 0.065709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:38:1'\n  failureType: 'testCodeFailure'\n  error: 'handler is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656544564.mjs:40:24)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 0\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.131333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:04.650Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export async function createChatHandler(adapter) {\n  return async (request) => {\n    const { messages } = await request.json();\n\n    const stream = chat({\n      adapter,\n      messages,\n    });\n\n    return toServerSentEventsResponse(stream);\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHandler returns async function\nnot ok 1 - createChatHandler returns async function\n  ---\n  duration_ms: 1.005417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:26:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + 'object'\n    - 'function'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'function'\n  actual: 'object'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:28:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: handler calls chat with adapter and messages\nnot ok 2 - handler calls chat with adapter and messages\n  ---\n  duration_ms: 0.090875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:31:1'\n  failureType: 'testCodeFailure'\n  error: 'handler is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:33:9)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n# Subtest: handler returns SSE response\nnot ok 3 - handler returns SSE response\n  ---\n  duration_ms: 0.067542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:38:1'\n  failureType: 'testCodeFailure'\n  error: 'handler is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656551326.mjs:40:24)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 0\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.112792\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:11.412Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function createChatHandler(adapter) {\n  return async (request) => {\n    const { messages } = await request.json();\n\n    const stream = chat({\n      adapter,\n      messages,\n    });\n\n    return toServerSentEventsResponse(stream);\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatHandler returns async function\nok 1 - createChatHandler returns async function\n  ---\n  duration_ms: 0.361875\n  ...\n# Subtest: handler calls chat with adapter and messages\nok 2 - handler calls chat with adapter and messages\n  ---\n  duration_ms: 0.435167\n  ...\n# Subtest: handler returns SSE response\nok 3 - handler returns SSE response\n  ---\n  duration_ms: 0.061333\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.382333\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:16.859Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function createChatWithTools(adapter, messages, tools) {\n  return await adapter.chat(messages, tools);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatWithTools passes all args\nnot ok 1 - createChatWithTools passes all args\n  ---\n  duration_ms: 0.348708\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656560184.mjs:15:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'adapter')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656560184.mjs:17:35)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Error: Test \"createChatWithTools passes all args\" at generated/temp-test-1768656560184.mjs:15:1 generated asynchronous activity after the test ended. This activity created the error \"TypeError: adapter.chat is not a function\" and would have caused the test to fail, but instead triggered an unhandledRejection event.\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.644833\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:20.269Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function createChatWithTools(adapter, messages, tools) {\n  return chat({\n    adapter,\n    messages,\n    tools,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createChatWithTools passes all args\nok 1 - createChatWithTools passes all args\n  ---\n  duration_ms: 0.516583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.128417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:23.311Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createOpenAIAdapter(model) {\n  return openaiText(model);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createOpenAIAdapter passes model to openaiText\nok 1 - createOpenAIAdapter passes model to openaiText\n  ---\n  duration_ms: 0.359208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.043125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:25.852Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createOpenAIAdapter(model) {\n  return openaiText(model);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createOpenAIAdapter passes model to openaiText\nok 1 - createOpenAIAdapter passes model to openaiText\n  ---\n  duration_ms: 0.35925\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.543416\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:29.334Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createAnthropicAdapter(apiKey, model) {\n  return {\n    anthropicText: async function(config) {\n      return {\n        ...config,\n        apiKey,\n        model\n      };\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createAnthropicAdapter passes config object\nnot ok 1 - createAnthropicAdapter passes config object\n  ---\n  duration_ms: 0.3375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656572892.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'apiKey')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656572892.mjs:21:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.811583\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:32.971Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createAnthropicAdapter(apiKey, model) {\n  return anthropicText({\n    apiKey: apiKey,\n    model: model\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createAnthropicAdapter passes config object\nok 1 - createAnthropicAdapter passes config object\n  ---\n  duration_ms: 0.36\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.164667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:36.454Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createOllamaAdapter(host, model) {\n  return function ollamaText(config = {}) {\n    return {\n      ...config,\n      host,\n      model\n    };\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createOllamaAdapter passes host and model\nnot ok 1 - createOllamaAdapter passes host and model\n  ---\n  duration_ms: 0.348334\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656582845.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'host')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656582845.mjs:19:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.598459\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:42.927Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createOllamaAdapter(host, model) {\n  return ollamaText({\n    host: host,\n    model: model\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createOllamaAdapter passes host and model\nok 1 - createOllamaAdapter passes host and model\n  ---\n  duration_ms: 0.371958\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.932667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:45.851Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createBasicTool(name, description, inputSchema) {\n  return {\n    name,\n    description,\n    input_schema: inputSchema\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createBasicTool passes name\nnot ok 1 - createBasicTool passes name\n  ---\n  duration_ms: 0.373667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'name')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:19:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: createBasicTool passes description\nnot ok 2 - createBasicTool passes description\n  ---\n  duration_ms: 0.108916\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:22:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'description')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:24:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n# Subtest: createBasicTool passes inputSchema\nnot ok 3 - createBasicTool passes inputSchema\n  ---\n  duration_ms: 0.049541\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:27:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'inputSchema')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656589119.mjs:29:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async Test.processPendingSubtests (node:internal/test_runner/test:677:7)\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 0\n# fail 3\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.651458\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:29:49.204Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createBasicTool(name, description, inputSchema) {\n  return toolDefinition({\n    name,\n    description,\n    inputSchema,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createBasicTool passes name\nok 1 - createBasicTool passes name\n  ---\n  duration_ms: 0.365125\n  ...\n# Subtest: createBasicTool passes description\nok 2 - createBasicTool passes description\n  ---\n  duration_ms: 0.109583\n  ...\n# Subtest: createBasicTool passes inputSchema\nok 3 - createBasicTool passes inputSchema\n  ---\n  duration_ms: 0.048458\n  ...\n1..3\n# tests 3\n# suites 0\n# pass 3\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.804834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:52.553Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createServerTool(toolDef, executeFn) {\n  return toolDef.server(executeFn);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createServerTool calls .server() with execute function\nok 1 - createServerTool calls .server() with execute function\n  ---\n  duration_ms: 0.350542\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.512958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:55.615Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createServerTool(toolDef, executeFn) {\n  return toolDef.server(executeFn);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createServerTool calls .server() with execute function\nok 1 - createServerTool calls .server() with execute function\n  ---\n  duration_ms: 0.38275\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.899042\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:29:58.719Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createApprovalTool(name, description, inputSchema) {\n  return {\n    name,\n    description,\n    input_schema: inputSchema,\n    needsApproval: true\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createApprovalTool sets needsApproval true\nnot ok 1 - createApprovalTool sets needsApproval true\n  ---\n  duration_ms: 0.424792\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656602876.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'needsApproval')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656602876.mjs:18:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: createApprovalTool includes name and description\nnot ok 2 - createApprovalTool includes name and description\n  ---\n  duration_ms: 0.130875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656602876.mjs:21:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'name')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656602876.mjs:23:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 0\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.807459\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:02.959Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createApprovalTool(name, description, inputSchema) {\n  return toolDefinition({\n    name,\n    description,\n    inputSchema,\n    needsApproval: true,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createApprovalTool sets needsApproval true\nok 1 - createApprovalTool sets needsApproval true\n  ---\n  duration_ms: 0.416709\n  ...\n# Subtest: createApprovalTool includes name and description\nok 2 - createApprovalTool includes name and description\n  ---\n  duration_ms: 0.062459\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.606333\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:06.387Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createFullTool(config) {\n  return {\n    name: config.name,\n    description: config.description,\n    inputSchema: config.inputSchema,\n    outputSchema: config.outputSchema\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createFullTool passes all config fields\nnot ok 1 - createFullTool passes all config fields\n  ---\n  duration_ms: 0.39425\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656609393.mjs:23:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'name')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656609393.mjs:25:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.949917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:09.476Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createFullTool(config) {\n  return toolDefinition({\n    name: config.name,\n    description: config.description,\n    inputSchema: config.inputSchema,\n    outputSchema: config.outputSchema,\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: createFullTool passes all config fields\nok 1 - createFullTool passes all config fields\n  ---\n  duration_ms: 0.55475\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.635917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:13.735Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function getPartsByType(message, type) {\n  if (!message || !message.parts) {\n    return [];\n  }\n  \n  return message.parts.filter(part => part.type === type);\n}",
+    "testOutput": "TAP version 13\n# Subtest: getPartsByType returns matching parts\nok 1 - getPartsByType returns matching parts\n  ---\n  duration_ms: 0.408459\n  ...\n# Subtest: getPartsByType returns empty for no matches\nok 2 - getPartsByType returns empty for no matches\n  ---\n  duration_ms: 0.280959\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.699875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:17.066Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function getPartsByType(message, type) {\n  return message.parts.filter(part => part.type === type);\n}",
+    "testOutput": "TAP version 13\n# Subtest: getPartsByType returns matching parts\nok 1 - getPartsByType returns matching parts\n  ---\n  duration_ms: 0.40875\n  ...\n# Subtest: getPartsByType returns empty for no matches\nok 2 - getPartsByType returns empty for no matches\n  ---\n  duration_ms: 0.288375\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.559208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:19.728Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function countToolCalls(messages) {\n  return messages.reduce((count, message) => {\n    if (Array.isArray(message.content)) {\n      return count + message.content.filter(part => part.type === \"tool_call\").length;\n    }\n    return count;\n  }, 0);\n}",
+    "testOutput": "TAP version 13\n# Subtest: countToolCalls returns correct count\nnot ok 1 - countToolCalls returns correct count\n  ---\n  duration_ms: 0.788791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656622900.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    0 !== 2\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 2\n  actual: 0\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656622900.mjs:20:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: countToolCalls returns 0 for no tool calls\nok 2 - countToolCalls returns 0 for no tool calls\n  ---\n  duration_ms: 0.085166\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.660416\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:22.989Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function countToolCalls(messages) {\n  return messages.reduce((total, message) => {\n    return total + message.parts.filter(part => part.type === \"tool_call\").length;\n  }, 0);\n}",
+    "testOutput": "TAP version 13\n# Subtest: countToolCalls returns correct count\nok 1 - countToolCalls returns correct count\n  ---\n  duration_ms: 0.40975\n  ...\n# Subtest: countToolCalls returns 0 for no tool calls\nok 2 - countToolCalls returns 0 for no tool calls\n  ---\n  duration_ms: 0.065\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.916958\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:26.752Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function getToolResults(messages) {\n  const results = [];\n  \n  for (const message of messages) {\n    if (message.content && Array.isArray(message.content)) {\n      for (const part of message.content) {\n        if (part.type === 'tool_result') {\n          results.push({\n            name: part.tool_use_id || part.name,\n            result: part.content\n          });\n        }\n      }\n    }\n  }\n  \n  return results;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getToolResults extracts name and result\nnot ok 1 - getToolResults extracts name and result\n  ---\n  duration_ms: 0.76975\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656630964.mjs:29:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    0 !== 2\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 2\n  actual: 0\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656630964.mjs:31:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.187125\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:31.052Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function getToolResults(messages) {\n  const results = [];\n  \n  for (const message of messages) {\n    if (message.parts) {\n      for (const part of message.parts) {\n        if (part.type === 'tool_result') {\n          results.push({\n            name: part.name,\n            result: part.result\n          });\n        }\n      }\n    }\n  }\n  \n  return results;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getToolResults extracts name and result\nok 1 - getToolResults extracts name and result\n  ---\n  duration_ms: 0.684292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.004375\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:34.459Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createSSEConnection(url) {\n  return fetchServerSentEvents(url);\n}\n\nasync function fetchServerSentEvents(url) {\n  const response = await fetch(url);\n  \n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  \n  return {\n    async *[Symbol.asyncIterator]() {\n      let buffer = '';\n      \n      while (true) {\n        const { done, value } = await reader.read();\n        \n        if (done) break;\n        \n        buffer += decoder.decode(value, { stream: true });\n        const lines = buffer.split('\\n');\n        buffer = lines.pop();\n        \n        let event = {};\n        \n        for (const line of lines) {\n          if (line.startsWith('data: ')) {\n            event.data = line.slice(6);\n          } else if (line.startsWith('event: ')) {\n            event.event = line.slice(7);\n          } else if (line.startsWith('id: ')) {\n            event.id = line.slice(4);\n          } else if (line === '') {\n            if (event.data !== undefined) {\n              yield event;\n              event = {};\n            }\n          }\n        }\n      }\n    }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createSSEConnection returns SSE connection\nnot ok 1 - createSSEConnection returns SSE connection\n  ---\n  duration_ms: 10.8365\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656639931.mjs:54:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    undefined !== 'sse'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'sse'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656639931.mjs:56:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Error: Test \"createSSEConnection returns SSE connection\" at generated/temp-test-1768656639931.mjs:54:1 generated asynchronous activity after the test ended. This activity created the error \"TypeError: Failed to parse URL from /api/chat\" and would have caused the test to fail, but instead triggered an unhandledRejection event.\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 55.325542\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:40.028Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createSSEConnection(url) {\n  return fetchServerSentEvents(url);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createSSEConnection returns SSE connection\nok 1 - createSSEConnection returns SSE connection\n  ---\n  duration_ms: 0.342125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.230041\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:42.934Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createStreamConnection(serverFn) {\n  return async function stream(messages, options) {\n    const result = await serverFn(messages, options);\n    \n    return new ReadableStream({\n      async start(controller) {\n        try {\n          if (result && typeof result[Symbol.asyncIterator] === 'function') {\n            for await (const chunk of result) {\n              controller.enqueue(chunk);\n            }\n          } else if (result && typeof result.getReader === 'function') {\n            const reader = result.getReader();\n            while (true) {\n              const { done, value } = await reader.read();\n              if (done) break;\n              controller.enqueue(value);\n            }\n          } else {\n            controller.enqueue(result);\n          }\n          controller.close();\n        } catch (error) {\n          controller.error(error);\n        }\n      }\n    });\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createStreamConnection wraps function with stream()\nnot ok 1 - createStreamConnection wraps function with stream()\n  ---\n  duration_ms: 0.823292\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656647987.mjs:38:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + undefined\n    - 'stream'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'stream'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656647987.mjs:40:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.445584\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:48.067Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createStreamConnection(serverFn) {\n  return stream(serverFn);\n}",
+    "testOutput": "TAP version 13\n# Subtest: createStreamConnection wraps function with stream()\nok 1 - createStreamConnection wraps function with stream()\n  ---\n  duration_ms: 0.401667\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.196208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:30:51.075Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function useChatWithConnection(connectionType, endpoint) {\n  return async function useChat(message) {\n    if (connectionType === \"sse\") {\n      return await fetchServerSentEvents(endpoint, message);\n    } else if (connectionType === \"stream\") {\n      return await stream(endpoint, message);\n    }\n  };\n}\n\nasync function fetchServerSentEvents(endpoint, message) {\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ message })\n  });\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  let result = '';\n  \n  while (true) {\n    const { done, value } = await reader.read();\n    if (done) break;\n    result += decoder.decode(value, { stream: true });\n  }\n  \n  return result;\n}\n\nasync function stream(endpoint, message) {\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ message })\n  });\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  let result = '';\n  \n  while (true) {\n    const { done, value } = await reader.read();\n    if (done) break;\n    result += decoder.decode(value, { stream: true });\n  }\n  \n  return result;\n}",
+    "testOutput": "TAP version 13\n# Subtest: useChatWithConnection uses SSE for \"sse\" type\nnot ok 1 - useChatWithConnection uses SSE for \"sse\" type\n  ---\n  duration_ms: 0.381458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656656767.mjs:59:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'connection')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656656767.mjs:61:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Subtest: useChatWithConnection uses stream for \"stream\" type\nnot ok 2 - useChatWithConnection uses stream for \"stream\" type\n  ---\n  duration_ms: 0.120833\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656656767.mjs:65:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'connection')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656656767.mjs:68:37)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 0\n# fail 2\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.776625\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:30:56.850Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function useChatWithConnection(connectionType, endpoint) {\n  if (connectionType === \"sse\") {\n    return useChat({\n      connection: fetchServerSentEvents(endpoint),\n    });\n  } else if (connectionType === \"stream\") {\n    return useChat({\n      connection: stream((messages) => endpoint({ messages })),\n    });\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: useChatWithConnection uses SSE for \"sse\" type\nok 1 - useChatWithConnection uses SSE for \"sse\" type\n  ---\n  duration_ms: 0.429208\n  ...\n# Subtest: useChatWithConnection uses stream for \"stream\" type\nnot ok 2 - useChatWithConnection uses stream for \"stream\" type\n  ---\n  duration_ms: 0.467291\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656660077.mjs:27:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected \"actual\" to be reference-equal to \"expected\":\n    + actual - expected\n    \n    + [Function (anonymous)]\n    - [Function: fn]\n               ^\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768656660077.mjs:31:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.380209\n",
+    "passed": false,
+    "timestamp": "2026-01-17T13:31:00.161Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function useChatWithConnection(connectionType, endpoint) {\n  if (connectionType === \"sse\") {\n    return useChat({\n      connection: fetchServerSentEvents(endpoint),\n    });\n  } else if (connectionType === \"stream\") {\n    return useChat({\n      connection: stream(endpoint),\n    });\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: useChatWithConnection uses SSE for \"sse\" type\nok 1 - useChatWithConnection uses SSE for \"sse\" type\n  ---\n  duration_ms: 0.431834\n  ...\n# Subtest: useChatWithConnection uses stream for \"stream\" type\nok 2 - useChatWithConnection uses stream for \"stream\" type\n  ---\n  duration_ms: 0.073958\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 2\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 55.285791\n",
+    "passed": true,
+    "timestamp": "2026-01-17T13:31:05.107Z"
+  }
+]

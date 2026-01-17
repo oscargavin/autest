@@ -1,0 +1,367 @@
+{
+  "library": "tanstack-devtools",
+  "generatedAt": "2026-01-17T13:50:29.289Z",
+  "evaluatedAt": "2026-01-17T13:54:50.011Z",
+  "summary": {
+    "totalTasks": 25,
+    "aFirstPassRate": 92,
+    "bFirstPassRate": 100,
+    "docImpact": 8,
+    "bFailedFirstPass": 0,
+    "bRescuedByRetry": 0,
+    "iterationValue": 0,
+    "bFinalPassRate": 100
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "event-client-basics",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export class EventClient {\n  constructor() {\n    this.listeners = new Map();\n  }\n\n  on(event, callback) {\n    if (!this.listeners.has(event)) {\n      this.listeners.set(event, new Set());\n    }\n    this.listeners.get(event).add(callback);\n    \n    return () => {\n      const callbacks = this.listeners.get(event);\n      if (callbacks) {\n        callbacks.delete(callback);\n        if (callbacks.size === 0) {\n          this.listeners.delete(event);\n        }\n      }\n    };\n  }\n\n  emit(event, data) {\n    const callbacks = this.listeners.get(event);\n    if (callbacks) {\n      callbacks.forEach(callback => callback(data));\n    }\n  }\n\n  off(event, callback) {\n    if (!callback) {\n      this.listeners.delete(event);\n    } else {\n      const callbacks = this.listeners.get(event);\n      if (callbacks) {\n        callbacks.delete(callback);\n        if (callbacks.size === 0) {\n          this.listeners.delete(event);\n        }\n      }\n    }\n  }\n\n  once(event, callback) {\n    const wrapper = (data) => {\n      callback(data);\n      this.off(event, wrapper);\n    };\n    return this.on(event, wrapper);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createEventClient(pluginId, eventMap) {\n  class TypedEventClient extends EventClient {\n    constructor() {\n      super({ pluginId, debug: false })\n    }\n  }\n  \n  return new TypedEventClient()\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "event-client-basics",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { EventEmitter } from 'events';\n\nexport function createCounter(initialValue = 0) {\n  const emitter = new EventEmitter();\n  let count = initialValue;\n\n  return {\n    increment() {\n      count++;\n      emitter.emit('update', count);\n      return count;\n    },\n    decrement() {\n      count--;\n      emitter.emit('update', count);\n      return count;\n    },\n    getValue() {\n      return count;\n    },\n    on(event, listener) {\n      emitter.on(event, listener);\n    },\n    off(event, listener) {\n      emitter.off(event, listener);\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createCounter() {\n  class CounterEvents extends EventClient {\n    constructor() {\n      super({ pluginId: 'counter', debug: false })\n    }\n  }\n\n  const client = new CounterEvents()\n  let count = 0\n\n  return {\n    increment() {\n      count++\n      client.emit('state-update', { count })\n    },\n    decrement() {\n      count--\n      client.emit('state-update', { count })\n    },\n    reset() {\n      count = 0\n      client.emit('state-update', { count })\n    },\n    getCount() {\n      return count\n    },\n    on(event, handler) {\n      return client.on(event, handler)\n    }\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "event-client-basics",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export class EventClient {\n  constructor() {\n    this.listeners = new Map();\n  }\n\n  on(eventType, callback) {\n    if (!this.listeners.has(eventType)) {\n      this.listeners.set(eventType, []);\n    }\n    this.listeners.get(eventType).push(callback);\n  }\n\n  off(eventType, callback) {\n    if (!this.listeners.has(eventType)) {\n      return;\n    }\n    const callbacks = this.listeners.get(eventType);\n    const index = callbacks.indexOf(callback);\n    if (index !== -1) {\n      callbacks.splice(index, 1);\n    }\n  }\n\n  emit(eventType, ...args) {\n    if (!this.listeners.has(eventType)) {\n      return;\n    }\n    const callbacks = this.listeners.get(eventType);\n    for (const callback of callbacks) {\n      callback(...args);\n    }\n  }\n\n  once(eventType, callback) {\n    const onceCallback = (...args) => {\n      callback(...args);\n      this.off(eventType, onceCallback);\n    };\n    this.on(eventType, onceCallback);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createEventClient() {\n  class MyEventClient extends EventClient {\n    constructor() {\n      super({ pluginId: 'my-plugin', debug: false })\n    }\n  }\n  \n  return new MyEventClient()\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "event-listening",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function subscribe(eventEmitter, eventName, callback) {\n  eventEmitter.on(eventName, callback);\n  \n  return () => {\n    eventEmitter.off(eventName, callback);\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function subscribeToEvent(eventClient, eventType, callback) {\n  return eventClient.on(eventType, callback)\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "event-listening",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function onAllPluginEvents(plugin, callback) {\n  const events = new Map();\n  \n  const originalEmit = plugin.emit;\n  plugin.emit = function(eventName, ...args) {\n    if (!events.has(eventName)) {\n      events.set(eventName, []);\n    }\n    events.get(eventName).push(args);\n    callback(eventName, ...args);\n    return originalEmit.call(this, eventName, ...args);\n  };\n  \n  return () => {\n    plugin.emit = originalEmit;\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function onAllPluginEvents(callback) {\n  const events = ['state-update', 'error', 'initialized', 'reset'];\n  const cleanups = [];\n\n  for (const eventType of events) {\n    const cleanup = this.on(eventType, callback);\n    cleanups.push(cleanup);\n  }\n\n  return () => {\n    for (const cleanup of cleanups) {\n      cleanup();\n    }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "event-listening",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export class EventLog {\n  constructor(maxSize) {\n    this.maxSize = maxSize;\n    this.events = [];\n  }\n\n  add(event) {\n    this.events.push(event);\n    if (this.events.length > this.maxSize) {\n      this.events.shift();\n    }\n  }\n\n  getEvents() {\n    return [...this.events];\n  }\n\n  clear() {\n    this.events = [];\n  }\n\n  size() {\n    return this.events.length;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createEventLog(maxEvents) {\n  const events = [];\n  \n  return {\n    log(event) {\n      events.push(event);\n      if (events.length > maxEvents) {\n        events.shift();\n      }\n    },\n    \n    getEvents() {\n      return [...events];\n    },\n    \n    clear() {\n      events.length = 0;\n    }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "server-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function initializeServerEventBus(config = {}) {\n  const eventBus = {\n    events: new Map(),\n    config: {\n      maxListeners: config.maxListeners || 10,\n      async: config.async !== false,\n      ...config\n    },\n    \n    on(event, handler) {\n      if (!this.events.has(event)) {\n        this.events.set(event, []);\n      }\n      const handlers = this.events.get(event);\n      if (handlers.length >= this.config.maxListeners) {\n        throw new Error(`Max listeners (${this.config.maxListeners}) exceeded for event: ${event}`);\n      }\n      handlers.push(handler);\n      return this;\n    },\n    \n    off(event, handler) {\n      if (!this.events.has(event)) return this;\n      const handlers = this.events.get(event);\n      const index = handlers.indexOf(handler);\n      if (index > -1) {\n        handlers.splice(index, 1);\n      }\n      return this;\n    },\n    \n    async emit(event, ...args) {\n      if (!this.events.has(event)) return this;\n      const handlers = this.events.get(event);\n      \n      if (this.config.async) {\n        await Promise.all(handlers.map(handler => handler(...args)));\n      } else {\n        for (const handler of handlers) {\n          await handler(...args);\n        }\n      }\n      return this;\n    },\n    \n    once(event, handler) {\n      const onceHandler = (...args) => {\n        this.off(event, onceHandler);\n        return handler(...args);\n      };\n      return this.on(event, onceHandler);\n    },\n    \n    removeAllListeners(event) {\n      if (event) {\n        this.events.delete(event);\n      } else {\n        this.events.clear();\n      }\n      return this;\n    }\n  };\n  \n  return eventBus;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initializeServerEventBus(config) {\n  const bus = new ServerEventBus(config);\n  bus.start();\n  return bus;\n}"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "server-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { EventEmitter } from 'events';\n\nconst eventEmitter = new EventEmitter();\nconst clients = new Set();\n\nexport function addClient(client) {\n  clients.add(client);\n}\n\nexport function removeClient(client) {\n  clients.delete(client);\n}\n\nexport function broadcast(event, data) {\n  clients.forEach(client => {\n    if (typeof client.emit === 'function') {\n      client.emit(event, data);\n    } else if (typeof client.send === 'function') {\n      client.send(JSON.stringify({ event, data }));\n    } else if (typeof client === 'function') {\n      client(event, data);\n    }\n  });\n}\n\nexport function getClients() {\n  return clients;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function broadcastToClients(bus, event) {\n  bus.broadcast(event)\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "server-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createMessageHandler() {\n  const handlers = new Map();\n  \n  return {\n    on(event, callback) {\n      handlers.set(event, callback);\n    },\n    \n    async handleMessage(message) {\n      const handler = handlers.get(message.type);\n      if (handler) {\n        return await handler(message.data);\n      }\n      return null;\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function listenAndRespond(bus) {\n  bus.on('client:message', (event) => {\n    bus.broadcast({\n      type: 'server:response',\n      payload: { message: 'Hello clients' }\n    })\n  })\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "server-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "/**\n * Creates a graceful shutdown handler that performs cleanup operations\n * @param {Object} options - Configuration options\n * @param {Function[]} options.cleanupTasks - Array of async cleanup functions\n * @param {number} options.timeout - Timeout in ms for cleanup (default: 10000)\n * @returns {Function} Shutdown handler function\n */\nexport async function gracefulShutdown(options = {}) {\n  const { cleanupTasks = [], timeout = 10000 } = options;\n  \n  const executeCleanup = async () => {\n    const cleanupPromise = Promise.all(\n      cleanupTasks.map(task => \n        Promise.resolve(task()).catch(err => {\n          console.error('Cleanup task failed:', err);\n        })\n      )\n    );\n    \n    const timeoutPromise = new Promise((resolve) => \n      setTimeout(() => resolve(), timeout)\n    );\n    \n    await Promise.race([cleanupPromise, timeoutPromise]);\n  };\n  \n  return executeCleanup;\n}\n\n/**\n * Sets up graceful shutdown handlers for common signals\n * @param {Function[]} cleanupTasks - Array of async cleanup functions\n * @param {number} timeout - Timeout in ms for cleanup\n */\nexport function setupGracefulShutdown(cleanupTasks = [], timeout = 10000) {\n  let isShuttingDown = false;\n  \n  const shutdown = async (signal) => {\n    if (isShuttingDown) {\n      return;\n    }\n    \n    isShuttingDown = true;\n    console.log(`Received ${signal}, starting graceful shutdown...`);\n    \n    const handler = await gracefulShutdown({ cleanupTasks, timeout });\n    await handler();\n    \n    console.log('Cleanup completed, exiting...');\n    process.exit(0);\n  };\n  \n  process.on('SIGTERM', () => shutdown('SIGTERM'));\n  process.on('SIGINT', () => shutdown('SIGINT'));\n  \n  return shutdown;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function gracefulShutdown(bus) {\n  await bus.stop()\n  process.exit(0)\n}"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "client-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { EventEmitter } from 'events';\n\nclass ClientEventBus extends EventEmitter {\n  constructor() {\n    super();\n    this.started = false;\n  }\n\n  start() {\n    if (!this.started) {\n      this.started = true;\n      this.emit('started');\n    }\n    return this;\n  }\n}\n\nexport async function initializeAndStartClientEventBus() {\n  const eventBus = new ClientEventBus();\n  eventBus.start();\n  return eventBus;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initializeAndStartClientEventBus() {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: true,\n    port: 42069\n  })\n  \n  eventBus.start()\n  \n  return eventBus\n}"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "client-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { EventEmitter } from 'events';\n\nexport async function sendEventsToServer(events, serverUrl) {\n  if (!events || !Array.isArray(events) || events.length === 0) {\n    throw new Error('Events must be a non-empty array');\n  }\n  \n  if (!serverUrl || typeof serverUrl !== 'string') {\n    throw new Error('Server URL must be a valid string');\n  }\n\n  const response = await fetch(serverUrl, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n    body: JSON.stringify({ events }),\n  });\n\n  if (!response.ok) {\n    throw new Error(`Server responded with status: ${response.status}`);\n  }\n\n  return await response.json();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function sendEventToServer(eventType, payload, options = {}) {\n  const { port = 42069, debug = false } = options;\n  \n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug,\n    port\n  });\n\n  return new Promise((resolve, reject) => {\n    const timeout = setTimeout(() => {\n      eventBus.stop();\n      reject(new Error('Connection timeout'));\n    }, options.timeout || 5000);\n\n    eventBus.on('connected', () => {\n      clearTimeout(timeout);\n      eventBus.send({ type: eventType, payload });\n      eventBus.stop();\n      resolve();\n    });\n\n    eventBus.on('error', (error) => {\n      clearTimeout(timeout);\n      eventBus.stop();\n      reject(error);\n    });\n\n    eventBus.start();\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "client-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function handleConnectionLifecycle(connection) {\n  return new Promise((resolve, reject) => {\n    const events = [];\n    \n    connection.on('connecting', () => {\n      events.push('connecting');\n    });\n    \n    connection.on('connected', () => {\n      events.push('connected');\n    });\n    \n    connection.on('disconnecting', () => {\n      events.push('disconnecting');\n    });\n    \n    connection.on('disconnected', () => {\n      events.push('disconnected');\n      resolve(events);\n    });\n    \n    connection.on('error', (error) => {\n      events.push('error');\n      reject(error);\n    });\n    \n    connection.connect();\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function handleConnectionLifecycle(port = 42069) {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: true,\n    port: port\n  })\n\n  const events = []\n\n  eventBus.on('connected', () => {\n    events.push('connected')\n  })\n\n  eventBus.on('disconnected', () => {\n    events.push('disconnected')\n  })\n\n  eventBus.start()\n\n  return {\n    eventBus,\n    events,\n    stop: () => eventBus.stop()\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "client-event-bus",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function setupCleanup(callback) {\n  if (typeof window !== 'undefined') {\n    window.addEventListener('unload', callback);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function cleanupOnWindowUnload() {\n  const eventBus = new ClientEventBus({\n    connectToServerBus: true,\n    debug: false,\n    port: 42069\n  })\n\n  eventBus.start()\n\n  window.addEventListener('beforeunload', () => {\n    eventBus.stop()\n  })\n\n  return eventBus\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "plugin-configuration",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createPlugin(config = {}) {\n  return {\n    name: config.name || 'default-plugin',\n    version: config.version || '1.0.0',\n    enabled: config.enabled !== undefined ? config.enabled : true,\n    options: config.options || {},\n    async initialize() {\n      if (!this.enabled) {\n        return false;\n      }\n      return true;\n    },\n    async execute(data) {\n      if (!this.enabled) {\n        throw new Error('Plugin is not enabled');\n      }\n      return data;\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createPlugin(id, name, render, defaultOpen = false) {\n  return {\n    id,\n    name,\n    defaultOpen,\n    render\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "plugin-configuration",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function pluginWithDynamicName(name) {\n  return {\n    name,\n    setup(build) {\n      // Plugin setup logic\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function implementPluginWithDynamicName() {\n  return {\n    id: 'dynamic-name-plugin',\n    name: (el) => {\n      el.innerText = 'Dynamic Name';\n    },\n    render: (el, theme) => {\n      el.innerHTML = `<div>Plugin content (${theme} mode)</div>`;\n    }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "plugin-configuration",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { readFile, writeFile } from 'fs/promises';\nimport { join } from 'path';\n\nexport async function renderWithTheme(pluginPath, themePath, outputPath) {\n  const [pluginContent, themeConfig] = await Promise.all([\n    readFile(pluginPath, 'utf-8'),\n    readFile(themePath, 'utf-8')\n  ]);\n  \n  const theme = JSON.parse(themeConfig);\n  \n  let rendered = pluginContent;\n  for (const [key, value] of Object.entries(theme)) {\n    const regex = new RegExp(`{{\\\\s*${key}\\\\s*}}`, 'g');\n    rendered = rendered.replace(regex, value);\n  }\n  \n  await writeFile(outputPath, rendered, 'utf-8');\n  return rendered;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function buildPluginRender(plugin) {\n  return (el, theme) => {\n    if (typeof plugin.name === 'function') {\n      plugin.name(el);\n    } else if (typeof plugin.name === 'string') {\n      el.innerText = plugin.name;\n    }\n    \n    if (typeof plugin.render === 'function') {\n      plugin.render(el, theme);\n    }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "react-devtools-integration",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function configureTanStackDevtools(plugin) {\n  return {\n    plugins: [plugin],\n    enabled: true\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function configureTanStackDevtools(pluginConfig) {\n  return {\n    plugins: [pluginConfig]\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "react-devtools-integration",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function configureDevtools(libraries) {\n  const devtools = {};\n  \n  libraries.forEach(library => {\n    devtools[library] = {\n      enabled: true,\n      position: 'bottom-right',\n      initialIsOpen: false,\n      panelProps: {},\n      closeButtonProps: {},\n      toggleButtonProps: {},\n      errorTypes: ['active', 'inactive'],\n      client: null\n    };\n  });\n  \n  return devtools;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function configureMultipleDevtools(plugins) {\n  return {\n    plugins: plugins.map(plugin => ({\n      name: plugin.name,\n      render: plugin.render,\n      ...(plugin.defaultOpen !== undefined && { defaultOpen: plugin.defaultOpen })\n    }))\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "react-devtools-integration",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import React, { useState, useEffect, useCallback } from 'react';\n\nexport function CustomPluginPanel({ title, initialData, onDataChange }) {\n  const [data, setData] = useState(initialData || {});\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    if (onDataChange) {\n      onDataChange(data);\n    }\n  }, [data, onDataChange]);\n\n  const updateData = useCallback((key, value) => {\n    setData(prevData => ({\n      ...prevData,\n      [key]: value\n    }));\n  }, []);\n\n  const resetData = useCallback(() => {\n    setData(initialData || {});\n    setError(null);\n  }, [initialData]);\n\n  const loadData = useCallback(async (fetchFn) => {\n    setIsLoading(true);\n    setError(null);\n    try {\n      const result = await fetchFn();\n      setData(result);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setIsLoading(false);\n    }\n  }, []);\n\n  return {\n    data,\n    isLoading,\n    error,\n    updateData,\n    resetData,\n    loadData,\n    setData\n  };\n}\n\nexport function usePluginPanel(initialData, onDataChange) {\n  const [data, setData] = useState(initialData || {});\n  const [isLoading, setIsLoading] = useState(false);\n  const [error, setError] = useState(null);\n\n  useEffect(() => {\n    if (onDataChange) {\n      onDataChange(data);\n    }\n  }, [data, onDataChange]);\n\n  const updateData = useCallback((key, value) => {\n    setData(prevData => ({\n      ...prevData,\n      [key]: value\n    }));\n  }, []);\n\n  const resetData = useCallback(() => {\n    setData(initialData || {});\n    setError(null);\n  }, [initialData]);\n\n  const loadData = useCallback(async (fetchFn) => {\n    setIsLoading(true);\n    setError(null);\n    try {\n      const result = await fetchFn();\n      setData(result);\n    } catch (err) {\n      setError(err.message);\n    } finally {\n      setIsLoading(false);\n    }\n  }, []);\n\n  return {\n    data,\n    isLoading,\n    error,\n    updateData,\n    resetData,\n    loadData,\n    setData\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createCustomPluginPanel(pluginName, PanelComponent, options = {}) {\n  return {\n    name: pluginName,\n    render: PanelComponent,\n    defaultOpen: options.defaultOpen ?? false\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-021",
+      "docTag": "devtools-core",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { TanStackDevtoolsCore } from '@tanstack/devtools-core';\n\nexport async function initializeTanStackDevtools(config) {\n  const devtools = new TanStackDevtoolsCore(config);\n  await devtools.start();\n  return devtools;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initializeTanStackDevtoolsCore(config) {\n  const devtools = new TanStackDevtoolsCore({\n    config: config\n  });\n  \n  return devtools;\n}"
+      }
+    },
+    {
+      "taskId": "task-022",
+      "docTag": "devtools-core",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function mountDevtools(devtools, container) {\n  container.appendChild(devtools);\n}\n\nexport function unmountDevtools(devtools) {\n  devtools.parentNode?.removeChild(devtools);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function mountAndUnmountDevtools(container) {\n  const devtools = new TanStackDevtoolsCore({\n    config: {\n      defaultOpen: false,\n      position: 'bottom-right',\n      theme: 'dark',\n      openHotkey: ['Shift', 'A']\n    },\n    plugins: []\n  });\n\n  devtools.mount(container);\n  devtools.unmount();\n}"
+      }
+    },
+    {
+      "taskId": "task-023",
+      "docTag": "devtools-core",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "/**\n * Updates devtools configuration dynamically\n * @param {Object} config - The configuration object to update\n * @param {Object} updates - The updates to apply\n * @returns {Object} The updated configuration\n */\nexport async function updateDevtoolsConfig(config, updates) {\n  return {\n    ...config,\n    ...updates,\n    ...(config.nested && updates.nested && {\n      nested: {\n        ...config.nested,\n        ...updates.nested\n      }\n    })\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function updateDevtoolsConfig(devtools, newConfig) {\n  devtools.setConfig({\n    config: newConfig\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-024",
+      "docTag": "devtools-core",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "import { EventEmitter } from 'events';\n\nexport function integrateDevtools(eventBus, devtools) {\n  if (!eventBus || !devtools) {\n    throw new Error('eventBus and devtools are required');\n  }\n\n  const originalEmit = eventBus.emit.bind(eventBus);\n  \n  eventBus.emit = function(eventName, ...args) {\n    const timestamp = Date.now();\n    \n    if (typeof devtools.logEvent === 'function') {\n      devtools.logEvent({\n        name: eventName,\n        args,\n        timestamp\n      });\n    }\n    \n    return originalEmit(eventName, ...args);\n  };\n\n  const originalOn = eventBus.on.bind(eventBus);\n  \n  eventBus.on = function(eventName, listener) {\n    if (typeof devtools.registerListener === 'function') {\n      devtools.registerListener({\n        event: eventName,\n        listener\n      });\n    }\n    \n    return originalOn(eventName, listener);\n  };\n\n  return eventBus;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function integrateDevtoolsWithEventBus(eventBus, config = {}) {\n  const devtools = new TanStackDevtoolsCore({\n    config: {\n      defaultOpen: false,\n      position: 'bottom-right',\n      theme: 'dark',\n      openHotkey: ['Shift', 'A'],\n      ...config\n    },\n    plugins: []\n  });\n\n  eventBus.on('devtools:mount', (container) => {\n    devtools.mount(container);\n  });\n\n  eventBus.on('devtools:unmount', () => {\n    devtools.unmount();\n  });\n\n  eventBus.on('devtools:setConfig', (newConfig) => {\n    devtools.setConfig({ config: newConfig });\n  });\n\n  return devtools;\n}"
+      }
+    },
+    {
+      "taskId": "task-025",
+      "docTag": "devtools-core",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function registerPlugins(plugins) {\n  const registeredPlugins = [];\n  \n  for (const plugin of plugins) {\n    if (plugin && typeof plugin.render === 'function') {\n      registeredPlugins.push(plugin);\n    }\n  }\n  \n  return {\n    plugins: registeredPlugins,\n    async render(data) {\n      const results = [];\n      for (const plugin of registeredPlugins) {\n        results.push(await plugin.render(data));\n      }\n      return results;\n    }\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function registerPlugins(devtools, plugins) {\n  plugins.forEach(plugin => {\n    if (plugin.render && typeof plugin.render === 'function') {\n      devtools.registerPlugin(plugin);\n    }\n  });\n}"
+      }
+    }
+  ]
+}
