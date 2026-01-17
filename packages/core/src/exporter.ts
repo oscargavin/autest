@@ -14,9 +14,15 @@ interface DPOExample {
   rejected: string;
 }
 
+// Extended DPO with error context for teaching error correction
+interface DPOWithFeedback extends DPOExample {
+  rejected_error?: string;
+}
+
 export interface ExportStats {
   sftCount: number;
   dpoCount: number;
+  dpoFromRetries: number;
   bothPass: number;
   aOnlyPass: number;
   bOnlyPass: number;
@@ -98,32 +104,35 @@ export function exportTrainingData(options: ExportOptions): ExportStats {
   const attempts = loadLatestAttempts(library, generatedDir);
 
   emit('process', 20, 'Processing attempts...');
-  const taskResults = new Map<string, { a?: Attempt; b?: Attempt }>();
+
+  // Group attempts by task and variant, preserving iteration order
+  const attemptsByTask = new Map<string, { a: Attempt[]; b: Attempt[] }>();
 
   for (const attempt of attempts) {
-    const key = attempt.taskId;
-    if (!taskResults.has(key)) {
-      taskResults.set(key, {});
+    if (!attemptsByTask.has(attempt.taskId)) {
+      attemptsByTask.set(attempt.taskId, { a: [], b: [] });
     }
-
-    const result = taskResults.get(key)!;
-    const current = attempt.variant === 'a' ? result.a : result.b;
-
-    if (!current || (!current.passed && attempt.passed) || (!current.passed && !attempt.passed)) {
-      if (attempt.variant === 'a') {
-        result.a = attempt;
-      } else {
-        result.b = attempt;
-      }
+    const group = attemptsByTask.get(attempt.taskId)!;
+    if (attempt.variant === 'a') {
+      group.a.push(attempt);
+    } else {
+      group.b.push(attempt);
     }
+  }
+
+  // Sort each group by iteration
+  for (const group of attemptsByTask.values()) {
+    group.a.sort((x, y) => x.iteration - y.iteration);
+    group.b.sort((x, y) => x.iteration - y.iteration);
   }
 
   emit('generate', 50, 'Generating training examples...');
   const sftExamples: SFTExample[] = [];
-  const dpoExamples: DPOExample[] = [];
+  const dpoExamples: DPOWithFeedback[] = [];
   const stats: ExportStats = {
     sftCount: 0,
     dpoCount: 0,
+    dpoFromRetries: 0,
     bothPass: 0,
     aOnlyPass: 0,
     bOnlyPass: 0,
@@ -131,64 +140,65 @@ export function exportTrainingData(options: ExportOptions): ExportStats {
   };
 
   for (const task of taskSet.tasks) {
-    const result = taskResults.get(task.id);
-    if (!result) continue;
+    const group = attemptsByTask.get(task.id);
+    if (!group) continue;
 
-    const { a, b } = result;
-    const aPassed = a?.passed ?? false;
-    const bPassed = b?.passed ?? false;
     const docContent = getDocSection(taskSet, task.docTag);
 
-    if (aPassed && bPassed) {
-      stats.bothPass++;
+    // Find best attempts (first passing, or last if none pass)
+    const aAttempts = group.a;
+    const bAttempts = group.b;
 
+    const aBest = aAttempts.find(a => a.passed) || aAttempts[aAttempts.length - 1];
+    const bBest = bAttempts.find(b => b.passed) || bAttempts[bAttempts.length - 1];
+
+    const aPassed = aBest?.passed ?? false;
+    const bPassed = bBest?.passed ?? false;
+
+    // Track outcome stats
+    if (aPassed && bPassed) stats.bothPass++;
+    else if (!aPassed && bPassed) stats.bOnlyPass++;
+    else if (aPassed && !bPassed) stats.aOnlyPass++;
+    else stats.bothFail++;
+
+    // SFT: Include passing examples with their actual prompts
+    if (bPassed) {
       sftExamples.push({
         messages: [
           { role: 'system', content: 'You are an expert programmer. Write clean, working code.' },
           { role: 'user', content: buildPrompt(task, true, docContent) },
-          { role: 'assistant', content: b!.code }
+          { role: 'assistant', content: bBest!.code }
         ]
       });
+    }
 
+    if (aPassed) {
       sftExamples.push({
         messages: [
           { role: 'system', content: 'You are an expert programmer. Write clean, working code.' },
           { role: 'user', content: buildPrompt(task, false) },
-          { role: 'assistant', content: a!.code }
+          { role: 'assistant', content: aBest!.code }
         ]
       });
+    }
 
-    } else if (!aPassed && bPassed) {
-      stats.bOnlyPass++;
+    // DPO: Create pairs from B retries (same prompt, different responses)
+    // This is valid DPO: given (task + docs), prefer passing code over failing code
+    if (bPassed && bAttempts.length > 1) {
+      const bFirst = bAttempts[0];
+      const bPassing = bAttempts.find(b => b.passed);
 
-      sftExamples.push({
-        messages: [
-          { role: 'system', content: 'You are an expert programmer. Write clean, working code.' },
-          { role: 'user', content: buildPrompt(task, true, docContent) },
-          { role: 'assistant', content: b!.code }
-        ]
-      });
-
-      const prompt = buildPrompt(task, false);
-      dpoExamples.push({
-        prompt,
-        chosen: b!.code,
-        rejected: a!.code
-      });
-
-    } else if (aPassed && !bPassed) {
-      stats.aOnlyPass++;
-
-      sftExamples.push({
-        messages: [
-          { role: 'system', content: 'You are an expert programmer. Write clean, working code.' },
-          { role: 'user', content: buildPrompt(task, false) },
-          { role: 'assistant', content: a!.code }
-        ]
-      });
-
-    } else {
-      stats.bothFail++;
+      if (bFirst && bPassing && !bFirst.passed) {
+        // Valid DPO pair: same prompt, failed first attempt vs passing attempt
+        const prompt = buildPrompt(task, true, docContent);
+        dpoExamples.push({
+          prompt,
+          chosen: bPassing.code,
+          rejected: bFirst.code,
+          rejected_error: extractErrorSummary(bFirst.testOutput)
+        });
+        stats.dpoFromRetries++;
+      }
     }
   }
 
@@ -202,10 +212,37 @@ export function exportTrainingData(options: ExportOptions): ExportStats {
   const sftContent = sftExamples.map(e => JSON.stringify(e)).join('\n');
   writeFileSync(`${outDir}/sft.jsonl`, sftContent);
 
-  const dpoContent = dpoExamples.map(e => JSON.stringify(e)).join('\n');
+  // Write DPO without the extra error field (standard format)
+  const dpoContent = dpoExamples.map(e => JSON.stringify({
+    prompt: e.prompt,
+    chosen: e.chosen,
+    rejected: e.rejected
+  })).join('\n');
   writeFileSync(`${outDir}/dpo.jsonl`, dpoContent);
 
-  emit('done', 100, `Complete: ${stats.sftCount} SFT, ${stats.dpoCount} DPO`);
+  // Also write extended DPO with error context (useful for some training approaches)
+  const dpoExtendedContent = dpoExamples.map(e => JSON.stringify(e)).join('\n');
+  writeFileSync(`${outDir}/dpo-extended.jsonl`, dpoExtendedContent);
+
+  emit('done', 100, `Complete: ${stats.sftCount} SFT, ${stats.dpoCount} DPO (${stats.dpoFromRetries} from retries)`);
 
   return stats;
+}
+
+function extractErrorSummary(testOutput: string): string {
+  // Extract the key error message from TAP output
+  const errorMatch = testOutput.match(/error: ['"|\-]?(.*?)(?:\n|$)/i);
+  if (errorMatch) {
+    return errorMatch[1].trim().slice(0, 200);
+  }
+
+  // Fallback: look for assertion errors
+  const assertMatch = testOutput.match(/ERR_ASSERTION|AssertionError/);
+  if (assertMatch) {
+    const lines = testOutput.split('\n');
+    const errorLine = lines.find(l => l.includes('error:') || l.includes('expected:'));
+    return errorLine?.trim().slice(0, 200) || 'Assertion failed';
+  }
+
+  return 'Test failed';
 }
