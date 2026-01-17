@@ -92,6 +92,50 @@ export class JobQueue extends EventEmitter {
             onProgress
           });
           break;
+
+        case 'pipeline':
+          // Run all steps in sequence
+          const pipelineProgress = (stage: string, basePercent: number) => (event: ProgressEvent) => {
+            onProgress({
+              stage: `${stage}: ${event.stage}`,
+              percent: basePercent + Math.floor(event.percent * 0.25),
+              message: event.message
+            });
+          };
+
+          onProgress({ stage: 'pipeline', percent: 0, message: 'Starting full pipeline...' });
+
+          // 1. Generate (0-25%)
+          onProgress({ stage: 'generate', percent: 0, message: 'Generating tasks...' });
+          await generateTaskSuite({
+            library: job.library,
+            onProgress: pipelineProgress('generate', 0)
+          });
+
+          // 2. Run (25-50%)
+          onProgress({ stage: 'run', percent: 25, message: 'Running tests...' });
+          await runTests({
+            library: job.library,
+            variant: 'all',
+            onProgress: pipelineProgress('run', 25)
+          });
+
+          // 3. Evaluate (50-75%)
+          onProgress({ stage: 'evaluate', percent: 50, message: 'Evaluating results...' });
+          evaluate({
+            library: job.library,
+            onProgress: pipelineProgress('evaluate', 50)
+          });
+
+          // 4. Export (75-100%)
+          onProgress({ stage: 'export', percent: 75, message: 'Exporting training data...' });
+          result = exportTrainingData({
+            library: job.library,
+            onProgress: pipelineProgress('export', 75)
+          });
+
+          onProgress({ stage: 'complete', percent: 100, message: 'Pipeline complete!' });
+          break;
       }
 
       job.status = 'completed';

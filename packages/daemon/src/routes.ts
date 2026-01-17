@@ -14,7 +14,7 @@ export function registerRoutes(fastify: FastifyInstance, queue: JobQueue) {
       return reply.status(400).send({ error: 'type and library required' });
     }
 
-    const validTypes: JobType[] = ['generate', 'run', 'evaluate', 'export'];
+    const validTypes: JobType[] = ['generate', 'run', 'evaluate', 'export', 'pipeline'];
     if (!validTypes.includes(type)) {
       return reply.status(400).send({ error: `Invalid type. Must be one of: ${validTypes.join(', ')}` });
     }

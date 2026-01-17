@@ -8,7 +8,7 @@ export interface ProgressEvent {
 export type ProgressCallback = (event: ProgressEvent) => void;
 
 // Job types for the daemon
-export type JobType = 'generate' | 'run' | 'evaluate' | 'export';
+export type JobType = 'generate' | 'run' | 'evaluate' | 'export' | 'pipeline';
 
 export type JobStatus = 'pending' | 'running' | 'completed' | 'failed';
 

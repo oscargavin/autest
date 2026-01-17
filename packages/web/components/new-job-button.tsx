@@ -23,7 +23,7 @@ interface NewJobButtonProps {
   libraries: Library[]
 }
 
-type JobType = 'generate' | 'run' | 'evaluate' | 'export'
+type JobType = 'generate' | 'run' | 'evaluate' | 'export' | 'pipeline'
 
 async function searchNpm(query: string): Promise<NpmPackage[]> {
   if (!query || query.length < 2) return []
@@ -48,7 +48,7 @@ export function NewJobButton({ libraries }: NewJobButtonProps) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [selectedType, setSelectedType] = useState<JobType>('generate')
+  const [selectedType, setSelectedType] = useState<JobType>('pipeline')
 
   // Package selection
   const [searchQuery, setSearchQuery] = useState('')
@@ -155,6 +155,7 @@ export function NewJobButton({ libraries }: NewJobButtonProps) {
               onChange={(e) => setSelectedType(e.target.value as JobType)}
               className="w-full bg-background border border-border rounded-lg px-3 py-2"
             >
+              <option value="pipeline">Full pipeline (generate → run → evaluate → export)</option>
               <option value="generate">Generate tasks</option>
               <option value="run">Run tests</option>
               <option value="evaluate">Evaluate results</option>
