@@ -1,24 +1,16 @@
 {
   "name": "autest",
   "version": "1.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "autogen": "node --env-file=.env --import=tsx src/auto-generator.ts",
-    "run:a": "node --env-file=.env --import=tsx src/runner.ts a",
-    "run:b": "node --env-file=.env --import=tsx src/runner.ts b",
-    "run:all": "node --env-file=.env --import=tsx src/runner.ts all",
-    "evaluate": "tsx src/evaluator.ts",
-    "export": "tsx src/training-exporter.ts",
-    "test:generated": "node --test"
+    "dev": "tsx watch packages/daemon/src/index.ts",
+    "daemon": "node --env-file=.env --import=tsx packages/daemon/src/index.ts",
+    "web": "pnpm --filter @autest/web dev",
+    "build": "pnpm -r build"
   },
   "devDependencies": {
-    "@types/node": "^25.0.9",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3"
-  },
-  "dependencies": {
-    "@ai-sdk/mcp": "^1.0.10",
-    "@ai-sdk/xai": "^3.0.26",
-    "ai": "^6.0.39"
   }
 }

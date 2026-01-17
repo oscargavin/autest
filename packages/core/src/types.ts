@@ -1,3 +1,31 @@
+// Progress tracking for long-running jobs
+export interface ProgressEvent {
+  stage: string;
+  percent: number;
+  message: string;
+}
+
+export type ProgressCallback = (event: ProgressEvent) => void;
+
+// Job types for the daemon
+export type JobType = 'generate' | 'run' | 'evaluate' | 'export';
+
+export type JobStatus = 'pending' | 'running' | 'completed' | 'failed';
+
+export interface Job {
+  id: string;
+  type: JobType;
+  library: string;
+  status: JobStatus;
+  progress: ProgressEvent | null;
+  result: unknown | null;
+  error: string | null;
+  createdAt: string;
+  startedAt: string | null;
+  completedAt: string | null;
+}
+
+// Core data types
 export interface DocSection {
   id: string;
   title: string;

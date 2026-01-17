@@ -3,9 +3,9 @@ import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
 import { xai } from '@ai-sdk/xai';
 import { generateText, stepCountIs } from 'ai';
 import { writeFileSync, mkdirSync } from 'node:fs';
-import type { TaskSet, DocSection, Task } from './types.js';
+import type { TaskSet, DocSection, Task, ProgressCallback } from './types.js';
 
-const GENERATION_TOPICS = [
+const DEFAULT_TOPICS = [
   'hooks API useChat usage examples streaming',
   'server-side chat function streaming SSE response',
   'provider adapters openai anthropic ollama configuration',
@@ -19,11 +19,24 @@ interface GeneratedOutput {
   tasks: Task[];
 }
 
-async function generateTaskSuite(libraryName: string): Promise<void> {
-  console.log(`\n🚀 Generating test suite for: ${libraryName}\n`);
+export interface GenerateOptions {
+  library: string;
+  topics?: string[];
+  outputDir?: string;
+  onProgress?: ProgressCallback;
+}
+
+export async function generateTaskSuite(options: GenerateOptions): Promise<TaskSet> {
+  const { library, topics = DEFAULT_TOPICS, outputDir = './tasks', onProgress } = options;
+
+  const emit = (stage: string, percent: number, message: string) => {
+    onProgress?.({ stage, percent, message });
+  };
+
+  emit('init', 0, `Starting generation for ${library}`);
 
   // Create MCP client for Context7
-  console.log('📡 Connecting to Context7 MCP server...\n');
+  emit('mcp', 5, 'Connecting to Context7 MCP server...');
 
   const mcpClient = await createMCPClient({
     transport: new Experimental_StdioMCPTransport({
@@ -34,12 +47,12 @@ async function generateTaskSuite(libraryName: string): Promise<void> {
 
   try {
     const tools = await mcpClient.tools();
-    console.log(`  ✓ Connected, ${Object.keys(tools).length} tools available\n`);
+    emit('mcp', 10, `Connected, ${Object.keys(tools).length} tools available`);
 
     const systemPrompt = buildSystemPrompt();
-    const userPrompt = buildUserPrompt(libraryName, GENERATION_TOPICS);
+    const userPrompt = buildUserPrompt(library, topics);
 
-    console.log('📚 Generating tasks with Grok + Context7...\n');
+    emit('generate', 15, 'Generating tasks with Grok + Context7...');
 
     const { text, steps } = await generateText({
       model: xai('grok-4-1-fast-reasoning'),
@@ -49,61 +62,48 @@ async function generateTaskSuite(libraryName: string): Promise<void> {
       stopWhen: stepCountIs(10),
       onStepFinish: ({ toolCalls }) => {
         for (const call of toolCalls) {
-          console.log(`  🔧 ${call.toolName}`);
+          emit('generate', 20 + steps.length * 5, `Tool: ${call.toolName}`);
         }
       }
     });
 
-    console.log(`\n  📊 Steps: ${steps.length}`);
-    console.log('  ✅ Generation complete\n');
+    emit('parse', 70, `Generation complete (${steps.length} steps), parsing...`);
 
     // Extract JSON from response
-    console.log('📝 Parsing generated output...\n');
     const generated = extractJSON(text);
 
     if (!generated) {
-      console.error('❌ Failed to extract valid JSON from response');
-      console.log('Raw response:', text.slice(0, 500));
-      process.exit(1);
+      throw new Error('Failed to extract valid JSON from response');
     }
 
     // Validate output
     validateOutput(generated);
+    emit('validate', 80, `Validated ${generated.docs.length} docs, ${generated.tasks.length} tasks`);
 
-    // Write files
+    // Build TaskSet
     const taskSet: TaskSet = {
-      library: libraryName,
-      libraryId: `/${libraryName.replace('-', '/')}`,
+      library,
+      libraryId: `/${library.replace('-', '/')}`,
       generatedAt: new Date().toISOString(),
       docs: generated.docs,
       tasks: generated.tasks
     };
 
-    const outDir = `./tasks/${libraryName}`;
-    mkdirSync(outDir, { recursive: true });
+    // Write files
+    emit('write', 90, 'Writing output files...');
+    const outPath = `${outputDir}/${library}`;
+    mkdirSync(outPath, { recursive: true });
 
-    writeFileSync(`${outDir}/tasks.json`, JSON.stringify(taskSet, null, 2));
+    writeFileSync(`${outPath}/tasks.json`, JSON.stringify(taskSet, null, 2));
 
     const docsContent = generated.docs.map(d =>
       `## ${d.title}\n\n${d.content}\n\n\`\`\`typescript\n${d.codeExamples.join('\n\n')}\n\`\`\``
     ).join('\n\n---\n\n');
-    writeFileSync(`${outDir}/docs.md`, `# ${libraryName} Documentation\n\n${docsContent}`);
+    writeFileSync(`${outPath}/docs.md`, `# ${library} Documentation\n\n${docsContent}`);
 
-    // Print summary
-    console.log('✅ Generation complete!\n');
-    console.log(`  📁 Output: ${outDir}/`);
-    console.log(`  📄 Doc sections: ${generated.docs.length}`);
-    console.log(`  🧪 Tasks: ${generated.tasks.length}`);
+    emit('done', 100, `Complete: ${generated.docs.length} docs, ${generated.tasks.length} tasks`);
 
-    const distribution = new Map<string, number>();
-    for (const task of generated.tasks) {
-      distribution.set(task.docTag, (distribution.get(task.docTag) || 0) + 1);
-    }
-
-    console.log('\n  Task distribution:');
-    for (const [tag, count] of distribution) {
-      console.log(`    ${tag}: ${count}`);
-    }
+    return taskSet;
 
   } finally {
     await mcpClient.close();
@@ -253,35 +253,5 @@ function validateOutput(output: GeneratedOutput): void {
     if (!task.id || !task.docTag || !task.description || !task.testCode) {
       throw new Error(`Invalid task: ${JSON.stringify(task).slice(0, 100)}`);
     }
-    if (!docIds.has(task.docTag)) {
-      console.warn(`⚠️  Task ${task.id} references unknown docTag: ${task.docTag}`);
-    }
-  }
-
-  console.log(`  ✓ Validated ${docs.length} doc sections`);
-  console.log(`  ✓ Validated ${tasks.length} tasks`);
-}
-
-async function main() {
-  const libraryName = process.argv[2];
-
-  if (!libraryName) {
-    console.error('Usage: npm run autogen -- <library-name>');
-    console.error('Example: npm run autogen -- tanstack-ai');
-    process.exit(1);
-  }
-
-  if (!process.env.XAI_API_KEY) {
-    console.error('❌ XAI_API_KEY environment variable required');
-    process.exit(1);
-  }
-
-  try {
-    await generateTaskSuite(libraryName);
-  } catch (error) {
-    console.error('❌ Generation failed:', error);
-    process.exit(1);
   }
 }
-
-main();
