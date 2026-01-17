@@ -167,20 +167,22 @@ RULES FOR TEST CODE:
 - Include 2-3 test cases per task
 - Tests must be self-contained and runnable
 - NO real network calls or external dependencies
+- CRITICAL: Test code MUST call the EXACT function name from the task description
+  - If description says "Write myFunc(x)", test MUST call myFunc(x), NOT functionUnderTest(x)
 
 EXAMPLE TEST CODE STRUCTURE:
 \`\`\`
+// If task says: "Write a function calculateSum(a, b) that..."
 import { test } from 'node:test';
 import assert from 'node:assert';
 
 // Mock globals
 let capturedArgs;
-globalThis.someFunction = (args) => { capturedArgs = args; return mockResult; };
+globalThis.someLibraryFn = (args) => { capturedArgs = args; return mockResult; };
 
-test('function does X correctly', () => {
-  const result = functionUnderTest(input);
-  assert.strictEqual(result, expected);
-  assert.strictEqual(capturedArgs.property, expectedValue);
+test('calculateSum adds correctly', () => {
+  const result = calculateSum(2, 3);  // Use EXACT name from description!
+  assert.strictEqual(result, 5);
 });
 \`\`\`
 
