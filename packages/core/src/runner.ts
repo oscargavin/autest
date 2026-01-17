@@ -246,6 +246,8 @@ Requirements:
 - Write ONLY the function implementation
 - Use modern JavaScript (ES modules, async/await)
 - The function will be tested with Node.js node:test
+- Any library APIs referenced in the task are available as globals (no imports)
+- Do NOT import external libraries
 
 Respond with ONLY the function code, no explanations.`;
 }
@@ -264,6 +266,7 @@ ${docs}
 - The function will be tested with Node.js node:test
 - Follow the patterns shown in the documentation exactly
 - Library functions are available as globals in the test environment (no imports needed)
+- Do NOT import external libraries
 
 Respond with ONLY the function code, no explanations or imports.`;
 }
@@ -324,6 +327,7 @@ ${testCode}
 - Functions from the library are mocked globally (no imports needed)
 - Use the function names directly as shown in docs
 - DON'T add async unless the return value needs to be awaited
+ - Do NOT import external libraries
 
 ## Instructions
 1. First, explain in one sentence WHY your code failed
