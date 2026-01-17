@@ -1,6 +1,7 @@
 "use client"
 
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import {
@@ -22,10 +23,14 @@ export function NavSidebar() {
 
   return (
     <aside className="bg-card border-border/60 text-foreground hidden h-screen w-64 flex-col border-r px-5 py-6 lg:sticky lg:top-0 lg:flex">
-      <div className="flex items-center gap-2 px-2">
-        <div className="bg-primary text-primary-foreground flex size-9 items-center justify-center rounded-2xl text-sm font-semibold">
-          Au
-        </div>
+      <div className="flex items-center gap-3 px-2">
+        <Image
+          src="/logo.png"
+          alt="Autest"
+          width={36}
+          height={36}
+          className="dark:invert"
+        />
         <div>
           <p className="text-sm font-semibold">Autest</p>
           <p className="text-muted-foreground text-xs">Doc impact testing</p>
