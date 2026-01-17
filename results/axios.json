@@ -1,0 +1,367 @@
+{
+  "library": "axios",
+  "generatedAt": "2026-01-17T16:32:08.072Z",
+  "evaluatedAt": "2026-01-17T16:35:36.601Z",
+  "summary": {
+    "totalTasks": 25,
+    "aFirstPassRate": 36,
+    "bFirstPassRate": 68,
+    "docImpact": 32,
+    "bFailedFirstPass": 8,
+    "bRescuedByRetry": 7,
+    "iterationValue": 87.5,
+    "bFinalPassRate": 96
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "basic-requests",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function fetchUser(id) {\n  const { data } = await axios.get(`/user/${id}`);\n  return data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchUser(id) {\n  const response = await axios.get('/user/' + id);\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "basic-requests",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function createPost(data) {\n  const { data: postData } = await axios.post('/posts', data);\n  return postData;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function createPost(data) {\n  const response = await axios.post('/posts', data);\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "basic-requests",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function deleteResource(id) {\n  const response = await axios.delete('/resource/' + id);\n  return response.status;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "async function deleteResource(id) {\n  capturedRequests = [];\n  const response = await axios.delete('/resource/' + id);\n  return response.status;\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "basic-requests",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function updateUser(id, updates) {\n  const response = await axios.put(`/user/${id}`, updates);\n  return response.data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function updateUser(id, updates) {\n  const response = await axios.put(`/user/${id}`, updates);\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "request-config",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function fetchWithParams(baseUrl, params) {\n  const { data } = await axios.get(baseUrl, { params });\n  return data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchWithParams(baseUrl, params) {\n  const response = await axios.get(baseUrl, { params });\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "request-config",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function authenticatedRequest(url, token) {\n  const { data } = await axios.get(url, {\n    headers: {\n      Authorization: `Bearer ${token}`\n    }\n  });\n  return data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function authenticatedRequest(url, token) {\n  const response = await axios.get(url, { headers: { Authorization: `Bearer ${token}` } });\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "request-config",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport async function timedRequest(url, timeoutMs) {\n  const response = await axios.get(url, { timeout: timeoutMs });\n  return response.data;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "async function timedRequest(url, timeoutMs) {\n  capturedRequests = [];\n  const response = await axios.get(url, { timeout: timeoutMs });\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "request-config",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function postWithHeaders(url, data, contentType) {\n  const { data: responseData } = await axios.post(url, data, { headers: { 'Content-Type': contentType } });\n  return responseData;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function postWithHeaders(url, data, contentType) {\n  const response = await axios.post(url, data, { headers: { 'Content-Type': contentType } });\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "axios-instances",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport function createApiInstance(baseUrl) {\n  return axios.create({ baseURL: baseUrl });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createApiInstance(baseUrl) {\n  return axios.create({ baseURL: baseUrl });\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "axios-instances",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function fetchFromInstance(instance, path) {\n  const response = await instance.get(path);\n  return response.data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchFromInstance(instance, path) {\n  const response = await instance.get(path);\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "axios-instances",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import axios from 'axios';\n\nexport function setupAuthenticatedInstance(baseUrl, token) {\n  const instance = axios.create({ baseURL: baseUrl });\n  instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;\n  return instance;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupAuthenticatedInstance(baseUrl, token) {\n  const instance = axios.create({ baseURL: baseUrl });\n  instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;\n  return instance;\n}"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "axios-instances",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function useInstanceWithTimeout(instance, url, timeout) {\n  const response = await instance.get(url, { timeout });\n  return response.data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function useInstanceWithTimeout(instance, url, timeout) {\n  const response = await instance.get(url, { timeout });\n  return response.data;\n}"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "interceptors",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "function addAuthInterceptor(instance, getTokenFn) {\n  return instance.interceptors.request.use(async (config) => {\n    const token = await getTokenFn();\n    config.headers.Authorization = `Bearer ${token}`;\n    return config;\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function addAuthInterceptor(instance, getTokenFn) {\n  return instance.interceptors.request.use((config) => {\n    config.headers.Authorization = getTokenFn();\n    return config;\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "interceptors",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "function addLoggingInterceptor(axiosObj) {\n  const reqId = axiosObj.interceptors.request.use((config) => {\n    console.log(config.url);\n    return config;\n  });\n\n  const resId = axiosObj.interceptors.response.use((response) => {\n    console.log(response.status);\n    return response;\n  });\n\n  return [reqId, resId];\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function addLoggingInterceptor(axiosObj) {\n  const requestId = axiosObj.interceptors.request.use(config => {\n    console.log(config.url);\n    return config;\n  });\n  const responseId = axiosObj.interceptors.response.use(response => {\n    console.log(response.status);\n    return response.status;\n  }, error => Promise.reject(error));\n  return [requestId, responseId];\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "interceptors",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function requestWithInterceptor(instance) {\n  const { data } = await instance.get('/data');\n  return data;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export async function requestWithInterceptor(instance) {\n  const { data } = await instance.get('/data', {});\n  return data;\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "error-handling",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function safeFetch(url) {\n  try {\n    const { data } = await axios.get(url);\n    return data;\n  } catch (error) {\n    if (error.response) {\n      console.log('Server error');\n    } else {\n      throw error;\n    }\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function safeFetch(url) {\n  try {\n    const response = await axios.get(url);\n    return response.data;\n  } catch (error) {\n    if (error.response) {\n      console.log('Server error');\n    } else {\n      throw error;\n    }\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "error-handling",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function handleNetworkError(url) {\n  try {\n    return await axios.get(url);\n  } catch (error) {\n    if (error.request) {\n      return 'Network issue';\n    }\n    throw error;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function handleNetworkError(url) {\n  try {\n    return await axios.get(url);\n  } catch (error) {\n    if (error.request) {\n      return 'Network issue';\n    }\n    throw error;\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "error-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { isAxiosError } from 'axios';\n\nexport function isServerError(error) {\n  return isAxiosError(error) && error.response?.status >= 500;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function isServerError(error) {\n  return axios.isAxiosError(error) && error.response?.status >= 500;\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "request-cancellation",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function cancellableGet(url, signal) {\n  const { data } = await axios.get(url, { signal });\n  return data;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function cancellableGet(url, signal) {\n  const { data } = await axios.get(url, { signal });\n  return data;\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "request-cancellation",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "function createCanceller() {\n  const controller = new AbortController();\n  return {\n    controller,\n    cancel: () => controller.abort()\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "function createCanceller() {\n  const signal = {};\n  const controller = {\n    signal,\n    abort: () => signal.addEventListener('abort', () => {})\n  };\n  return {\n    controller,\n    cancel: () => controller.abort()\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-021",
+      "docTag": "request-cancellation",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "async function fetchOrCancel(url, shouldCancel) {\n  const controller = new AbortController();\n  const promise = axios.get(url, { signal: controller.signal });\n  if (shouldCancel) {\n    controller.abort();\n  }\n  try {\n    const response = await promise;\n    return response.data;\n  } catch (error) {\n    if (axios.isCancel(error)) {\n      return 'cancelled';\n    }\n    throw error;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export async function fetchOrCancel(url, shouldCancel) {\n  const controller = new AbortController();\n  if (shouldCancel) {\n    controller.abort();\n  }\n  try {\n    const response = await axios.get(url, { signal: controller.signal });\n    return response.data;\n  } catch (error) {\n    if (axios.isCancel(error)) {\n      return 'cancelled';\n    }\n    throw error;\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-022",
+      "docTag": "concurrent-requests",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function fetchUsersAndPosts() {\n  const [res1, res2] = await Promise.all([\n    axios.get('/users'),\n    axios.get('/posts')\n  ]);\n  return { users: res1.data, posts: res2.data };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchUsersAndPosts() {\n  const [usersRes, postsRes] = await Promise.all([axios.get('/users'), axios.get('/posts')]);\n  return { users: usersRes.data, posts: postsRes.data };\n}"
+      }
+    },
+    {
+      "taskId": "task-023",
+      "docTag": "concurrent-requests",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function fetchMultiple(urls) {\n  const responses = await Promise.all(urls.map(url => axios.get(url)));\n  return responses.map(response => response.data);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchMultiple(urls) {\n  const responses = await Promise.all(urls.map(url => axios.get(url)));\n  return responses.map(response => response.data);\n}"
+      }
+    },
+    {
+      "taskId": "task-024",
+      "docTag": "concurrent-requests",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "async function fetchWithFallback(primaryUrl, fallbackUrl) {\n  try {\n    const [primaryResponse] = await Promise.all([axios.get(primaryUrl)]);\n    return primaryResponse.data;\n  } catch (error) {\n    const fallbackResponse = await axios.get(fallbackUrl);\n    return fallbackResponse.data;\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function fetchWithFallback(primaryUrl, fallbackUrl) {\n  try {\n    const [primary] = await Promise.all([axios.get(primaryUrl)]);\n    return primary.data;\n  } catch {\n    const fallback = await axios.get(fallbackUrl);\n    return fallback.data;\n  }\n}"
+      }
+    },
+    {
+      "taskId": "task-025",
+      "docTag": "concurrent-requests",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "async function loadUserData(userId) {\n  const [u, p] = await Promise.all([\n    axios.get(`/user/${userId}`),\n    axios.get(`/user/${userId}/posts`)\n  ]);\n  return { user: u.data, posts: p.data };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "export async function loadUserData(userId) {\n  const [u, p] = await Promise.all([\n    axios.get(`/user/${userId}`),\n    axios.get(`/user/${userId}/posts`)\n  ]);\n  return { user: u.data, posts: p.data };\n}"
+      }
+    }
+  ]
+}

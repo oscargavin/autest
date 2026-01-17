@@ -1,15 +1,22 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import type { RunStep } from "@/lib/mock-data"
+import type { StepStatus } from "@/lib/mock-data"
 
-const statusStyles: Record<RunStep["status"], string> = {
+type TimelineStep = {
+  id: string
+  label: string
+  status: StepStatus
+  durationMs: number
+}
+
+const statusStyles: Record<StepStatus, string> = {
   pending: "border-border text-muted-foreground",
   running: "border-primary text-primary",
   complete: "border-emerald-500 text-emerald-600",
 }
 
-export function StepTimeline({ steps }: { steps: RunStep[] }) {
+export function StepTimeline({ steps }: { steps: TimelineStep[] }) {
   return (
     <div className="grid gap-3">
       {steps.map((step) => (
@@ -26,8 +33,8 @@ export function StepTimeline({ steps }: { steps: RunStep[] }) {
             <div>
               <p className="text-sm font-medium">{step.label}</p>
               <p className="text-muted-foreground text-xs">
-              {step.status}
-            </p>
+                {step.status}
+              </p>
             </div>
             <p className="text-muted-foreground text-xs">
               {Math.round(step.durationMs / 100) / 10}s

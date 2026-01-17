@@ -3,6 +3,7 @@ import { AppShell } from "@/components/app-shell"
 import { SectionHeading } from "@/components/section-heading"
 import { StatusBadge } from "@/components/status-badge"
 import { JobProgress } from "@/components/job-progress"
+import { JobResultsPanel } from "@/components/job-results-panel"
 import { formatDistanceToNow } from "@/lib/format"
 import Link from "next/link"
 
@@ -14,6 +15,17 @@ async function getJob(jobId: string) {
     if (!res.ok) return null
     const data = await res.json()
     return data.job
+  } catch {
+    return null
+  }
+}
+
+async function getResults(library: string) {
+  try {
+    const res = await fetch(`${API_BASE}/api/results/${library}`, { cache: 'no-store' })
+    if (!res.ok) return null
+    const data = await res.json()
+    return data.results
   } catch {
     return null
   }
@@ -32,6 +44,7 @@ export default async function JobDetailPage({
   }
 
   const isActive = job.status === 'pending' || job.status === 'running'
+  const results = job.status === 'completed' ? await getResults(job.library) : null
 
   return (
     <AppShell>
@@ -84,17 +97,7 @@ export default async function JobDetailPage({
         </div>
       )}
 
-      {job.status === 'completed' && (
-        <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-2xl p-5">
-          <p className="text-emerald-600 font-medium">Completed</p>
-          <p className="text-emerald-600 text-sm mt-1">
-            Job finished successfully.{' '}
-            <Link href={`/libraries/${job.library}`} className="underline">
-              View results
-            </Link>
-          </p>
-        </div>
-      )}
+      <JobResultsPanel initialJob={job} initialResults={results} />
     </AppShell>
   )
 }

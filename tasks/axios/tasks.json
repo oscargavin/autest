@@ -1,0 +1,272 @@
+{
+  "library": "axios",
+  "libraryId": "/axios",
+  "generatedAt": "2026-01-17T16:32:08.072Z",
+  "docs": [
+    {
+      "id": "basic-requests",
+      "title": "Basic HTTP Requests with Axios",
+      "content": "Axios provides simple methods like axios.get(url, config) and axios.post(url, data, config) for making HTTP requests. These methods return promises that resolve to response objects containing data, status, and headers properties. They support both Promise chains and async/await syntax for handling responses.",
+      "codeExamples": [
+        "const response = await axios.get('/user?ID=12345'); console.log(response.data);",
+        "const response = await axios.post('/user', { firstName: 'Fred', lastName: 'Flintstone' });"
+      ]
+    },
+    {
+      "id": "request-config",
+      "title": "Request Configuration Options",
+      "content": "Requests can include a config object specifying params for query strings, headers for authorization or content-type, timeout, baseURL, and more. Params are automatically serialized into the URL. Configuration overrides defaults and allows flexible request customization.",
+      "codeExamples": [
+        "axios.get('/user', { params: { ID: 12345 }, headers: { 'Authorization': 'Bearer token' } });",
+        "axios({ method: 'post', url: '/user', data: { name: 'John' }, timeout: 5000 });"
+      ]
+    },
+    {
+      "id": "axios-instances",
+      "title": "Creating Reusable Axios Instances",
+      "content": "axios.create(config) produces an instance with predefined defaults like baseURL, timeout, and headers. Instances behave like the main axios object and support modifying defaults post-creation. Request configs override instance defaults for flexibility.",
+      "codeExamples": [
+        "const api = axios.create({ baseURL: 'https://api.example.com', timeout: 10000 }); api.get('/users');",
+        "const instance = axios.create({ headers: { 'X-Custom': 'value' } }); instance.defaults.headers.common['Auth'] = 'token';"
+      ]
+    },
+    {
+      "id": "interceptors",
+      "title": "Request and Response Interceptors",
+      "content": "Interceptors on axios or instances allow global modification of requests before sending and responses before fulfillment. Request interceptors receive and return config; response interceptors handle success or errors. Interceptors can be ejected or cleared.",
+      "codeExamples": [
+        "axios.interceptors.request.use(config => { config.headers.Authorization = 'Bearer token'; return config; });",
+        "axios.interceptors.response.use(response => response, error => Promise.reject(error));"
+      ]
+    },
+    {
+      "id": "error-handling",
+      "title": "Handling Errors in Axios Requests",
+      "content": "Errors provide error.response for server errors (4xx/5xx), error.request for no response, and error.message for setup issues. Use try/catch with async/await or .catch() with promises. axios.isAxiosError checks for Axios-specific errors.",
+      "codeExamples": [
+        "try { await axios.get('/user'); } catch (error) { if (error.response) console.log(error.response.status); }",
+        "axios.get('/user').catch(error => { if (error.request) console.log('No response'); });"
+      ]
+    },
+    {
+      "id": "request-cancellation",
+      "title": "Cancelling Requests with AbortController",
+      "content": "Include { signal: new AbortController().signal } in config to enable cancellation. Call controller.abort() to cancel; errors are AxiosError with code 'ERR_CANCELED'. Check with axios.isCancel(error) in catch blocks.",
+      "codeExamples": [
+        "const controller = new AbortController(); axios.get('/foo', { signal: controller.signal }); controller.abort();",
+        "if (axios.isCancel(error)) { console.log('Request cancelled'); }"
+      ]
+    },
+    {
+      "id": "concurrent-requests",
+      "title": "Executing Concurrent Requests",
+      "content": "Use native Promise.all to run multiple axios requests in parallel, receiving an array of responses. Destructure results for easy access. Errors from any request reject the entire Promise.all.",
+      "codeExamples": [
+        "Promise.all([axios.get('/user'), axios.get('/posts')]).then(([user, posts]) => console.log(user.data, posts.data));",
+        "const [acct, perm] = await Promise.all([axios.get('/account'), axios.get('/permissions')]);"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "basic-requests",
+      "description": "Write an async function fetchUser(id) that uses axios.get to request '/user/' + id and returns the response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async get(url) {\n    capturedRequests.push({ method: 'get', url });\n    return { data: `user-${url}` };\n  }\n};\n\ntest('fetchUser basic', async () => {\n  capturedRequests = [];\n  const result = await fetchUser('123');\n  assert.strictEqual(result, 'user-/user/123');\n  assert.strictEqual(capturedRequests.length, 1);\n  assert.strictEqual(capturedRequests[0].url, '/user/123');\n});\n\ntest('fetchUser different id', async () => {\n  capturedRequests = [];\n  const result = await fetchUser('456');\n  assert.strictEqual(result, 'user-/user/456');\n  assert.strictEqual(capturedRequests[0].url, '/user/456');\n});",
+      "solutionHint": "Use axios.get('/user/' + id) and return res.data"
+    },
+    {
+      "id": "task-002",
+      "docTag": "basic-requests",
+      "description": "Write an async function createPost(data) that uses axios.post('/posts', data) and returns response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async post(url, data) {\n    capturedRequests.push({ method: 'post', url, data });\n    return { data: `created-${JSON.stringify(data)}` };\n  }\n};\n\ntest('createPost basic', async () => {\n  capturedRequests = [];\n  const result = await createPost({ title: 'Test' });\n  assert.strictEqual(result, 'created-{\"title\":\"Test\"}');\n  assert.strictEqual(capturedRequests[0].url, '/posts');\n  assert.deepStrictEqual(capturedRequests[0].data, { title: 'Test' });\n});\n\ntest('createPost complex data', async () => {\n  capturedRequests = [];\n  const result = await createPost({ title: 'Hi', body: 'body' });\n  assert.strictEqual(capturedRequests[0].data.title, 'Hi');\n});",
+      "solutionHint": "Call axios.post('/posts', data) and return res.data"
+    },
+    {
+      "id": "task-003",
+      "docTag": "basic-requests",
+      "description": "Write an async function deleteResource(id) that uses axios.delete('/resource/' + id) and returns response.status",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async delete(url) {\n    capturedRequests.push({ method: 'delete', url });\n    return { status: 204 };\n  }\n};\n\ntest('deleteResource basic', async () => {\n  capturedRequests = [];\n  const result = await deleteResource('123');\n  assert.strictEqual(result, 204);\n  assert.strictEqual(capturedRequests[0].url, '/resource/123');\n});\n\ntest('deleteResource another id', async () => {\n  const result = await deleteResource('456');\n  assert.strictEqual(capturedRequests[0].url, '/resource/456');\n});",
+      "solutionHint": "Use axios.delete('/resource/' + id)"
+    },
+    {
+      "id": "task-004",
+      "docTag": "basic-requests",
+      "description": "Write an async function updateUser(id, updates) that uses axios.put(`/user/${id}`, updates) and returns response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async put(url, data) {\n    capturedRequests.push({ method: 'put', url, data });\n    return { data: { updated: data } };\n  }\n};\n\ntest('updateUser basic', async () => {\n  capturedRequests = [];\n  const result = await updateUser('1', { name: 'New' });\n  assert.deepStrictEqual(result, { updated: { name: 'New' } });\n  assert.strictEqual(capturedRequests[0].url, '/user/1');\n});",
+      "solutionHint": "axios.put(`/user/${id}`, updates)"
+    },
+    {
+      "id": "task-005",
+      "docTag": "request-config",
+      "description": "Write an async function fetchWithParams(baseUrl, params) that uses axios.get(baseUrl, { params }) and returns response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async get(url, config) {\n    capturedRequests.push({ method: 'get', url, config });\n    return { data: { params: config?.params } };\n  }\n};\n\ntest('fetchWithParams basic', async () => {\n  capturedRequests = [];\n  const result = await fetchWithParams('/users', { limit: 10 });\n  assert.deepStrictEqual(result.params, { limit: 10 });\n  assert.deepStrictEqual(capturedRequests[0].config.params, { limit: 10 });\n});\n\ntest('no params', async () => {\n  const result = await fetchWithParams('/users');\n  assert.deepStrictEqual(result.params, undefined);\n});",
+      "solutionHint": "Pass { params } as second arg to axios.get"
+    },
+    {
+      "id": "task-006",
+      "docTag": "request-config",
+      "description": "Write an async function authenticatedRequest(url, token) that uses axios.get(url, { headers: { Authorization: `Bearer ${token}` } }) and returns response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async get(url, config) {\n    capturedRequests.push({ method: 'get', url, config });\n    return { data: 'success' };\n  }\n};\n\ntest('authenticatedRequest valid token', async () => {\n  capturedRequests = [];\n  const result = await authenticatedRequest('/profile', 'abc123');\n  assert.strictEqual(result, 'success');\n  assert.strictEqual(capturedRequests[0].config.headers.Authorization, 'Bearer abc123');\n});",
+      "solutionHint": "Set headers.Authorization in config"
+    },
+    {
+      "id": "task-007",
+      "docTag": "request-config",
+      "description": "Write an async function timedRequest(url, timeoutMs) that uses axios.get(url, { timeout: timeoutMs }) and returns response.data",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async get(url, config) {\n    capturedRequests.push({ method: 'get', url, config });\n    return { data: 'done' };\n  }\n};\n\ntest('timedRequest sets timeout', async () => {\n  capturedRequests = [];\n  const result = await timedRequest('/api/data', 5000);\n  assert.strictEqual(result, 'done');\n  assert.strictEqual(capturedRequests[0].config.timeout, 5000);\n});\n\ntest('different timeout', async () => {\n  const result = await timedRequest('/other', 1000);\n  assert.strictEqual(capturedRequests[0].config.timeout, 1000);\n});",
+      "solutionHint": "Include timeout in config object"
+    },
+    {
+      "id": "task-008",
+      "docTag": "request-config",
+      "description": "Write an async function postWithHeaders(url, data, contentType) that uses axios.post(url, data, { headers: { 'Content-Type': contentType } }) and returns response.data",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nglobalThis.axios = {\n  async post(url, data, config) {\n    capturedRequests.push({ method: 'post', url, data, config });\n    return { data: data };\n  }\n};\n\ntest('postWithHeaders json', async () => {\n  capturedRequests = [];\n  const result = await postWithHeaders('/submit', { key: 'val' }, 'application/json');\n  assert.deepStrictEqual(result, { key: 'val' });\n  assert.strictEqual(capturedRequests[0].config.headers['Content-Type'], 'application/json');\n});",
+      "solutionHint": "Pass config as third arg to post"
+    },
+    {
+      "id": "task-009",
+      "docTag": "axios-instances",
+      "description": "Write a function createApiInstance(baseUrl) that calls axios.create({ baseURL: baseUrl }) and returns the instance",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedCreate;\nglobalThis.axios = {\n  create(config) {\n    capturedCreate = config;\n    return { defaults: { baseURL: config.baseURL } };\n  }\n};\n\ntest('createApiInstance sets baseURL', () => {\n  capturedCreate = null;\n  const instance = createApiInstance('https://api.ex.com');\n  assert.strictEqual(capturedCreate.baseURL, 'https://api.ex.com');\n  assert.strictEqual(instance.defaults.baseURL, 'https://api.ex.com');\n});",
+      "solutionHint": "Return result of axios.create({ baseURL })"
+    },
+    {
+      "id": "task-010",
+      "docTag": "axios-instances",
+      "description": "Write an async function fetchFromInstance(instance, path) that uses instance.get(path) and returns response.data",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedRequests = [];\nconst mockInstance = {\n  async get(path) {\n    capturedRequests.push({ path });\n    return { data: `data-${path}` };\n  }\n};\nglobalThis.axios = { create: () => mockInstance };\n\ntest('fetchFromInstance uses instance.get', async () => {\n  capturedRequests = [];\n  const result = await fetchFromInstance(mockInstance, '/data');\n  assert.strictEqual(result, 'data-/data');\n  assert.strictEqual(capturedRequests[0].path, '/data');\n});",
+      "solutionHint": "Call instance.get(path)"
+    },
+    {
+      "id": "task-011",
+      "docTag": "axios-instances",
+      "description": "Write a function setupAuthenticatedInstance(baseUrl, token) that creates an axios instance with baseURL and sets instance.defaults.headers.common['Authorization'] = `Bearer ${token}` then returns it",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedCreate;\nglobalThis.axios = {\n  create(config) {\n    capturedCreate = config;\n    const inst = { defaults: { headers: { common: {} }, baseURL: config.baseURL } };\n    return inst;\n  }\n};\n\ntest('setupAuthenticatedInstance config', () => {\n  capturedCreate = null;\n  const instance = setupAuthenticatedInstance('https://api.com', 'token123');\n  assert.strictEqual(instance.defaults.baseURL, 'https://api.com');\n  assert.strictEqual(instance.defaults.headers.common['Authorization'], 'Bearer token123');\n});",
+      "solutionHint": "After create, set instance.defaults.headers.common.Authorization"
+    },
+    {
+      "id": "task-012",
+      "docTag": "axios-instances",
+      "description": "Write an async function useInstanceWithTimeout(instance, url, timeout) that calls instance.get(url, { timeout }) and returns response.data",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedGet;\nconst mockInstance = {\n  async get(url, config) {\n    capturedGet = { url, config };\n    return { data: 'mock' };\n  }\n};\n\ntest('useInstanceWithTimeout overrides timeout', async () => {\n  capturedGet = null;\n  const result = await useInstanceWithTimeout(mockInstance, '/test', 3000);\n  assert.strictEqual(result, 'mock');\n  assert.strictEqual(capturedGet.config.timeout, 3000);\n  assert.strictEqual(capturedGet.url, '/test');\n});",
+      "solutionHint": "Pass { timeout } config to instance.get"
+    },
+    {
+      "id": "task-013",
+      "docTag": "interceptors",
+      "description": "Write a function addAuthInterceptor(instance, getTokenFn) that adds a request interceptor to set config.headers.Authorization using getTokenFn() and returns the interceptor id",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet interceptorCalls = [];\nlet ejectCalled = false;\nconst mockInstance = {\n  interceptors: {\n    request: {\n      use(fn) {\n        interceptorCalls.push(fn);\n        return 1;\n      },\n      eject(id) {\n        ejectCalled = true;\n      }\n    }\n  }\n};\n\nfunction getTokenFn() { return 'token'; }\n\ntest('addAuthInterceptor adds interceptor', () => {\n  interceptorCalls = [];\n  const id = addAuthInterceptor(mockInstance, getTokenFn);\n  assert.strictEqual(id, 1);\n  const config = { headers: {} };\n  interceptorCalls[0](config);\n  assert.strictEqual(config.headers.Authorization, 'token');\n});",
+      "solutionHint": "instance.interceptors.request.use(config => { config.headers.Auth... = getTokenFn(); return config; })"
+    },
+    {
+      "id": "task-014",
+      "docTag": "interceptors",
+      "description": "Write a function addLoggingInterceptor(axiosObj) that adds a request interceptor logging config.url to console and response interceptor logging response.status, returns ids",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet requestLogs = [], responseLogs = [];\nconst consoleSpy = { log: (msg) => { if (typeof msg === 'object') requestLogs.push(msg.url || msg.status); else requestLogs.push(msg); } };\nconst mockAxios = {\n  interceptors: {\n    request: { use(fn) { requestLogs.push(fn({url: '/test'})); return 1; } },\n    response: { use(fn) { responseLogs.push(fn({status: 200})); return 2; } }\n  }\n};\nglobalThis.console = consoleSpy;\n\ntest('addLoggingInterceptor logs', () => {\n  requestLogs = []; responseLogs = [];\n  addLoggingInterceptor(mockAxios);\n  assert.strictEqual(requestLogs[0], '/test');\n  assert.strictEqual(responseLogs[0], 200);\n});",
+      "solutionHint": "Use interceptors.request.use and response.use with console.log"
+    },
+    {
+      "id": "task-015",
+      "docTag": "interceptors",
+      "description": "Write an async function requestWithInterceptor(instance) that makes instance.get('/data'), assuming interceptor modifies config, returns data",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet interceptedConfig;\nconst mockInstance = {\n  async get(url, config) {\n    interceptedConfig = config;\n    return { data: 'intercepted' };\n  }\n};\n\ntest('requestWithInterceptor uses intercepted config', async () => {\n  interceptedConfig = null;\n  const result = await requestWithInterceptor(mockInstance);\n  assert.strictEqual(result, 'intercepted');\n  assert.ok(interceptedConfig);\n});",
+      "solutionHint": "Assume interceptor runs before get, just call instance.get('/data')"
+    },
+    {
+      "id": "task-016",
+      "docTag": "error-handling",
+      "description": "Write an async function safeFetch(url) that tries axios.get(url), logs 'Server error' if error.response, returns data or throws other errors",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet errorType;\nglobalThis.axios = {\n  async get(url) {\n    if (url === '/fail') throw { response: { status: 500 } };\n    return { data: 'ok' };\n  }\n};\nglobalThis.console = { log: (msg) => { errorType = msg; } };\n\ntest('safeFetch success', async () => {\n  errorType = null;\n  const result = await safeFetch('/ok');\n  assert.strictEqual(result, 'ok');\n  assert.strictEqual(errorType, null);\n});\n\ntest('safeFetch server error logs', async () => {\n  await safeFetch('/fail');\n  assert.strictEqual(errorType, 'Server error');\n});",
+      "solutionHint": "In catch, if (error.response) console.log('Server error')"
+    },
+    {
+      "id": "task-017",
+      "docTag": "error-handling",
+      "description": "Write an async function handleNetworkError(url) that calls axios.get(url), catches errors, returns 'Network issue' if error.request, else rethrows",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet thrown;\nglobalThis.axios = {\n  async get(url) {\n    if (url === '/network') throw { request: {} };\n    throw new Error('other');\n  }\n};\n\ntest('handleNetworkError returns message', async () => {\n  const result = await handleNetworkError('/network');\n  assert.strictEqual(result, 'Network issue');\n});\n\ntest('handleNetworkError rethrows other', async () => {\n  try {\n    await handleNetworkError('/other');\n  } catch (e) {\n    thrown = true;\n  }\n  assert.ok(thrown);\n});",
+      "solutionHint": "Catch if (error.request) return 'Network issue'; else throw error"
+    },
+    {
+      "id": "task-018",
+      "docTag": "error-handling",
+      "description": "Write a function isServerError(error) that returns true if axios.isAxiosError(error) && error.response?.status >= 500",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.axios = { isAxiosError: (e) => true };\n\ntest('isServerError 500', () => {\n  assert.ok(isServerError({ response: { status: 500 } }));\n});\n\ntest('isServerError 400 false', () => {\n  assert.strictEqual(isServerError({ response: { status: 400 } }), false);\n});\n\ntest('isServerError non axios false', () => {\n  assert.strictEqual(isServerError({}), false);\n});",
+      "solutionHint": "Check axios.isAxiosError && error.response.status >= 500"
+    },
+    {
+      "id": "task-019",
+      "docTag": "request-cancellation",
+      "description": "Write an async function cancellableGet(url, signal) that calls axios.get(url, { signal }) and returns data, or handles cancel",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.axios = { isCancel: (e) => true };\nlet captured;\nglobalThis.axios.get = async (u, c) => { captured = c.signal; return { data: 'data' }; };\n\ntest('cancellableGet passes signal', async () => {\n  const mockSignal = {};\n  const result = await cancellableGet('/test', mockSignal);\n  assert.strictEqual(result, 'data');\n  assert.strictEqual(captured, mockSignal);\n});",
+      "solutionHint": "axios.get(url, { signal })"
+    },
+    {
+      "id": "task-020",
+      "docTag": "request-cancellation",
+      "description": "Write a function createCanceller() that returns { controller: new AbortController(), cancel: () => controller.abort() }",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\ntest('createCanceller provides controller and cancel', () => {\n  const { controller, cancel } = createCanceller();\n  assert.ok(controller.abort);\n  let aborted = false;\n  controller.signal.addEventListener = (type, fn) => { if (type === 'abort') aborted = true; };\n  cancel();\n  assert.ok(aborted);\n});",
+      "solutionHint": "Return { controller: new AbortController(), cancel: () => controller.abort() }"
+    },
+    {
+      "id": "task-021",
+      "docTag": "request-cancellation",
+      "description": "Write an async function fetchOrCancel(url, shouldCancel) that creates controller, calls axios.get(url, {signal: controller.signal}), if shouldCancel calls controller.abort(), handles isCancel by returning 'cancelled'",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.axios = {\n  isCancel: (e) => e?.cancelled,\n  get: async (u, c) => {\n    if (c.signal.aborted) throw { cancelled: true };\n    return { data: 'success' };\n  }\n};\n\ntest('fetchOrCancel success', async () => {\n  const result = await fetchOrCancel('/test', false);\n  assert.strictEqual(result, 'success');\n});\n\ntest('fetchOrCancel cancelled', async () => {\n  const result = await fetchOrCancel('/test', true);\n  assert.strictEqual(result, 'cancelled');\n});",
+      "solutionHint": "Create controller, get with signal, if shouldCancel abort before await"
+    },
+    {
+      "id": "task-022",
+      "docTag": "concurrent-requests",
+      "description": "Write an async function fetchUsersAndPosts() that uses Promise.all with axios.get('/users') and axios.get('/posts') and returns { users: res1.data, posts: res2.data }",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet calls = 0;\nglobalThis.axios = {\n  async get(url) {\n    calls++;\n    return { data: url === '/users' ? ['u1'] : ['p1'] };\n  }\n};\n\ntest('fetchUsersAndPosts parallel', async () => {\n  calls = 0;\n  const result = await fetchUsersAndPosts();\n  assert.deepStrictEqual(result, { users: ['u1'], posts: ['p1'] });\n  assert.strictEqual(calls, 2);\n});",
+      "solutionHint": "Promise.all([axios.get('/users'), axios.get('/posts')]).then(([u,p]) => ({users: u.data, posts: p.data}))"
+    },
+    {
+      "id": "task-023",
+      "docTag": "concurrent-requests",
+      "description": "Write an async function fetchMultiple(urls) that uses Promise.all(urls.map(url => axios.get(url))) and returns array of data",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet capturedUrls = [];\nglobalThis.axios = {\n  async get(url) {\n    capturedUrls.push(url);\n    return { data: `data-${url}` };\n  }\n};\n\ntest('fetchMultiple maps and all', async () => {\n  capturedUrls = [];\n  const result = await fetchMultiple(['/a', '/b']);\n  assert.deepStrictEqual(result, ['data-/a', 'data-/b']);\n  assert.deepStrictEqual(capturedUrls, ['/a', '/b']);\n});",
+      "solutionHint": "Promise.all(urls.map(u => axios.get(u))).then(res => res.map(r => r.data))"
+    },
+    {
+      "id": "task-024",
+      "docTag": "concurrent-requests",
+      "description": "Write an async function fetchWithFallback(primaryUrl, fallbackUrl) that tries Promise.all([axios.get(primaryUrl)]), if fails does axios.get(fallbackUrl), returns data or combined",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nglobalThis.axios = {\n  async get(url) {\n    if (url === '/primary') throw new Error('fail');\n    return { data: `data-${url}` };\n  }\n};\n\nlet calls = [];\nglobalThis.axios.get = (async (url) => {\n  calls.push(url);\n  if (url === '/primary') throw new Error();\n  return { data: url };\n});\n\ntest('fetchWithFallback uses fallback', async () => {\n  calls = [];\n  const result = await fetchWithFallback('/primary', '/fallback');\n  assert.strictEqual(result, '/fallback');\n  assert.deepStrictEqual(calls, ['/primary', '/fallback']);\n});",
+      "solutionHint": "Promise.all([get primary]).catch(() => get fallback)"
+    },
+    {
+      "id": "task-025",
+      "docTag": "concurrent-requests",
+      "description": "Write an async function loadUserData(userId) that concurrently fetches axios.get(`/user/${userId}`), axios.get(`/user/${userId}/posts`), returns { user: u.data, posts: p.data }",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert';\n\nlet captured = [];\nglobalThis.axios = {\n  async get(url) {\n    captured.push(url);\n    return { data: { id: url.includes('user') ? 'user' : 'posts' } };\n  }\n};\n\ntest('loadUserData concurrent', async () => {\n  captured = [];\n  const result = await loadUserData('123');\n  assert.deepStrictEqual(result, { user: { id: 'user' }, posts: { id: 'posts' } });\n  assert.strictEqual(captured[0], '/user/123');\n  assert.strictEqual(captured[1], '/user/123/posts');\n});",
+      "solutionHint": "Promise.all two gets with template literals"
+    }
+  ]
+}

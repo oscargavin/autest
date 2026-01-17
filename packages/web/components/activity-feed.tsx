@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import type { RunActivity } from "@/lib/mock-data"
 import { cn } from "@/lib/utils"
 
+type ActivityItem = Pick<RunActivity, "id" | "time" | "message" | "tone">
+
 const toneStyles: Record<string, string> = {
   info: "bg-sky-500/10 text-sky-600",
   success: "bg-emerald-500/10 text-emerald-600",
@@ -11,7 +13,7 @@ const toneStyles: Record<string, string> = {
   error: "bg-rose-500/10 text-rose-600",
 }
 
-export function ActivityFeed({ activities }: { activities: RunActivity[] }) {
+export function ActivityFeed({ activities }: { activities: ActivityItem[] }) {
   return (
     <Card className="border-border/60">
       <CardHeader>
