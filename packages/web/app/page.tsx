@@ -2,15 +2,8 @@ import { AppShell } from "@/components/app-shell"
 import { MetricCard } from "@/components/metric-card"
 import { SectionHeading } from "@/components/section-heading"
 import { LibraryCard } from "@/components/library-card"
-import { PassRateChart } from "@/components/charts/pass-rate-chart"
 import { PassSplitChart } from "@/components/charts/pass-split-chart"
 import { formatDelta, formatPercent } from "@/lib/format"
-import {
-  ActivityIcon,
-  ArrowUpRightIcon,
-  CheckCircleIcon,
-  PackageIcon,
-} from "lucide-react"
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
 
@@ -92,39 +85,25 @@ export default async function DashboardPage() {
           title="Libraries"
           value={`${libraries.length}`}
           delta={`${completedLibraries.length} evaluated`}
-          icon={<PackageIcon className="size-4" />}
         />
         <MetricCard
           title="Active jobs"
           value={`${activeJobs.length}`}
           delta={`${jobs.length} total`}
-          icon={<ActivityIcon className="size-4" />}
         />
         <MetricCard
           title="Avg baseline pass"
           value={formatPercent(avgBaseline)}
-          icon={<CheckCircleIcon className="size-4" />}
         />
         <MetricCard
           title="Avg doc uplift"
           value={formatPercent(avgUplift)}
           delta={formatDelta(avgUplift)}
-          icon={<ArrowUpRightIcon className="size-4" />}
         />
       </div>
 
       {chartData.length > 0 && (
-        <div className="grid gap-6 lg:grid-cols-2">
-          <PassRateChart
-            title="Pass rate by library"
-            data={chartData.map((item) => ({
-              time: item.label,
-              baseline: item.baseline,
-              informed: item.informed,
-            }))}
-          />
-          <PassSplitChart title="Baseline vs Informed" data={chartData} />
-        </div>
+        <PassSplitChart title="Baseline vs Informed" data={chartData} />
       )}
 
       <SectionHeading
