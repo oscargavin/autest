@@ -12,6 +12,7 @@ export interface RunOptions {
   variant: 'a' | 'b' | 'all';
   tasksDir?: string;
   outputDir?: string;
+  concurrency?: number;
   onProgress?: ProgressCallback;
 }
 
@@ -29,12 +30,36 @@ export function loadTaskSet(library: string, tasksDir = './tasks'): TaskSet {
   return JSON.parse(content);
 }
 
+async function runWithConcurrency<T, R>(
+  items: T[],
+  fn: (item: T) => Promise<R>,
+  concurrency: number
+): Promise<R[]> {
+  const results: R[] = [];
+  let index = 0;
+
+  async function worker(): Promise<void> {
+    while (index < items.length) {
+      const currentIndex = index++;
+      results[currentIndex] = await fn(items[currentIndex]);
+    }
+  }
+
+  const workers = Array(Math.min(concurrency, items.length))
+    .fill(null)
+    .map(() => worker());
+
+  await Promise.all(workers);
+  return results;
+}
+
 export async function runTests(options: RunOptions): Promise<RunResult> {
   const {
     library,
     variant,
     tasksDir = './tasks',
     outputDir = './generated',
+    concurrency = 10,
     onProgress
   } = options;
 
@@ -45,30 +70,36 @@ export async function runTests(options: RunOptions): Promise<RunResult> {
   emit('init', 0, `Loading task set for ${library}`);
   const taskSet = loadTaskSet(library, tasksDir);
 
-  emit('init', 5, `Running ${variant} variant(s) for ${taskSet.tasks.length} tasks`);
-
-  const allAttempts: Attempt[] = [];
   const totalTasks = taskSet.tasks.length;
-  const tasksToRun = variant === 'all' ? totalTasks * 2 : totalTasks;
-  let tasksCompleted = 0;
+  emit('init', 5, `Running ${variant} variant(s) for ${totalTasks} tasks (concurrency: ${concurrency})`);
 
-  for (let i = 0; i < taskSet.tasks.length; i++) {
-    const task = taskSet.tasks[i];
+  let completed = 0;
+  const totalVariants = variant === 'all' ? totalTasks * 2 : totalTasks;
 
+  // Build list of work items
+  const workItems: Array<{ task: Task; v: 'a' | 'b' }> = [];
+  for (const task of taskSet.tasks) {
     if (variant === 'a' || variant === 'all') {
-      emit('run', 5 + (tasksCompleted / tasksToRun) * 90, `Task ${task.id} [A]`);
-      const attempts = await runTaskVariant(task, 'a', taskSet);
-      allAttempts.push(...attempts);
-      tasksCompleted++;
+      workItems.push({ task, v: 'a' });
     }
-
     if (variant === 'b' || variant === 'all') {
-      emit('run', 5 + (tasksCompleted / tasksToRun) * 90, `Task ${task.id} [B]`);
-      const attempts = await runTaskVariant(task, 'b', taskSet);
-      allAttempts.push(...attempts);
-      tasksCompleted++;
+      workItems.push({ task, v: 'b' });
     }
   }
+
+  // Run in parallel with concurrency limit
+  const attemptArrays = await runWithConcurrency(
+    workItems,
+    async ({ task, v }) => {
+      const attempts = await runTaskVariant(task, v, taskSet);
+      completed++;
+      emit('run', 5 + (completed / totalVariants) * 90, `${completed}/${totalVariants} (${task.id} [${v.toUpperCase()}])`);
+      return attempts;
+    },
+    concurrency
+  );
+
+  const allAttempts = attemptArrays.flat();
 
   // Save results
   emit('write', 95, 'Writing results...');

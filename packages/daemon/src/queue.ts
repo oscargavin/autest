@@ -75,6 +75,7 @@ export class JobQueue extends EventEmitter {
           result = await runTests({
             library: job.library,
             variant: 'all',
+            concurrency: 10,
             onProgress
           });
           break;
@@ -113,10 +114,11 @@ export class JobQueue extends EventEmitter {
           });
 
           // 2. Run (25-50%)
-          onProgress({ stage: 'run', percent: 25, message: 'Running tests...' });
+          onProgress({ stage: 'run', percent: 25, message: 'Running tests (parallel)...' });
           await runTests({
             library: job.library,
             variant: 'all',
+            concurrency: 10,
             onProgress: pipelineProgress('run', 25)
           });
 
