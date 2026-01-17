@@ -1,0 +1,560 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function getNodeCount(reactFlowInstance) {\n  const nodes = reactFlowInstance.getNodes();\n  return nodes.length;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getNodeCount works\nnot ok 1 - getNodeCount works\n  ---\n  duration_ms: 0.862417\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663631888.mjs:9:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + Promise {\n    +   2,\n    +   [Symbol(async_id_symbol)]: 35,\n    +   [Symbol(trigger_async_id_symbol)]: 17\n    + }\n    - 2\n    \n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.067417\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:27:12.003Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function getNodeCount(reactFlowInstance) {\n  return reactFlowInstance.getNodes().length;\n}",
+    "testOutput": "TAP version 13\n# Subtest: getNodeCount works\nok 1 - getNodeCount works\n  ---\n  duration_ms: 0.331625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 52.646667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:14.294Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createFitViewHandler(reactFlowInstance) {\n  return async () => {\n    await reactFlowInstance.fitView();\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createFitViewHandler works\nok 1 - createFitViewHandler works\n  ---\n  duration_ms: 0.391084\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.949417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:19.785Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createFitViewHandler(reactFlowInstance) {\n  return () => {\n    reactFlowInstance.fitView();\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createFitViewHandler works\nok 1 - createFitViewHandler works\n  ---\n  duration_ms: 0.337834\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.454792\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:22.815Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function countAndFit(reactFlowInstance) {\n  const nodes = reactFlowInstance.getNodes();\n  console.log(nodes.length);\n  await reactFlowInstance.fitView();\n}",
+    "testOutput": "TAP version 13\n# Subtest: countAndFit works\nok 1 - countAndFit works\n  ---\n  duration_ms: 0.387625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.175167\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:30.269Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function countAndFit(reactFlowInstance) {\n  console.log(reactFlowInstance.getNodes().length);\n  reactFlowInstance.fitView();\n}",
+    "testOutput": "TAP version 13\n# Subtest: countAndFit works\nok 1 - countAndFit works\n  ---\n  duration_ms: 0.335666\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 50.165417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:33.328Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function initNodeState() {\n  return useNodesState([]);\n}",
+    "testOutput": "TAP version 13\n# Subtest: initNodeState calls useNodesState with empty array\nok 1 - initNodeState calls useNodesState with empty array\n  ---\n  duration_ms: 0.94925\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 50.93875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:40.620Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initNodeState() {\n  return useNodesState([]);\n}",
+    "testOutput": "TAP version 13\n# Subtest: initNodeState calls useNodesState with empty array\nok 1 - initNodeState calls useNodesState with empty array\n  ---\n  duration_ms: 0.547625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.529542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:27:43.814Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createNodeHandlers(initialNodes) {\n  let nodes = initialNodes;\n  const listeners = [];\n\n  const onNodesChange = (callback) => {\n    const listener = (currentNodes) => callback(currentNodes);\n    listeners.push(listener);\n    listener(nodes); // immediate invocation with current state\n    return () => {\n      const index = listeners.indexOf(listener);\n      if (index !== -1) {\n        listeners.splice(index, 1);\n      }\n    };\n  };\n\n  const setNodes = async (updaterOrNodes) => {\n    const newNodes = typeof updaterOrNodes === 'function' \n      ? updaterOrNodes(nodes) \n      : updaterOrNodes;\n    nodes = newNodes;\n    const promises = listeners.map(listener => {\n      try {\n        const result = listener(nodes);\n        return result instanceof Promise ? result : Promise.resolve(result);\n      } catch (error) {\n        console.error(error);\n        return Promise.resolve();\n      }\n    });\n    await Promise.all(promises);\n  };\n\n  return { onNodesChange, setNodes };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createNodeHandlers captures initialNodes\nnot ok 1 - createNodeHandlers captures initialNodes\n  ---\n  duration_ms: 1.034709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663721618.mjs:50:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + undefined\n    - [\n    -   {\n    -     id: '1'\n    -   }\n    - ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0:\n      id: '1'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663721618.mjs:52:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.187042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:28:41.719Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createNodeHandlers(initialNodes) {\n  let currentNodes = initialNodes;\n\n  const setNodes = (updater) => {\n    if (typeof updater === 'function') {\n      currentNodes = updater(currentNodes);\n    } else {\n      currentNodes = updater;\n    }\n  };\n\n  const onNodesChange = (changes) => {\n    setNodes((nodes) => applyNodeChanges(changes, nodes));\n  };\n\n  return { onNodesChange, setNodes };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createNodeHandlers captures initialNodes\nnot ok 1 - createNodeHandlers captures initialNodes\n  ---\n  duration_ms: 1.053458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663732425.mjs:32:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + undefined\n    - [\n    -   {\n    -     id: '1'\n    -   }\n    - ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0:\n      id: '1'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663732425.mjs:34:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.90575\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:28:52.536Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function createNodeHandlers(initialNodes) {\n  const [, setNodes, onNodesChange] = useNodesState(initialNodes);\n  return { onNodesChange, setNodes };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createNodeHandlers captures initialNodes\nok 1 - createNodeHandlers captures initialNodes\n  ---\n  duration_ms: 0.5155\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.094834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:29:03.581Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function basicReactFlowProps() {\n  return {\n    nodes: [\n      {\n        id: '1',\n        type: 'input',\n        data: { label: 'Input Node' },\n        position: { x: 250, y: 25 },\n      },\n      {\n        id: '2',\n        data: { label: 'Default Node' },\n        position: { x: 100, y: 125 },\n      },\n    ],\n    edges: [\n      { id: 'e1-2', source: '1', target: '2' },\n    ],\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: basicReactFlowProps includes nodes and edges\nnot ok 1 - basicReactFlowProps includes nodes and edges\n  ---\n  duration_ms: 1.2075\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663750843.mjs:27:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected \"actual\" to be reference-equal to \"expected\":\n    + actual - expected\n    \n    + [\n    +   {\n    +     data: {\n    +       label: 'Input Node'\n    +     },\n    +     id: '1',\n    +     position: {\n    +       x: 250,\n    +       y: 25\n    +     },\n    +     type: 'input'\n    +   },\n    +   {\n    +     data: {\n    +       label: 'Default Node'\n    +     },\n    +     id: '2',\n    +     position: {\n    +       x: 100,\n    +       y: 125\n    +     }\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      id: '1'\n      type: 'input'\n      data:\n        label: 'Input Node'\n      position:\n        x: 250\n        y: 25\n    1:\n      id: '2'\n      data:\n        label: 'Default Node'\n      position:\n        x: 100\n        y: 125\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663750843.mjs:29:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.22175\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:29:10.951Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function basicReactFlowProps() {\n  const nodes = [\n    {\n      id: '1',\n      data: { label: 'Node 1' },\n      position: { x: 250, y: 25 }\n    },\n    {\n      id: '2',\n      data: { label: 'Node 2' },\n      position: { x: 100, y: 125 }\n    }\n  ];\n\n  const edges = [\n    {\n      id: 'e1-2',\n      source: '1',\n      target: '2'\n    }\n  ];\n\n  return {\n    nodes,\n    edges,\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: basicReactFlowProps includes nodes and edges\nnot ok 1 - basicReactFlowProps includes nodes and edges\n  ---\n  duration_ms: 1.220709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663764659.mjs:37:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected \"actual\" to be reference-equal to \"expected\":\n    + actual - expected\n    \n    + [\n    +   {\n    +     data: {\n    +       label: 'Node 1'\n    +     },\n    +     id: '1',\n    +     position: {\n    +       x: 250,\n    +       y: 25\n    +     }\n    +   },\n    +   {\n    +     data: {\n    +       label: 'Node 2'\n    +     },\n    +     id: '2',\n    +     position: {\n    +       x: 100,\n    +       y: 125\n    +     }\n    +   }\n    + ]\n    - []\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  actual:\n    0:\n      id: '1'\n      data:\n        label: 'Node 1'\n      position:\n        x: 250\n        y: 25\n    1:\n      id: '2'\n      data:\n        label: 'Node 2'\n      position:\n        x: 100\n        y: 125\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663764659.mjs:39:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.031333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:29:24.770Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function basicReactFlowProps(nodes, edges) {\n  return {\n    nodes,\n    edges,\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: basicReactFlowProps includes nodes and edges\nok 1 - basicReactFlowProps includes nodes and edges\n  ---\n  duration_ms: 0.343583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.867542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:29:32.353Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function fullReactFlowConfig(nodes, edges, handlers) {\n  return {\n    nodes,\n    edges,\n    ...handlers,\n    fitView: true,\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: fullReactFlowConfig has all props\nnot ok 1 - fullReactFlowConfig has all props\n  ---\n  duration_ms: 0.776959\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663777623.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + undefined\n    - [Function: onNodesChange]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663777623.mjs:20:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.733708\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:29:37.735Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function fullReactFlowConfig(nodes, edges, handlers) {\n  return {\n    nodes,\n    edges,\n    ...handlers,\n    fitView: true,\n    children: [\n      Background(),\n      Controls()\n    ]\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: fullReactFlowConfig has all props\nnot ok 1 - fullReactFlowConfig has all props\n  ---\n  duration_ms: 0.394375\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663788754.mjs:20:1'\n  failureType: 'testCodeFailure'\n  error: 'Background is not defined'\n  code: 'ERR_TEST_FAILURE'\n  name: 'ReferenceError'\n  stack: |-\n    fullReactFlowConfig (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663788754.mjs:7:15)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663788754.mjs:21:17)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 51.8495\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:29:48.838Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function fullReactFlowConfig(nodes, edges, onNodesChange, onEdgesChange) {\n  return {\n    nodes,\n    edges,\n    onNodesChange,\n    onEdgesChange,\n    fitView: true\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: fullReactFlowConfig has all props\nok 1 - fullReactFlowConfig has all props\n  ---\n  duration_ms: 0.364792\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.303209\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:30:22.291Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function addNewEdge(oldEdges, connection) {\n  return await addEdge(oldEdges, connection);\n}",
+    "testOutput": "TAP version 13\n# Subtest: addNewEdge uses addEdge\nnot ok 1 - addNewEdge uses addEdge\n  ---\n  duration_ms: 1.102791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663830872.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + []\n    - {\n    -   source: '1',\n    -   target: '2'\n    - }\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    source: '1'\n    target: '2'\n  actual:\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663830872.mjs:21:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Error: Test \"addNewEdge uses addEdge\" at generated/temp-test-1768663830872.mjs:19:1 generated asynchronous activity after the test ended. This activity created the error \"TypeError: eds is not iterable\" and would have caused the test to fail, but instead triggered an unhandledRejection event.\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.862125\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:30:30.981Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function addNewEdge(oldEdges, connection) {\n  return addEdge(connection, oldEdges);\n}",
+    "testOutput": "TAP version 13\n# Subtest: addNewEdge uses addEdge\nok 1 - addNewEdge uses addEdge\n  ---\n  duration_ms: 0.505792\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.766583\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:30:34.292Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export const safeAddEdge = (edge, setEdges) => {\n  setEdges((prevEdges) => addEdge(edge, prevEdges));\n};",
+    "testOutput": "TAP version 13\n# Subtest: safeAddEdge returns updater\nnot ok 1 - safeAddEdge returns updater\n  ---\n  duration_ms: 0.340834\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663853040.mjs:18:1'\n  failureType: 'testCodeFailure'\n  error: 'setEdges is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    safeAddEdge (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663853040.mjs:2:3)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663853040.mjs:19:19)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.005333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:30:53.144Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function safeAddEdge(connection) {\n  return (eds) => addEdge(connection, eds);\n}",
+    "testOutput": "TAP version 13\n# Subtest: safeAddEdge returns updater\nok 1 - safeAddEdge returns updater\n  ---\n  duration_ms: 0.587916\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 50.781417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:31:04.685Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function logConnection({ source, target }) {\n  console.log(source, target);\n}",
+    "testOutput": "TAP version 13\n# Subtest: logConnection logs source -> target\nnot ok 1 - logConnection logs source -> target\n  ---\n  duration_ms: 1.048583\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663871574.mjs:14:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n      [\n        '1',\n    -   '->',\n        '2'\n      ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0: '1'\n    1: '->'\n    2: '2'\n  actual:\n    0: '1'\n    1: '2'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663871574.mjs:16:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.090917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:31:11.662Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function logConnection(connection) {\n  console.log(connection.source, '->', connection.target);\n}",
+    "testOutput": "TAP version 13\n# Subtest: logConnection logs source -> target\nok 1 - logConnection logs source -> target\n  ---\n  duration_ms: 0.60725\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.079375\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:31:15.325Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createOnConnect(setEdges, addEdge) {\n  return (connection) => {\n    setEdges((edges) => addEdge(connection, edges));\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createOnConnect uses addEdge\nnot ok 1 - createOnConnect uses addEdge\n  ---\n  duration_ms: 0.3435\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663884726.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: 'addEdge is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663884726.mjs:3:25\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663884726.mjs:20:18)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.022625\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:31:24.837Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export const createOnConnect = (setEdges) => {\n  return (connection) => {\n    console.log(connection.source, '->', connection.target);\n    setEdges((eds) => addEdge(connection, eds));\n  };\n};",
+    "testOutput": "TAP version 13\n# 1 -> 2\n# Subtest: createOnConnect uses addEdge\nok 1 - createOnConnect uses addEdge\n  ---\n  duration_ms: 0.693333\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.320333\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:31:28.902Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function validateAndConnect(graph, source, target) {\n  if (source === target) {\n    return false;\n  }\n  await graph.addEdge(source, target);\n  return true;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663917465.mjs:17\n# function validateAndConnect(setEdges) {\n# ^\n# SyntaxError: Identifier 'validateAndConnect' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768663917465.mjs\nnot ok 1 - generated/temp-test-1768663917465.mjs\n  ---\n  duration_ms: 33.871791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663917465.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.993708\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:31:57.569Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function validateAndConnect(connection) {\n  if (connection.source !== connection.target) {\n    console.log(connection.source, '->', connection.target);\n    setEdges((eds) => addEdge(connection, eds));\n  }\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663929263.mjs:16\n# function validateAndConnect(setEdges) {\n# ^\n# SyntaxError: Identifier 'validateAndConnect' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768663929263.mjs\nnot ok 1 - generated/temp-test-1768663929263.mjs\n  ---\n  duration_ms: 33.436792\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663929263.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.6345\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:32:09.366Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function validateAndConnect(setEdges) {\n  return (conn) => {\n    if (conn.source === conn.target) return;\n    setEdges((eds) => addEdge(conn, eds));\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663938938.mjs:16\n# function validateAndConnect(setEdges) {\n# ^\n# SyntaxError: Identifier 'validateAndConnect' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768663938938.mjs\nnot ok 1 - generated/temp-test-1768663938938.mjs\n  ---\n  duration_ms: 33.810625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768663938938.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.950167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:32:19.042Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 3,
+    "code": "validateAndConnect = (setEdges) => (conn) => {\n  if (conn.source === conn.target) return;\n  setEdges((eds) => addEdge(conn, eds));\n};",
+    "testOutput": "TAP version 13\n# Subtest: validateAndConnect skips self-connect\nok 1 - validateAndConnect skips self-connect\n  ---\n  duration_ms: 0.425917\n  ...\n# Subtest: validateAndConnect calls for different\nnot ok 2 - validateAndConnect calls for different\n  ---\n  duration_ms: 0.433833\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664001107.mjs:30:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    false !== true\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664001107.mjs:34:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.processPendingSubtests (node:internal/test_runner/test:677:18)\n    Test.postRun (node:internal/test_runner/test:1090:19)\n    Test.run (node:internal/test_runner/test:1018:12)\n    async startSubtestAfterBootstrap (node:internal/test_runner/harness:296:3)\n  ...\n1..2\n# tests 2\n# suites 0\n# pass 1\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 56.678667\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:33:21.228Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function createNodeTypes(CustomNode) {\n  return {\n    custom: CustomNode,\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createNodeTypes maps custom\nok 1 - createNodeTypes maps custom\n  ---\n  duration_ms: 0.5645\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.857542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:33:28.639Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createNodeTypes(CustomNode) {\n  return { custom: CustomNode };\n}",
+    "testOutput": "TAP version 13\n# Subtest: createNodeTypes maps custom\nok 1 - createNodeTypes maps custom\n  ---\n  duration_ms: 0.559083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.875875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:33:30.777Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function buildCustomNode(data) {\n  return {\n    type: 'custom',\n    data\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: buildCustomNode has type custom\nnot ok 1 - buildCustomNode has type custom\n  ---\n  duration_ms: 0.715041\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664015627.mjs:11:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    undefined !== '1'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '1'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664015627.mjs:14:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.726834\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:33:35.745Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function buildCustomNode(id, position, data) {\n  return {\n    id,\n    type: 'custom',\n    position,\n    data\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: buildCustomNode has type custom\nnot ok 1 - buildCustomNode has type custom\n  ---\n  duration_ms: 0.862083\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664020509.mjs:13:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   label: 'Test'\n    + }\n    - '1'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '1'\n  actual:\n    label: 'Test'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664020509.mjs:16:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.117583\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:33:40.626Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function buildCustomNode(data, id) {\n  return {\n    id,\n    type: 'custom',\n    data\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: buildCustomNode has type custom\nok 1 - buildCustomNode has type custom\n  ---\n  duration_ms: 0.571083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.625791\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:33:46.546Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function fullCustomSetup() {\n  const nodeTypes = {\n    custom: {\n      type: 'custom',\n      label: 'Custom Node',\n      properties: {\n        color: '#ff6b6b'\n      }\n    }\n  };\n\n  const initialNodes = [\n    {\n      id: '1',\n      type: 'custom',\n      data: { label: 'Hello Custom Node!' },\n      position: { x: 100, y: 100 }\n    },\n    {\n      id: '2',\n      type: 'custom',\n      data: { label: 'Another Custom Node' },\n      position: { x: 400, y: 100 }\n    }\n  ];\n\n  return { nodeTypes, initialNodes };\n}",
+    "testOutput": "TAP version 13\n# Subtest: fullCustomSetup provides both\nnot ok 1 - fullCustomSetup provides both\n  ---\n  duration_ms: 1.138458\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664041835.mjs:35:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   label: 'Custom Node',\n    +   properties: {\n    +     color: '#ff6b6b'\n    +   },\n    +   type: 'custom'\n    + }\n    - [Function: CustomNode]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664041835.mjs:37:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.72375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:34:01.952Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function fullCustomSetup() {\n  const CustomNode = ({ data }) => {\n    return <div>{data.label}</div>;\n  };\n\n  const nodeTypes = { custom: CustomNode };\n\n  const initialNodes = [\n    { id: '1', type: 'custom', position: { x: 0, y: 0 }, data: { label: 'Node' } }\n  ];\n\n  return { nodeTypes, initialNodes };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664055334.mjs:3\n#     return <div>{data.label}</div>;\n#            ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768664055334.mjs\nnot ok 1 - generated/temp-test-1768664055334.mjs\n  ---\n  duration_ms: 34.140584\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664055334.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.49775\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:34:15.442Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function fullCustomSetup(CustomNode) {\n  const nodeTypes = { custom: CustomNode };\n\n  const initialNodes = [\n    { id: '1', type: 'custom', position: { x: 0, y: 0 }, data: { label: 'Node' } }\n  ];\n\n  return { nodeTypes, initialNodes };\n}",
+    "testOutput": "TAP version 13\n# Subtest: fullCustomSetup provides both\nok 1 - fullCustomSetup provides both\n  ---\n  duration_ms: 0.372666\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.575959\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:34:26.097Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function nodeCountDisplay() {\n  const nodes = await useNodes();\n  return `${nodes.length} nodes`;\n}",
+    "testOutput": "TAP version 13\n# Subtest: nodeCountDisplay returns length string\nnot ok 1 - nodeCountDisplay returns length string\n  ---\n  duration_ms: 0.92075\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664071435.mjs:15:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + Promise {\n    +   <pending>,\n    +   [Symbol(async_id_symbol)]: 35,\n    +   [Symbol(trigger_async_id_symbol)]: 17\n    + }\n    - '2 nodes'\n    \n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 51.924167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:34:31.550Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function nodeCountDisplay() {\n  const nodes = useNodes();\n  return `${nodes.length} nodes`;\n}",
+    "testOutput": "TAP version 13\n# Subtest: nodeCountDisplay returns length string\nok 1 - nodeCountDisplay returns length string\n  ---\n  duration_ms: 0.351209\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.708584\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:34:37.286Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function listNodeIds() {\n  const nodes = await useNodes();\n  return nodes.map(node => node.id);\n}",
+    "testOutput": "TAP version 13\n# Subtest: listNodeIds maps ids\nnot ok 1 - listNodeIds maps ids\n  ---\n  duration_ms: 1.167542\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664081585.mjs:13:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + Promise {\n    +   <pending>,\n    +   [Symbol(async_id_symbol)]: 35,\n    +   [Symbol(trigger_async_id_symbol)]: 17\n    + }\n    - [\n    -   '1',\n    -   '2'\n    - ]\n    \n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.569333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:34:41.700Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function listNodeIds() {\n  const nodes = useNodes();\n  return nodes.map((node) => node.id);\n}",
+    "testOutput": "TAP version 13\n# Subtest: listNodeIds maps ids\nok 1 - listNodeIds maps ids\n  ---\n  duration_ms: 0.605209\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.069625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:34:46.713Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function addNodeViaInstance(reactFlowInstance, newNode) {\n  return reactFlowInstance.addNodes([newNode]);\n}",
+    "testOutput": "TAP version 13\n# Subtest: addNodeViaInstance calls addNodes\nok 1 - addNodeViaInstance calls addNodes\n  ---\n  duration_ms: 0.613542\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.599583\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:34:54.170Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function addNodeViaInstance(reactFlowInstance, newNode) {\n  await reactFlowInstance.addNodes([newNode]);\n}",
+    "testOutput": "TAP version 13\n# Subtest: addNodeViaInstance calls addNodes\nok 1 - addNodeViaInstance calls addNodes\n  ---\n  duration_ms: 0.660834\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 51.048\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:35:05.541Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function combinedStateInit() {\n  return {\n    nodes: [],\n    edges: []\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: combinedStateInit captures both\nnot ok 1 - combinedStateInit captures both\n  ---\n  duration_ms: 1.024083\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664114664.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly deep-equal:\n    + actual - expected\n    \n    + undefined\n    - [\n    -   {\n    -     id: 'n1'\n    -   }\n    - ]\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n    0:\n      id: 'n1'\n  operator: 'deepStrictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664114664.mjs:19:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.865917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:35:14.771Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function combinedStateInit(initialNodes, initialEdges) {\n  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);\n  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);\n  return [nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange];\n}",
+    "testOutput": "TAP version 13\n# Subtest: combinedStateInit captures both\nok 1 - combinedStateInit captures both\n  ---\n  duration_ms: 0.645334\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.197166\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:35:21.489Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export default async function reactFlowWithTypes() {\n  return {\n    nodeTypes: {},\n    edgeTypes: {},\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: reactFlowWithTypes includes types\nnot ok 1 - reactFlowWithTypes includes types\n  ---\n  duration_ms: 0.341958\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664145058.mjs:13:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'custom')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664145058.mjs:15:38)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.473167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:35:45.153Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function reactFlowWithTypes() {\n  return {\n    nodes: [],\n    edges: [],\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true,\n    nodeTypes: {},\n    edgeTypes: {}\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: reactFlowWithTypes includes types\nnot ok 1 - reactFlowWithTypes includes types\n  ---\n  duration_ms: 1.036208\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664158994.mjs:18:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    undefined !== {}\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected:\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664158994.mjs:20:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 58.812291\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:35:59.097Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function reactFlowWithTypes(CustomNode, CustomEdge, nodes, edges) {\n  return {\n    nodes,\n    edges,\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true,\n    nodeTypes: { custom: CustomNode },\n    edgeTypes: { custom: CustomEdge }\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: reactFlowWithTypes includes types\nok 1 - reactFlowWithTypes includes types\n  ---\n  duration_ms: 0.342375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.352708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:36:04.781Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function batchAddEdges(addEdge, edges) {\n  for (const edge of edges) {\n    await addEdge(edge);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: batchAddEdges calls addEdge for each\nnot ok 1 - batchAddEdges calls addEdge for each\n  ---\n  duration_ms: 0.382041\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664186599.mjs:19:1'\n  failureType: 'testCodeFailure'\n  error: 'updater is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664186599.mjs:21:3)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Error: Test \"batchAddEdges calls addEdge for each\" at generated/temp-test-1768664186599.mjs:19:1 generated asynchronous activity after the test ended. This activity created the error \"TypeError: edges is not iterable\" and would have caused the test to fail, but instead triggered an unhandledRejection event.\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.80425\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:36:26.711Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function batchAddEdges(connections, edges) {\n  return connections.reduce((currentEdges, connection) => addEdge(connection, currentEdges), edges);\n}",
+    "testOutput": "TAP version 13\n# Subtest: batchAddEdges calls addEdge for each\nnot ok 1 - batchAddEdges calls addEdge for each\n  ---\n  duration_ms: 0.3705\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664194061.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: 'updater is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664194061.mjs:19:3)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.060042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:36:34.178Z"
+  },
+  {
+    "taskId": "task-021",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function batchAddEdges(connections) {\n  return (edges) => connections.reduce((currentEdges, connection) => addEdge(connection, currentEdges), edges);\n}",
+    "testOutput": "TAP version 13\n# Subtest: batchAddEdges calls addEdge for each\nok 1 - batchAddEdges calls addEdge for each\n  ---\n  duration_ms: 0.51275\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.272042\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:36:40.499Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function nodeWithHandles({ id, position = { x: 0, y: 0 }, sourcePosition = 'right', targetPosition = 'left', data = { label: 'Custom Node' }, type = 'custom' } = {}) {\n  return {\n    id,\n    type,\n    data,\n    position,\n    sourcePosition,\n    targetPosition,\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: nodeWithHandles has positions\nok 1 - nodeWithHandles has positions\n  ---\n  duration_ms: 0.375333\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.956792\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:37:01.074Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function nodeWithHandles(sourcePosition, targetPosition) {\n  return ({ data }) => (\n    <div\n      style={{\n        padding: 10,\n        background: 'white',\n        border: '1px solid #777',\n        borderRadius: 5,\n        width: 80,\n        height: 'auto'\n      }}\n    >\n      <Handle type=\"target\" position={targetPosition} />\n      <div>{data.label}</div>\n      <Handle type=\"source\" position={sourcePosition} />\n    </div>\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664238216.mjs:3\n#     <div\n#     ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768664238216.mjs\nnot ok 1 - generated/temp-test-1768664238216.mjs\n  ---\n  duration_ms: 31.804667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664238216.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 36.74925\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:37:18.318Z"
+  },
+  {
+    "taskId": "task-022",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function nodeWithHandles(sourcePosition, targetPosition) {\n  return {\n    id: sourcePosition,\n    type: targetPosition,\n    sourcePosition: 'right',\n    targetPosition: 'left'\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: nodeWithHandles has positions\nok 1 - nodeWithHandles has positions\n  ---\n  duration_ms: 0.338417\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.951542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:37:55.087Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function filteredNodes(selectedIds) {\n  const nodes = await useNodes();\n  return nodes.filter(({ id }) => selectedIds.includes(id));\n}",
+    "testOutput": "TAP version 13\n# Subtest: filteredNodes returns selected\nnot ok 1 - filteredNodes returns selected\n  ---\n  duration_ms: 0.798875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664286313.mjs:12:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    \n    undefined !== 1\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 1\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664286313.mjs:14:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n# Error: Test \"filteredNodes returns selected\" at generated/temp-test-1768664286313.mjs:12:1 generated asynchronous activity after the test ended. This activity created the error \"TypeError: Cannot read properties of undefined (reading 'includes')\" and would have caused the test to fail, but instead triggered an unhandledRejection event.\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.626958\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:38:06.425Z"
+  },
+  {
+    "taskId": "task-023",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export const filteredNodes = () => {\n  const nodes = useNodes();\n  return nodes.filter((node) => node.selected);\n};",
+    "testOutput": "TAP version 13\n# Subtest: filteredNodes returns selected\nok 1 - filteredNodes returns selected\n  ---\n  duration_ms: 0.336917\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.847417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:38:12.886Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function connectWithHandles(connection) {\n  if (connection?.handles) {\n    console.log(connection.handles);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: connectWithHandles logs handles\nnot ok 1 - connectWithHandles logs handles\n  ---\n  duration_ms: 0.335\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664299880.mjs:14:1'\n  failureType: 'testCodeFailure'\n  error: 'connectWithHandles(...) is not a function'\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664299880.mjs:16:23)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.274333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:38:20.002Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export const connectWithHandles = (connection) => {\n  const from = connection.sourceHandle ? `${connection.source}:${connection.sourceHandle}` : connection.source;\n  const to = connection.targetHandle ? `${connection.target}:${connection.targetHandle}` : connection.target;\n  console.log(from, '->', to);\n  setEdges((eds) => addEdge(connection, eds));\n};",
+    "testOutput": "TAP version 13\n# Subtest: connectWithHandles logs handles\nnot ok 1 - connectWithHandles logs handles\n  ---\n  duration_ms: 0.358083\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664329539.mjs:15:1'\n  failureType: 'testCodeFailure'\n  error: \"Cannot read properties of undefined (reading 'sourceHandle')\"\n  code: 'ERR_TEST_FAILURE'\n  name: 'TypeError'\n  stack: |-\n    connectWithHandles (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664329539.mjs:2:27)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664329539.mjs:17:3)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.785292\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:38:49.647Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export const connectWithHandles = () => (connection) => {\n  console.log(connection.sourceHandle, '->', connection.targetHandle);\n  setEdges((eds) => addEdge(connection, eds));\n};",
+    "testOutput": "TAP version 13\n# Subtest: connectWithHandles logs handles\nnot ok 1 - connectWithHandles logs handles\n  ---\n  duration_ms: 0.347584\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664346937.mjs:13:1'\n  failureType: 'testCodeFailure'\n  error: 'setEdges is not defined'\n  code: 'ERR_TEST_FAILURE'\n  name: 'ReferenceError'\n  stack: |-\n    file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664346937.mjs:3:3\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664346937.mjs:15:23)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 59.914167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:39:07.047Z"
+  },
+  {
+    "taskId": "task-024",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export const connectWithHandles = () => (connection) => {\n  console.log(connection.sourceHandle, '->', connection.targetHandle);\n};",
+    "testOutput": "TAP version 13\n# Subtest: connectWithHandles logs handles\nok 1 - connectWithHandles logs handles\n  ---\n  duration_ms: 0.61425\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.155708\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:39:16.029Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function minimalReactFlow() {\n  return {\n    defaultNodes: [\n      {\n        id: '1',\n        data: { label: 'Node 1' },\n        position: { x: 250, y: 25 }\n      },\n      {\n        id: '2',\n        data: { label: 'Node 2' },\n        position: { x: 100, y: 125 }\n      }\n    ],\n    defaultEdges: [\n      {\n        id: 'e1-2',\n        source: '1',\n        target: '2'\n      }\n    ]\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: minimalReactFlow uses default props\nnot ok 1 - minimalReactFlow uses default props\n  ---\n  duration_ms: 6.929834\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664365572.mjs:28:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    The expression evaluated to a falsy value:\n    \n      assert.ok(Array.isArray(props.defaultNodes))\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: true\n  actual: false\n  operator: '=='\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768664365572.mjs:30:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 54.350042\n",
+    "passed": false,
+    "timestamp": "2026-01-17T15:39:25.690Z"
+  },
+  {
+    "taskId": "task-025",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function minimalReactFlow() {\n  return {\n    defaultNodes: [\n      {\n        id: '1',\n        data: { label: 'Node 1' },\n        position: { x: 250, y: 25 },\n      },\n      {\n        id: '2',\n        data: { label: 'Node 2' },\n        position: { x: 100, y: 125 },\n      },\n    ],\n    defaultEdges: [\n      {\n        id: 'e1-2',\n        source: '1',\n        target: '2',\n      },\n    ],\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: minimalReactFlow uses default props\nok 1 - minimalReactFlow uses default props\n  ---\n  duration_ms: 0.343083\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.193542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T15:39:47.827Z"
+  }
+]

@@ -131,8 +131,9 @@ export function evaluate(options: EvaluateOptions): EvaluationReport {
   };
 
   emit('write', 90, 'Writing report...');
-  mkdirSync(resultsDir, { recursive: true });
-  writeFileSync(`${resultsDir}/${library}.json`, JSON.stringify(report, null, 2));
+  const resultPath = `${resultsDir}/${library}.json`;
+  mkdirSync(resultPath.substring(0, resultPath.lastIndexOf('/')), { recursive: true });
+  writeFileSync(resultPath, JSON.stringify(report, null, 2));
 
   emit('done', 100, `Complete: Doc impact ${docImpact >= 0 ? '+' : ''}${Math.round(docImpact)}pp`);
 

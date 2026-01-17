@@ -1,0 +1,367 @@
+{
+  "library": "@reactflow/core",
+  "generatedAt": "2026-01-17T15:27:04.554Z",
+  "evaluatedAt": "2026-01-17T15:43:31.841Z",
+  "summary": {
+    "totalTasks": 25,
+    "aFirstPassRate": 24,
+    "bFirstPassRate": 60,
+    "docImpact": 36,
+    "bFailedFirstPass": 10,
+    "bRescuedByRetry": 9,
+    "iterationValue": 90,
+    "bFinalPassRate": 96
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "use-reactflow-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function getNodeCount(reactFlowInstance) {\n  const nodes = reactFlowInstance.getNodes();\n  return nodes.length;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function getNodeCount(reactFlowInstance) {\n  return reactFlowInstance.getNodes().length;\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "use-reactflow-hook",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createFitViewHandler(reactFlowInstance) {\n  return async () => {\n    await reactFlowInstance.fitView();\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createFitViewHandler(reactFlowInstance) {\n  return () => {\n    reactFlowInstance.fitView();\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "use-reactflow-hook",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function countAndFit(reactFlowInstance) {\n  const nodes = reactFlowInstance.getNodes();\n  console.log(nodes.length);\n  await reactFlowInstance.fitView();\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function countAndFit(reactFlowInstance) {\n  console.log(reactFlowInstance.getNodes().length);\n  reactFlowInstance.fitView();\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "state-hooks",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function initNodeState() {\n  return useNodesState([]);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initNodeState() {\n  return useNodesState([]);\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "state-hooks",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function createNodeHandlers(initialNodes) {\n  let nodes = initialNodes;\n  const listeners = [];\n\n  const onNodesChange = (callback) => {\n    const listener = (currentNodes) => callback(currentNodes);\n    listeners.push(listener);\n    listener(nodes); // immediate invocation with current state\n    return () => {\n      const index = listeners.indexOf(listener);\n      if (index !== -1) {\n        listeners.splice(index, 1);\n      }\n    };\n  };\n\n  const setNodes = async (updaterOrNodes) => {\n    const newNodes = typeof updaterOrNodes === 'function' \n      ? updaterOrNodes(nodes) \n      : updaterOrNodes;\n    nodes = newNodes;\n    const promises = listeners.map(listener => {\n      try {\n        const result = listener(nodes);\n        return result instanceof Promise ? result : Promise.resolve(result);\n      } catch (error) {\n        console.error(error);\n        return Promise.resolve();\n      }\n    });\n    await Promise.all(promises);\n  };\n\n  return { onNodesChange, setNodes };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function createNodeHandlers(initialNodes) {\n  const [, setNodes, onNodesChange] = useNodesState(initialNodes);\n  return { onNodesChange, setNodes };\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "reactflow-component",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function basicReactFlowProps() {\n  return {\n    nodes: [\n      {\n        id: '1',\n        type: 'input',\n        data: { label: 'Input Node' },\n        position: { x: 250, y: 25 },\n      },\n      {\n        id: '2',\n        data: { label: 'Default Node' },\n        position: { x: 100, y: 125 },\n      },\n    ],\n    edges: [\n      { id: 'e1-2', source: '1', target: '2' },\n    ],\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function basicReactFlowProps(nodes, edges) {\n  return {\n    nodes,\n    edges,\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "reactflow-component",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function fullReactFlowConfig(nodes, edges, handlers) {\n  return {\n    nodes,\n    edges,\n    ...handlers,\n    fitView: true,\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function fullReactFlowConfig(nodes, edges, onNodesChange, onEdgesChange) {\n  return {\n    nodes,\n    edges,\n    onNodesChange,\n    onEdgesChange,\n    fitView: true\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "addedge-util",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function addNewEdge(oldEdges, connection) {\n  return await addEdge(oldEdges, connection);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function addNewEdge(oldEdges, connection) {\n  return addEdge(connection, oldEdges);\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "addedge-util",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export const safeAddEdge = (edge, setEdges) => {\n  setEdges((prevEdges) => addEdge(edge, prevEdges));\n};"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function safeAddEdge(connection) {\n  return (eds) => addEdge(connection, eds);\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "onconnect-prop",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function logConnection({ source, target }) {\n  console.log(source, target);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function logConnection(connection) {\n  console.log(connection.source, '->', connection.target);\n}"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "onconnect-prop",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function createOnConnect(setEdges, addEdge) {\n  return (connection) => {\n    setEdges((edges) => addEdge(connection, edges));\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export const createOnConnect = (setEdges) => {\n  return (connection) => {\n    console.log(connection.source, '->', connection.target);\n    setEdges((eds) => addEdge(connection, eds));\n  };\n};"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "onconnect-prop",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function validateAndConnect(graph, source, target) {\n  if (source === target) {\n    return false;\n  }\n  await graph.addEdge(source, target);\n  return true;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "validateAndConnect = (setEdges) => (conn) => {\n  if (conn.source === conn.target) return;\n  setEdges((eds) => addEdge(conn, eds));\n};"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "custom-nodes",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createNodeTypes(CustomNode) {\n  return {\n    custom: CustomNode,\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createNodeTypes(CustomNode) {\n  return { custom: CustomNode };\n}"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "custom-nodes",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function buildCustomNode(data) {\n  return {\n    type: 'custom',\n    data\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function buildCustomNode(data, id) {\n  return {\n    id,\n    type: 'custom',\n    data\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "custom-nodes",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function fullCustomSetup() {\n  const nodeTypes = {\n    custom: {\n      type: 'custom',\n      label: 'Custom Node',\n      properties: {\n        color: '#ff6b6b'\n      }\n    }\n  };\n\n  const initialNodes = [\n    {\n      id: '1',\n      type: 'custom',\n      data: { label: 'Hello Custom Node!' },\n      position: { x: 100, y: 100 }\n    },\n    {\n      id: '2',\n      type: 'custom',\n      data: { label: 'Another Custom Node' },\n      position: { x: 400, y: 100 }\n    }\n  ];\n\n  return { nodeTypes, initialNodes };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function fullCustomSetup(CustomNode) {\n  const nodeTypes = { custom: CustomNode };\n\n  const initialNodes = [\n    { id: '1', type: 'custom', position: { x: 0, y: 0 }, data: { label: 'Node' } }\n  ];\n\n  return { nodeTypes, initialNodes };\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "use-nodes-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function nodeCountDisplay() {\n  const nodes = await useNodes();\n  return `${nodes.length} nodes`;\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function nodeCountDisplay() {\n  const nodes = useNodes();\n  return `${nodes.length} nodes`;\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "use-nodes-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function listNodeIds() {\n  const nodes = await useNodes();\n  return nodes.map(node => node.id);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function listNodeIds() {\n  const nodes = useNodes();\n  return nodes.map((node) => node.id);\n}"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "use-reactflow-hook",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function addNodeViaInstance(reactFlowInstance, newNode) {\n  return reactFlowInstance.addNodes([newNode]);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function addNodeViaInstance(reactFlowInstance, newNode) {\n  await reactFlowInstance.addNodes([newNode]);\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "state-hooks",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function combinedStateInit() {\n  return {\n    nodes: [],\n    edges: []\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function combinedStateInit(initialNodes, initialEdges) {\n  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);\n  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);\n  return [nodes, setNodes, onNodesChange, edges, setEdges, onEdgesChange];\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "reactflow-component",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export default async function reactFlowWithTypes() {\n  return {\n    nodeTypes: {},\n    edgeTypes: {},\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function reactFlowWithTypes(CustomNode, CustomEdge, nodes, edges) {\n  return {\n    nodes,\n    edges,\n    onNodesChange: () => {},\n    onEdgesChange: () => {},\n    fitView: true,\n    nodeTypes: { custom: CustomNode },\n    edgeTypes: { custom: CustomEdge }\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-021",
+      "docTag": "addedge-util",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function batchAddEdges(addEdge, edges) {\n  for (const edge of edges) {\n    await addEdge(edge);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function batchAddEdges(connections) {\n  return (edges) => connections.reduce((currentEdges, connection) => addEdge(connection, currentEdges), edges);\n}"
+      }
+    },
+    {
+      "taskId": "task-022",
+      "docTag": "custom-nodes",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function nodeWithHandles({ id, position = { x: 0, y: 0 }, sourcePosition = 'right', targetPosition = 'left', data = { label: 'Custom Node' }, type = 'custom' } = {}) {\n  return {\n    id,\n    type,\n    data,\n    position,\n    sourcePosition,\n    targetPosition,\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "function nodeWithHandles(sourcePosition, targetPosition) {\n  return {\n    id: sourcePosition,\n    type: targetPosition,\n    sourcePosition: 'right',\n    targetPosition: 'left'\n  };\n}"
+      }
+    },
+    {
+      "taskId": "task-023",
+      "docTag": "use-nodes-hook",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function filteredNodes(selectedIds) {\n  const nodes = await useNodes();\n  return nodes.filter(({ id }) => selectedIds.includes(id));\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export const filteredNodes = () => {\n  const nodes = useNodes();\n  return nodes.filter((node) => node.selected);\n};"
+      }
+    },
+    {
+      "taskId": "task-024",
+      "docTag": "onconnect-prop",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function connectWithHandles(connection) {\n  if (connection?.handles) {\n    console.log(connection.handles);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "export const connectWithHandles = () => (connection) => {\n  console.log(connection.sourceHandle, '->', connection.targetHandle);\n};"
+      }
+    },
+    {
+      "taskId": "task-025",
+      "docTag": "reactflow-component",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export async function minimalReactFlow() {\n  return {\n    defaultNodes: [\n      {\n        id: '1',\n        data: { label: 'Node 1' },\n        position: { x: 250, y: 25 }\n      },\n      {\n        id: '2',\n        data: { label: 'Node 2' },\n        position: { x: 100, y: 125 }\n      }\n    ],\n    defaultEdges: [\n      {\n        id: 'e1-2',\n        source: '1',\n        target: '2'\n      }\n    ]\n  };\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function minimalReactFlow() {\n  return {\n    defaultNodes: [\n      {\n        id: '1',\n        data: { label: 'Node 1' },\n        position: { x: 250, y: 25 },\n      },\n      {\n        id: '2',\n        data: { label: 'Node 2' },\n        position: { x: 100, y: 125 },\n      },\n    ],\n    defaultEdges: [\n      {\n        id: 'e1-2',\n        source: '1',\n        target: '2',\n      },\n    ],\n  };\n}"
+      }
+    }
+  ]
+}

@@ -1,0 +1,272 @@
+{
+  "library": "@reactflow/core",
+  "libraryId": "/@reactflow/core",
+  "generatedAt": "2026-01-17T15:27:04.554Z",
+  "docs": [
+    {
+      "id": "use-reactflow-hook",
+      "title": "useReactFlow Hook",
+      "content": "The useReactFlow hook returns a ReactFlowInstance object for programmatic interaction with the flow, such as querying nodes or manipulating the viewport. It should be called within a ReactFlowProvider context and added as a dependency in useEffect or useCallback due to async initialization. Common methods include getNodes(), fitView(), and addNodes().",
+      "codeExamples": [
+        "const reactFlow = useReactFlow();\nconst countNodes = useCallback(() => {\n  setCount(reactFlow.getNodes().length);\n}, [reactFlow]);",
+        "const reactFlowInstance = useReactFlow();\nconst fitView = () => {\n  reactFlowInstance.fitView();\n};"
+      ]
+    },
+    {
+      "id": "state-hooks",
+      "title": "useNodesState and useEdgesState Hooks",
+      "content": "useNodesState and useEdgesState are custom hooks for managing nodes and edges state in React Flow apps. Each returns a tuple: current state array, setter function, and onChange handler. They simplify state updates and provide change handlers for the ReactFlow component.",
+      "codeExamples": [
+        "const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);\nconst [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);",
+        "<ReactFlow \n  nodes={nodes} \n  onNodesChange={onNodesChange} \n  edges={edges} \n  onEdgesChange={onEdgesChange} />"
+      ]
+    },
+    {
+      "id": "reactflow-component",
+      "title": "ReactFlow Component",
+      "content": "ReactFlow is the main canvas component that renders nodes and edges. Key props include nodes, edges, onNodesChange, onEdgesChange, fitView, nodeTypes, and edgeTypes. It supports nested components like Background and Controls for enhanced UI.",
+      "codeExamples": [
+        "<ReactFlow \n  nodes={nodes} \n  edges={edges} \n  onNodesChange={onNodesChange} \n  onEdgesChange={onEdgesChange} \n  fitView />",
+        "<ReactFlow ...>\n  <Background />\n  <Controls />\n</ReactFlow>"
+      ]
+    },
+    {
+      "id": "addedge-util",
+      "title": "addEdge Utility",
+      "content": "addEdge takes a Connection object and existing edges array, returning a new array with the connection upgraded to a full Edge. It prevents duplicate edges and sets default properties. Primarily used inside setEdges updater in onConnect callbacks.",
+      "codeExamples": [
+        "const onConnect = useCallback(\n  (connection) => setEdges((eds) => addEdge(connection, eds)),\n  [setEdges]\n);",
+        "setEdges((oldEdges) => addEdge({source: '1', target: '2'}, oldEdges));"
+      ]
+    },
+    {
+      "id": "onconnect-prop",
+      "title": "onConnect Callback",
+      "content": "onConnect is a prop on ReactFlow triggered when users connect node handles. It receives a Connection {source, target, sourceHandle, targetHandle}. Implement it to validate and add the edge using addEdge.",
+      "codeExamples": [
+        "const onConnect = (connection) => {\n  console.log(connection.source, '->', connection.target);\n  setEdges((eds) => addEdge(connection, eds));\n};",
+        "<ReactFlow onConnect={onConnect} />"
+      ]
+    },
+    {
+      "id": "custom-nodes",
+      "title": "Custom Node Types",
+      "content": "Custom nodes extend default rendering by mapping type strings to React components via nodeTypes prop. Custom components receive the full node object {id, type, position, data}. Define initial nodes with type: 'custom'.",
+      "codeExamples": [
+        "const nodeTypes = { custom: CustomNode };\n<ReactFlow nodeTypes={nodeTypes} />",
+        "{ id: '1', type: 'custom', position: {x: 0, y: 0}, data: {label: 'Node'} }"
+      ]
+    },
+    {
+      "id": "use-nodes-hook",
+      "title": "useNodes Hook",
+      "content": "useNodes returns the current nodes array and subscribes the component to re-render on any node changes like position or selection. Ideal for read-only displays of node data. Does not take arguments.",
+      "codeExamples": [
+        "const nodes = useNodes();\nreturn <div>{nodes.length} nodes</div>;",
+        "{nodes.map((node) => (\n  <li key={node.id}>{node.id}</li>\n))}"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "use-reactflow-hook",
+      "description": "Write a function `getNodeCount` that takes a `reactFlowInstance` and returns the number of nodes using `getNodes()`.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('getNodeCount works', () => {\n  const mockInstance = {\n    getNodes: () => [{ id: '1' }, { id: '2' }]\n  };\n  const result = getNodeCount(mockInstance);\n  assert.strictEqual(result, 2);\n});",
+      "solutionHint": "Call reactFlowInstance.getNodes().length"
+    },
+    {
+      "id": "task-002",
+      "docTag": "use-reactflow-hook",
+      "description": "Write a function `createFitViewHandler` that takes `reactFlowInstance` and returns a function that calls `fitView()`.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet called = false;\nconst mockInstance = { fitView: () => { called = true; } };\n\ntest('createFitViewHandler works', () => {\n  const handler = createFitViewHandler(mockInstance);\n  handler();\n  assert.strictEqual(called, true);\n});",
+      "solutionHint": "Return () => reactFlowInstance.fitView()"
+    },
+    {
+      "id": "task-003",
+      "docTag": "use-reactflow-hook",
+      "description": "Write a function `countAndFit` that takes `reactFlowInstance` and logs the node count then calls fitView.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet logCount, fitCalled;\nconst mockInstance = {\n  getNodes: () => [{ id: '1' }],\n  fitView: () => { fitCalled = true; }\n};\nconst consoleLog = (c) => { logCount = c; };\n\nglobalThis.console = { log: consoleLog };\n\ntest('countAndFit works', () => {\n  countAndFit(mockInstance);\n  assert.strictEqual(logCount, 1);\n  assert.strictEqual(fitCalled, true);\n});",
+      "solutionHint": "Use getNodes().length and console.log"
+    },
+    {
+      "id": "task-004",
+      "docTag": "state-hooks",
+      "description": "Write a function `initNodeState` that calls `useNodesState([])` and returns the tuple.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedInit;\nconst useNodesState = (init) => {\n  capturedInit = init;\n  return [[], () => {}, () => {}];\n};\n\nglobalThis.useNodesState = useNodesState;\n\ntest('initNodeState calls useNodesState with empty array', () => {\n  const result = initNodeState();\n  assert.deepStrictEqual(capturedInit, []);\n  assert.strictEqual(Array.isArray(result[0]), true);\n});",
+      "solutionHint": "Return useNodesState([])"
+    },
+    {
+      "id": "task-005",
+      "docTag": "state-hooks",
+      "description": "Write a function `createNodeHandlers` that initializes nodes state with given initialNodes and returns {onNodesChange, setNodes}.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedNodesInit;\nconst useNodesState = (init) => {\n  capturedNodesInit = init;\n  return [[], () => {}, (changes) => {}];\n};\n\nglobalThis.useNodesState = useNodesState;\n\nconst initialNodes = [{id: '1'}];\n\ntest('createNodeHandlers captures initialNodes', () => {\n  const {onNodesChange, setNodes} = createNodeHandlers(initialNodes);\n  assert.deepStrictEqual(capturedNodesInit, initialNodes);\n  assert.strictEqual(typeof onNodesChange, 'function');\n  assert.strictEqual(typeof setNodes, 'function');\n});",
+      "solutionHint": "Destructure [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)"
+    },
+    {
+      "id": "task-006",
+      "docTag": "reactflow-component",
+      "description": "Write a function `basicReactFlowProps` that returns props object for basic ReactFlow with nodes and edges.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst nodes = []; const edges = [];\n\ntest('basicReactFlowProps includes nodes and edges', () => {\n  const props = basicReactFlowProps(nodes, edges);\n  assert.strictEqual(props.nodes, nodes);\n  assert.strictEqual(props.edges, edges);\n});",
+      "solutionHint": "Return { nodes, edges }"
+    },
+    {
+      "id": "task-007",
+      "docTag": "reactflow-component",
+      "description": "Write a function `fullReactFlowConfig` that takes nodes, edges, handlers and returns complete props including fitView: true.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst nodes = []; const edges = [];\nconst onNodesChange = () => {}; const onEdgesChange = () => {};\n\ntest('fullReactFlowConfig has all props', () => {\n  const props = fullReactFlowConfig(nodes, edges, onNodesChange, onEdgesChange);\n  assert.strictEqual(props.nodes, nodes);\n  assert.strictEqual(props.edges, edges);\n  assert.strictEqual(props.onNodesChange, onNodesChange);\n  assert.strictEqual(props.onEdgesChange, onEdgesChange);\n  assert.strictEqual(props.fitView, true);\n});",
+      "solutionHint": "Include onNodesChange, onEdgesChange, fitView"
+    },
+    {
+      "id": "task-008",
+      "docTag": "addedge-util",
+      "description": "Write a function `addNewEdge` that takes oldEdges and connection, calls addEdge and returns result.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedConn, capturedEds;\nconst addEdge = (conn, eds) => {\n  capturedConn = conn;\n  capturedEds = eds;\n  return [...eds, {id: 'new', ...conn}];\n};\nglobalThis.addEdge = addEdge;\n\nconst connection = {source: '1', target: '2'};\nconst oldEdges = [];\n\ntest('addNewEdge uses addEdge', () => {\n  const result = addNewEdge(oldEdges, connection);\n  assert.deepStrictEqual(capturedConn, connection);\n  assert.strictEqual(capturedEds, oldEdges);\n  assert.strictEqual(result.length, 1);\n});",
+      "solutionHint": "Return addEdge(connection, oldEdges)"
+    },
+    {
+      "id": "task-009",
+      "docTag": "addedge-util",
+      "description": "Write a function `safeAddEdge` that uses addEdge in a setEdges updater function.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedConn, capturedEds, updaterCalled;\nconst addEdge = (conn, eds) => {\n  capturedConn = conn;\n  capturedEds = eds;\n  return [...eds, {id: 'new', ...conn}];\n};\nglobalThis.addEdge = addEdge;\n\nconst connection = {source: '1', target: '2'};\n\ntest('safeAddEdge returns updater', () => {\n  const updater = safeAddEdge(connection);\n  assert.strictEqual(typeof updater, 'function');\n  const newEdges = updater([]);\n  assert.deepStrictEqual(capturedConn, connection);\n  assert.deepStrictEqual(capturedEds, []);\n  assert.strictEqual(newEdges.length, 1);\n});",
+      "solutionHint": "Return (eds) => addEdge(connection, eds)"
+    },
+    {
+      "id": "task-010",
+      "docTag": "onconnect-prop",
+      "description": "Write a function `logConnection` that logs the source and target from connection.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet logArgs;\nconst consoleLog = (...args) => { logArgs = args; };\nglobalThis.console = { log: consoleLog };\n\nconst connection = {source: '1', target: '2'};\n\ntest('logConnection logs source -> target', () => {\n  logConnection(connection);\n  assert.deepStrictEqual(logArgs, ['1', '->', '2']);\n});",
+      "solutionHint": "console.log(connection.source, '->', connection.target)"
+    },
+    {
+      "id": "task-011",
+      "docTag": "onconnect-prop",
+      "description": "Write `createOnConnect` that returns an onConnect handler using addEdge with setEdges.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedUpdater;\nlet addEdgeCalled = false;\nconst addEdge = () => { addEdgeCalled = true; return []; };\nglobalThis.addEdge = addEdge;\nconst setEdges = (updater) => { capturedUpdater = updater; };\n\ntest('createOnConnect uses addEdge', () => {\n  const onConnect = createOnConnect(setEdges);\n  const conn = {source:'1',target:'2'};\n  onConnect(conn);\n  const newEds = capturedUpdater([]);\n  assert.strictEqual(addEdgeCalled, true);\n});",
+      "solutionHint": "Return (conn) => setEdges(eds => addEdge(conn, eds))"
+    },
+    {
+      "id": "task-012",
+      "docTag": "onconnect-prop",
+      "description": "Write `validateAndConnect` that checks if source !== target before adding edge.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet addEdgeCalled;\nconst addEdge = () => { addEdgeCalled = true; return []; };\nglobalThis.addEdge = addEdge;\nconst setEdges = () => {};\n\nfunction validateAndConnect(setEdges) {\n  return (conn) => {\n    if (conn.source === conn.target) return;\n    setEdges((eds) => addEdge(conn, eds));\n  };\n}\n\n// Wait, this is solution? No, test assumes functionUnderTest\n\ntest('validateAndConnect skips self-connect', () => {\n  const onConnect = validateAndConnect(setEdges);\n  addEdgeCalled = false;\n  onConnect({source:'1', target:'1'});\n  assert.strictEqual(addEdgeCalled, false);\n});\n\ntest('validateAndConnect calls for different', () => {\n  const onConnect = validateAndConnect(setEdges);\n  addEdgeCalled = false;\n  onConnect({source:'1', target:'2'});\n  assert.strictEqual(addEdgeCalled, true);\n});",
+      "solutionHint": "If source === target return early"
+    },
+    {
+      "id": "task-013",
+      "docTag": "custom-nodes",
+      "description": "Write `createNodeTypes` that takes CustomNode component and returns nodeTypes map.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst CustomNode = () => {};\n\ntest('createNodeTypes maps custom', () => {\n  const types = createNodeTypes(CustomNode);\n  assert.deepStrictEqual(types, { custom: CustomNode });\n});",
+      "solutionHint": "Return { custom: CustomNode }"
+    },
+    {
+      "id": "task-014",
+      "docTag": "custom-nodes",
+      "description": "Write `buildCustomNode` that returns node object with type 'custom' and given data.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('buildCustomNode has type custom', () => {\n  const node = buildCustomNode({label: 'Test'}, '1');\n  assert.strictEqual(node.type, 'custom');\n  assert.strictEqual(node.id, '1');\n  assert.deepStrictEqual(node.data, {label: 'Test'});\n});",
+      "solutionHint": "{ id, type: 'custom', data }"
+    },
+    {
+      "id": "task-015",
+      "docTag": "custom-nodes",
+      "description": "Write `fullCustomSetup` that returns {nodeTypes, initialNodes} with custom type.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst CustomNode = () => {};\n\ntest('fullCustomSetup provides both', () => {\n  const setup = fullCustomSetup(CustomNode);\n  assert.strictEqual(setup.nodeTypes.custom, CustomNode);\n  assert.strictEqual(setup.initialNodes[0].type, 'custom');\n});",
+      "solutionHint": "Combine nodeTypes and initialNodes with type"
+    },
+    {
+      "id": "task-016",
+      "docTag": "use-nodes-hook",
+      "description": "Write `nodeCountDisplay` that uses useNodes() to return count string.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedNodes;\nconst useNodes = () => {\n  return capturedNodes || [];\n};\nglobalThis.useNodes = useNodes;\n\ntest('nodeCountDisplay returns length string', () => {\n  capturedNodes = [{id:'1'}, {id:'2'}];\n  const result = nodeCountDisplay();\n  assert.strictEqual(result, '2 nodes');\n});",
+      "solutionHint": "const nodes = useNodes(); return `${nodes.length} nodes`"
+    },
+    {
+      "id": "task-017",
+      "docTag": "use-nodes-hook",
+      "description": "Write `listNodeIds` that uses useNodes to return array of ids.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedNodes;\nconst useNodes = () => capturedNodes;\nglobalThis.useNodes = useNodes;\n\ntest('listNodeIds maps ids', () => {\n  capturedNodes = [{id:'1'}, {id:'2'}];\n  const result = listNodeIds();\n  assert.deepStrictEqual(result, ['1', '2']);\n});",
+      "solutionHint": "nodes.map(n => n.id)"
+    },
+    {
+      "id": "task-018",
+      "docTag": "use-reactflow-hook",
+      "description": "Write `addNodeViaInstance` that takes reactFlowInstance and newNode, calls addNodes.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedNodes;\nconst mockInstance = {\n  addNodes: (nodes) => { capturedNodes = nodes; }\n};\n\ntest('addNodeViaInstance calls addNodes', () => {\n  const newNode = {id: 'new'};\n  addNodeViaInstance(mockInstance, newNode);\n  assert.deepStrictEqual(capturedNodes, [newNode]);\n});",
+      "solutionHint": "reactFlowInstance.addNodes([newNode])"
+    },
+    {
+      "id": "task-019",
+      "docTag": "state-hooks",
+      "description": "Write `combinedStateInit` that inits both nodes and edges state.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet nodesInit, edgesInit;\nconst useNodesState = (init) => { nodesInit = init; return []; };\nconst useEdgesState = (init) => { edgesInit = init; return []; };\nglobalThis.useNodesState = useNodesState;\nglobalThis.useEdgesState = useEdgesState;\n\ntest('combinedStateInit captures both', () => {\n  combinedStateInit([{id:'n1'}], [{id:'e1'}]);\n  assert.deepStrictEqual(nodesInit, [{id:'n1'}]);\n  assert.deepStrictEqual(edgesInit, [{id:'e1'}]);\n});",
+      "solutionHint": "Call both hooks"
+    },
+    {
+      "id": "task-020",
+      "docTag": "reactflow-component",
+      "description": "Write `reactFlowWithTypes` that returns props including nodeTypes and edgeTypes.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst CustomNode = {}; const CustomEdge = {};\n\ntest('reactFlowWithTypes includes types', () => {\n  const props = reactFlowWithTypes(CustomNode, CustomEdge, [], []);\n  assert.strictEqual(props.nodeTypes.custom, CustomNode);\n  assert.strictEqual(props.edgeTypes.custom, CustomEdge);\n});",
+      "solutionHint": "{ ..., nodeTypes: {custom: CustomNode}, edgeTypes: {custom: CustomEdge} }"
+    },
+    {
+      "id": "task-021",
+      "docTag": "addedge-util",
+      "description": "Write `batchAddEdges` that adds multiple connections using addEdge sequentially.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet addEdgeCalls = [];\nconst addEdge = (conn) => {\n  addEdgeCalls.push(conn);\n  return [];\n};\nglobalThis.addEdge = addEdge;\n\nconst conns = [{source:'1',target:'2'}, {source:'3',target:'4'}];\n\ntest('batchAddEdges calls addEdge for each', () => {\n  const updater = batchAddEdges(conns);\n  updater([]);\n  assert.strictEqual(addEdgeCalls.length, 2);\n  assert.deepStrictEqual(addEdgeCalls[0], conns[0]);\n});",
+      "solutionHint": "Reduce or loop with addEdge"
+    },
+    {
+      "id": "task-022",
+      "docTag": "custom-nodes",
+      "description": "Write `nodeWithHandles` that creates custom node with sourcePosition and targetPosition.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('nodeWithHandles has positions', () => {\n  const node = nodeWithHandles('1', 'custom');\n  assert.strictEqual(node.sourcePosition, 'right');\n  assert.strictEqual(node.targetPosition, 'left');\n  assert.strictEqual(node.type, 'custom');\n});",
+      "solutionHint": "Add sourcePosition: Position.Right, targetPosition: Position.Left"
+    },
+    {
+      "id": "task-023",
+      "docTag": "use-nodes-hook",
+      "description": "Write `filteredNodes` that uses useNodes to return only selected nodes.",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nconst useNodes = () => [{id:'1', selected: true}, {id:'2', selected: false}];\nglobalThis.useNodes = useNodes;\n\ntest('filteredNodes returns selected', () => {\n  const result = filteredNodes();\n  assert.strictEqual(result.length, 1);\n  assert.strictEqual(result[0].id, '1');\n});",
+      "solutionHint": "nodes.filter(node => node.selected)"
+    },
+    {
+      "id": "task-024",
+      "docTag": "onconnect-prop",
+      "description": "Write `connectWithHandles` that logs handles if present in connection.",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet logArgs = [];\nconst consoleLog = (...a) => logArgs.push(a);\nglobalThis.console = {log: consoleLog};\n\ntest('connectWithHandles logs handles', () => {\n  const conn = {source:'1', target:'2', sourceHandle:'a', targetHandle:'b'};\n  connectWithHandles()(conn);\n  assert.deepStrictEqual(logArgs[0], ['a', '->', 'b']);\n});",
+      "solutionHint": "Log sourceHandle and targetHandle"
+    },
+    {
+      "id": "task-025",
+      "docTag": "reactflow-component",
+      "description": "Write `minimalReactFlow` that returns props with defaultNodes and defaultEdges.",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\ntest('minimalReactFlow uses default props', () => {\n  const props = minimalReactFlow();\n  assert.ok(Array.isArray(props.defaultNodes));\n  assert.ok(Array.isArray(props.defaultEdges));\n});",
+      "solutionHint": "{ defaultNodes: [], defaultEdges: [] }"
+    }
+  ]
+}
