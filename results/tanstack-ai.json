@@ -1,7 +1,7 @@
 {
   "library": "tanstack-ai",
-  "generatedAt": "2026-01-17T13:39:27.403Z",
-  "evaluatedAt": "2026-01-17T13:43:52.319Z",
+  "generatedAt": "2026-01-17T14:39:35.693Z",
+  "evaluatedAt": "2026-01-17T14:42:50.088Z",
   "summary": {
     "totalTasks": 20,
     "aFirstPassRate": 25,
@@ -15,7 +15,7 @@
   "results": [
     {
       "taskId": "task-001",
-      "docTag": "usechat-hook",
+      "docTag": "doc-001",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createChatHook() {\n  return useChat(fetchServerSentEvents(\"/api/chat\"));\n}"
@@ -23,13 +23,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function createChatHook() {\n  return useChat({\n    connection: fetchServerSentEvents(\"/api/chat\"),\n  });\n}"
       }
     },
     {
       "taskId": "task-002",
-      "docTag": "usechat-hook",
+      "docTag": "doc-001",
       "a": {
         "passedFirstTry": true,
         "finalCode": "export function extractTextFromMessages(messages) {\n  return messages\n    .flatMap(message => message.parts || [])\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join('');\n}"
@@ -37,13 +37,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function extractTextFromMessages(messages) {\n  return messages\n    .flatMap(msg => msg.parts)\n    .filter(part => part.type === \"text\")\n    .map(part => part.content)\n    .join(\"\");\n}"
       }
     },
     {
       "taskId": "task-003",
-      "docTag": "usechat-hook",
+      "docTag": "doc-001",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function useChatWithCallbacks(url, onFinish, onError) {\n  return useChat({\n    api: url,\n    onFinish: onFinish,\n    onError: onError\n  });\n}"
@@ -51,13 +51,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function useChatWithCallbacks(url, onFinish, onError) {\n  return useChat({\n    connection: fetchServerSentEvents(url),\n    onFinish: onFinish,\n    onError: onError,\n  });\n}"
       }
     },
     {
       "taskId": "task-004",
-      "docTag": "message-parts",
+      "docTag": "doc-002",
       "a": {
         "passedFirstTry": true,
         "finalCode": "export function hasThinkingParts(messages) {\n  return messages.some(message => \n    message.parts?.some(part => part.type === \"thinking\")\n  );\n}"
@@ -65,13 +65,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 3,
         "finalCode": "export function hasThinkingParts(messages) {\n  return messages.some(msg => \n    msg.parts.some(part => part.type === \"thinking\")\n  );\n}"
       }
     },
     {
       "taskId": "task-005",
-      "docTag": "message-parts",
+      "docTag": "doc-002",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export async function* createChatStream(adapter, messages) {\n  const stream = await adapter.chat(messages);\n  for await (const chunk of stream) {\n    yield chunk;\n  }\n}"
@@ -79,13 +79,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function createChatStream(adapter, messages) {\n  return chat({\n    adapter,\n    messages,\n  });\n}"
       }
     },
     {
       "taskId": "task-006",
-      "docTag": "message-parts",
+      "docTag": "doc-003",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createChatHandler(adapter) {\n  return async (request) => {\n    const { messages } = await request.json();\n    const result = await adapter.chat({ messages });\n    return adapter.toServerSentEventsResponse(result);\n  };\n}"
@@ -93,13 +93,13 @@
       "b": {
         "passedFirstTry": false,
         "passedAfterRetry": true,
-        "totalAttempts": 3,
+        "totalAttempts": 6,
         "finalCode": "export function createChatHandler(adapter) {\n  return async (request) => {\n    const { messages } = await request.json();\n\n    const stream = chat({\n      adapter,\n      messages,\n    });\n\n    return toServerSentEventsResponse(stream);\n  };\n}"
       }
     },
     {
       "taskId": "task-007",
-      "docTag": "message-parts",
+      "docTag": "doc-003",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export async function createChatWithTools(adapter, messages, tools) {\n  return await adapter.chat(messages, tools);\n}"
@@ -107,13 +107,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export async function createChatWithTools(adapter, messages, tools) {\n  return chat({\n    adapter,\n    messages,\n    tools,\n  });\n}"
       }
     },
     {
       "taskId": "task-008",
-      "docTag": "server-streaming",
+      "docTag": "doc-003",
       "a": {
         "passedFirstTry": true,
         "finalCode": "export function createOpenAIAdapter(model) {\n  return openaiText(model);\n}"
@@ -121,13 +121,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function createOpenAIAdapter(model) {\n  return openaiText(model);\n}"
       }
     },
     {
       "taskId": "task-009",
-      "docTag": "server-streaming",
+      "docTag": "doc-004",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createAnthropicAdapter(apiKey, model) {\n  return {\n    anthropicText: async function(config) {\n      return {\n        ...config,\n        apiKey,\n        model\n      };\n    }\n  };\n}"
@@ -135,13 +135,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function createAnthropicAdapter(apiKey, model) {\n  return anthropicText({\n    apiKey: apiKey,\n    model: model\n  });\n}"
       }
     },
     {
       "taskId": "task-010",
-      "docTag": "server-streaming",
+      "docTag": "doc-004",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createOllamaAdapter(host, model) {\n  return function ollamaText(config = {}) {\n    return {\n      ...config,\n      host,\n      model\n    };\n  };\n}"
@@ -149,13 +149,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function createOllamaAdapter(host, model) {\n  return ollamaText({\n    host: host,\n    model: model\n  });\n}"
       }
     },
     {
       "taskId": "task-011",
-      "docTag": "provider-adapters",
+      "docTag": "doc-004",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createBasicTool(name, description, inputSchema) {\n  return {\n    name,\n    description,\n    input_schema: inputSchema\n  };\n}"
@@ -163,13 +163,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function createBasicTool(name, description, inputSchema) {\n  return toolDefinition({\n    name,\n    description,\n    inputSchema,\n  });\n}"
       }
     },
     {
       "taskId": "task-012",
-      "docTag": "provider-adapters",
+      "docTag": "doc-005",
       "a": {
         "passedFirstTry": true,
         "finalCode": "export function createServerTool(toolDef, executeFn) {\n  return toolDef.server(executeFn);\n}"
@@ -177,13 +177,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function createServerTool(toolDef, executeFn) {\n  return toolDef.server(executeFn);\n}"
       }
     },
     {
       "taskId": "task-013",
-      "docTag": "provider-adapters",
+      "docTag": "doc-005",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createApprovalTool(name, description, inputSchema) {\n  return {\n    name,\n    description,\n    input_schema: inputSchema,\n    needsApproval: true\n  };\n}"
@@ -191,13 +191,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 3,
         "finalCode": "export function createApprovalTool(name, description, inputSchema) {\n  return toolDefinition({\n    name,\n    description,\n    inputSchema,\n    needsApproval: true,\n  });\n}"
       }
     },
     {
       "taskId": "task-014",
-      "docTag": "provider-adapters",
+      "docTag": "doc-005",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createFullTool(config) {\n  return {\n    name: config.name,\n    description: config.description,\n    inputSchema: config.inputSchema,\n    outputSchema: config.outputSchema\n  };\n}"
@@ -205,13 +205,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 4,
         "finalCode": "export function createFullTool(config) {\n  return toolDefinition({\n    name: config.name,\n    description: config.description,\n    inputSchema: config.inputSchema,\n    outputSchema: config.outputSchema,\n  });\n}"
       }
     },
     {
       "taskId": "task-015",
-      "docTag": "tool-definition",
+      "docTag": "doc-006",
       "a": {
         "passedFirstTry": true,
         "finalCode": "export function getPartsByType(message, type) {\n  if (!message || !message.parts) {\n    return [];\n  }\n  \n  return message.parts.filter(part => part.type === type);\n}"
@@ -219,13 +219,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function getPartsByType(message, type) {\n  return message.parts.filter(part => part.type === type);\n}"
       }
     },
     {
       "taskId": "task-016",
-      "docTag": "tool-definition",
+      "docTag": "doc-006",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function countToolCalls(messages) {\n  return messages.reduce((count, message) => {\n    if (Array.isArray(message.content)) {\n      return count + message.content.filter(part => part.type === \"tool_call\").length;\n    }\n    return count;\n  }, 0);\n}"
@@ -233,13 +233,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function countToolCalls(messages) {\n  return messages.reduce((total, message) => {\n    return total + message.parts.filter(part => part.type === \"tool_call\").length;\n  }, 0);\n}"
       }
     },
     {
       "taskId": "task-017",
-      "docTag": "tool-definition",
+      "docTag": "doc-001",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function getToolResults(messages) {\n  const results = [];\n  \n  for (const message of messages) {\n    if (message.content && Array.isArray(message.content)) {\n      for (const part of message.content) {\n        if (part.type === 'tool_result') {\n          results.push({\n            name: part.tool_use_id || part.name,\n            result: part.content\n          });\n        }\n      }\n    }\n  }\n  \n  return results;\n}"
@@ -247,13 +247,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function getToolResults(messages) {\n  const results = [];\n  \n  for (const message of messages) {\n    if (message.parts) {\n      for (const part of message.parts) {\n        if (part.type === 'tool_result') {\n          results.push({\n            name: part.name,\n            result: part.result\n          });\n        }\n      }\n    }\n  }\n  \n  return results;\n}"
       }
     },
     {
       "taskId": "task-018",
-      "docTag": "tool-definition",
+      "docTag": "doc-002",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createSSEConnection(url) {\n  return fetchServerSentEvents(url);\n}\n\nasync function fetchServerSentEvents(url) {\n  const response = await fetch(url);\n  \n  if (!response.ok) {\n    throw new Error(`HTTP error! status: ${response.status}`);\n  }\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  \n  return {\n    async *[Symbol.asyncIterator]() {\n      let buffer = '';\n      \n      while (true) {\n        const { done, value } = await reader.read();\n        \n        if (done) break;\n        \n        buffer += decoder.decode(value, { stream: true });\n        const lines = buffer.split('\\n');\n        buffer = lines.pop();\n        \n        let event = {};\n        \n        for (const line of lines) {\n          if (line.startsWith('data: ')) {\n            event.data = line.slice(6);\n          } else if (line.startsWith('event: ')) {\n            event.event = line.slice(7);\n          } else if (line.startsWith('id: ')) {\n            event.id = line.slice(4);\n          } else if (line === '') {\n            if (event.data !== undefined) {\n              yield event;\n              event = {};\n            }\n          }\n        }\n      }\n    }\n  };\n}"
@@ -261,13 +261,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function createSSEConnection(url) {\n  return fetchServerSentEvents(url);\n}"
       }
     },
     {
       "taskId": "task-019",
-      "docTag": "connection-adapters",
+      "docTag": "doc-003",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function createStreamConnection(serverFn) {\n  return async function stream(messages, options) {\n    const result = await serverFn(messages, options);\n    \n    return new ReadableStream({\n      async start(controller) {\n        try {\n          if (result && typeof result[Symbol.asyncIterator] === 'function') {\n            for await (const chunk of result) {\n              controller.enqueue(chunk);\n            }\n          } else if (result && typeof result.getReader === 'function') {\n            const reader = result.getReader();\n            while (true) {\n              const { done, value } = await reader.read();\n              if (done) break;\n              controller.enqueue(value);\n            }\n          } else {\n            controller.enqueue(result);\n          }\n          controller.close();\n        } catch (error) {\n          controller.error(error);\n        }\n      }\n    });\n  };\n}"
@@ -275,13 +275,13 @@
       "b": {
         "passedFirstTry": true,
         "passedAfterRetry": false,
-        "totalAttempts": 1,
+        "totalAttempts": 2,
         "finalCode": "export function createStreamConnection(serverFn) {\n  return stream(serverFn);\n}"
       }
     },
     {
       "taskId": "task-020",
-      "docTag": "connection-adapters",
+      "docTag": "doc-006",
       "a": {
         "passedFirstTry": false,
         "finalCode": "export function useChatWithConnection(connectionType, endpoint) {\n  return async function useChat(message) {\n    if (connectionType === \"sse\") {\n      return await fetchServerSentEvents(endpoint, message);\n    } else if (connectionType === \"stream\") {\n      return await stream(endpoint, message);\n    }\n  };\n}\n\nasync function fetchServerSentEvents(endpoint, message) {\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ message })\n  });\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  let result = '';\n  \n  while (true) {\n    const { done, value } = await reader.read();\n    if (done) break;\n    result += decoder.decode(value, { stream: true });\n  }\n  \n  return result;\n}\n\nasync function stream(endpoint, message) {\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: JSON.stringify({ message })\n  });\n  \n  const reader = response.body.getReader();\n  const decoder = new TextDecoder();\n  let result = '';\n  \n  while (true) {\n    const { done, value } = await reader.read();\n    if (done) break;\n    result += decoder.decode(value, { stream: true });\n  }\n  \n  return result;\n}"
@@ -289,8 +289,8 @@
       "b": {
         "passedFirstTry": false,
         "passedAfterRetry": true,
-        "totalAttempts": 2,
-        "finalCode": "export function useChatWithConnection(connectionType, endpoint) {\n  if (connectionType === \"sse\") {\n    return useChat({\n      connection: fetchServerSentEvents(endpoint),\n    });\n  } else if (connectionType === \"stream\") {\n    return useChat({\n      connection: stream(endpoint),\n    });\n  }\n}"
+        "totalAttempts": 3,
+        "finalCode": "export async function handleAdapterTimeout(adapter, timeoutMs = 5000) {\n  return new Promise((resolve, reject) => {\n    const timeoutId = setTimeout(() => {\n      reject(new Error(`Connection adapter timed out after ${timeoutMs}ms`));\n    }, timeoutMs);\n\n    adapter\n      .then((connection) => {\n        clearTimeout(timeoutId);\n        resolve(connection);\n      })\n      .catch((error) => {\n        clearTimeout(timeoutId);\n        reject(error);\n      });\n  });\n}"
       }
     }
   ]

@@ -1,0 +1,506 @@
+[
+  {
+    "taskId": "task-001",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function initializeChatSession(endpoint, onMessage, onError) {\n  const response = await fetch(endpoint, {\n    method: 'POST',\n    headers: {\n      'Content-Type': 'application/json',\n    },\n  });\n\n  if (!response.ok) {\n    throw new Error(`Failed to initialize chat session: ${response.status}`);\n  }\n\n  const reader = response.body.getReader();\n  const decoder = new TextDecoder('utf-8');\n\n  while (true) {\n    const { done, value } = await reader.read();\n    if (done) break;\n\n    const chunk = decoder.decode(value);\n    const lines = chunk.split('\\n');\n\n    for (const line of lines) {\n      if (line.startsWith('data: ')) {\n        const data = line.slice(6).trim();\n        if (data) {\n          try {\n            const parsedData = JSON.parse(data);\n            onMessage(parsedData);\n          } catch (err) {\n            onError(new Error(`Failed to parse SSE data: ${err.message}`));\n          }\n        }\n      }\n    }\n  }\n}\n\nexport default initializeChatSession;",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat session with useChat hook\nnot ok 1 - initialize chat session with useChat hook\n  ---\n  duration_ms: 0.899292\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660850682.mjs:49:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   type: 'sse'\n    + }\n    - '/api/chat'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '/api/chat'\n  actual:\n    type: 'sse'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660850682.mjs:51:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.2615\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:40:50.779Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initializeChatSession() {\n  const { messages, sendMessage, isLoading } = useChat({\n    connection: fetchServerSentEvents('/api/chat')\n  });\n  return { messages, sendMessage, isLoading };\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat session with useChat hook\nnot ok 1 - initialize chat session with useChat hook\n  ---\n  duration_ms: 0.945042\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660851882.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   type: 'sse'\n    + }\n    - '/api/chat'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '/api/chat'\n  actual:\n    type: 'sse'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660851882.mjs:18:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.475417\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:40:51.988Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function initializeChatSession() {\n  const { messages, sendMessage, isLoading } = useChat({\n    connection: fetchServerSentEvents('/api/chat')\n  });\n  return { messages, sendMessage, isLoading };\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat session with useChat hook\nnot ok 1 - initialize chat session with useChat hook\n  ---\n  duration_ms: 0.946125\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660854740.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   type: 'sse'\n    + }\n    - '/api/chat'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '/api/chat'\n  actual:\n    type: 'sse'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660854740.mjs:18:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.400667\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:40:54.844Z"
+  },
+  {
+    "taskId": "task-001",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function initializeChatSession() {\n  const { messages, sendMessage, isLoading } = useChat({\n    connection: fetchServerSentEvents('/api/chat')\n  });\n  return { messages, sendMessage, isLoading };\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat session with useChat hook\nnot ok 1 - initialize chat session with useChat hook\n  ---\n  duration_ms: 0.922834\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660856153.mjs:16:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + {\n    +   type: 'sse'\n    + }\n    - '/api/chat'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: '/api/chat'\n  actual:\n    type: 'sse'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660856153.mjs:18:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.616125\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:40:56.256Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function sendMessage(message, chatId, useChat) {\n  try {\n    const { sendMessage, isLoading } = useChat(chatId);\n    if (isLoading) {\n      throw new Error('Chat is currently loading, please wait.');\n    }\n    const response = await sendMessage(message);\n    return response;\n  } catch (error) {\n    throw new Error(`Failed to send message: ${error.message}`);\n  }\n}\n\nexport default sendMessage;",
+    "testOutput": "TAP version 13\n# Subtest: send message using useChat hook\nok 1 - send message using useChat hook\n  ---\n  duration_ms: 0.354334\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.417875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:02.973Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function sendChatMessage(message) {\n  const { sendMessage, isLoading } = useChat({ connection: fetchServerSentEvents('/api/chat') });\n  \n  return {\n    send: async () => {\n      if (!isLoading) {\n        await sendMessage(message);\n      }\n      return { success: !isLoading };\n    },\n    isLoading\n  };\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660865015.mjs:33\n# function sendChatMessage(chat, message) {\n# ^\n# SyntaxError: Identifier 'sendChatMessage' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660865015.mjs\nnot ok 1 - generated/temp-test-1768660865015.mjs\n  ---\n  duration_ms: 34.417958\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660865015.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.371583\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:05.105Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function sendChatMessage(chat, message) {\n  if (!chat.isLoading) {\n    chat.sendMessage(message);\n    return true;\n  }\n  return false;\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660866177.mjs:27\n# function sendChatMessage(chat, message) {\n# ^\n# SyntaxError: Identifier 'sendChatMessage' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660866177.mjs\nnot ok 1 - generated/temp-test-1768660866177.mjs\n  ---\n  duration_ms: 35.012708\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660866177.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.441541\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:06.276Z"
+  },
+  {
+    "taskId": "task-002",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function sendMessageToChat(chat, message) {\n  if (!chat.isLoading) {\n    chat.sendMessage(message);\n    return true;\n  }\n  return false;\n}",
+    "testOutput": "TAP version 13\n# Subtest: send message using useChat hook\nok 1 - send message using useChat hook\n  ---\n  duration_ms: 0.370792\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.392542\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:07.615Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export function formatChatMessages(messages) {\n  return messages.map((msg) => {\n    const { role, content } = msg;\n    return `${role.charAt(0).toUpperCase() + role.slice(1)}: ${content}`;\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: display formatted messages from useChat\nok 1 - display formatted messages from useChat\n  ---\n  duration_ms: 0.378\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.712917\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:09.604Z"
+  },
+  {
+    "taskId": "task-003",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function formatChatMessages(messages) {\n  return messages.map((msg) => ({\n    role: msg.role,\n    content: msg.content\n  }));\n}",
+    "testOutput": "TAP version 13\n# Subtest: display formatted messages from useChat\nok 1 - display formatted messages from useChat\n  ---\n  duration_ms: 0.372167\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 44.655834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:10.503Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function setupChatConnection(stream) {\n  try {\n    const encoder = new TextEncoder();\n    const decoder = new TextDecoder();\n\n    const sendMessage = async (message) => {\n      if (stream.writable) {\n        const writer = stream.writable.getWriter();\n        await writer.write(encoder.encode(message + '\\n'));\n        writer.releaseLock();\n      }\n    };\n\n    const receiveMessages = async (callback) => {\n      if (stream.readable) {\n        const reader = stream.readable.getReader();\n        try {\n          while (true) {\n            const { value, done } = await reader.read();\n            if (done) break;\n            const message = decoder.decode(value, { stream: true });\n            callback(message);\n          }\n        } finally {\n          reader.releaseLock();\n        }\n      }\n    };\n\n    return {\n      send: sendMessage,\n      receive: receiveMessages\n    };\n  } catch (error) {\n    throw new Error(`Failed to setup chat connection: ${error.message}`);\n  }\n}\n\nexport default setupChatConnection;",
+    "testOutput": "TAP version 13\n# Subtest: setup server-side chat with stream utility\nok 1 - setup server-side chat with stream utility\n  ---\n  duration_ms: 0.375041\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 50.633167\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:16.366Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function setupServerChat(messages) {\n  return stream((msgs) => serverChatFunction({ messages: msgs }))(messages);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660877242.mjs:19\n# function setupServerChat() {\n# ^\n# SyntaxError: Identifier 'setupServerChat' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660877242.mjs\nnot ok 1 - generated/temp-test-1768660877242.mjs\n  ---\n  duration_ms: 34.799667\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660877242.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.180375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:17.344Z"
+  },
+  {
+    "taskId": "task-004",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function setupServerChatConnection(messages) {\n  return stream((msgs) => serverChatFunction({ messages: msgs }))(messages);\n}",
+    "testOutput": "TAP version 13\n# Subtest: setup server-side chat with stream utility\nok 1 - setup server-side chat with stream utility\n  ---\n  duration_ms: 0.44025\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.912792\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:18.705Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function handleSSEConnectionError(error, reconnectCallback, maxRetries = 3) {\n  console.error('SSE Connection Error:', error.message);\n  \n  let retries = 0;\n  while (retries < maxRetries) {\n    try {\n      console.log(`Attempting reconnection ${retries + 1}/${maxRetries}`);\n      await new Promise(resolve => setTimeout(resolve, 2000 * (retries + 1)));\n      await reconnectCallback();\n      console.log('SSE Connection reestablished');\n      return true;\n    } catch (err) {\n      console.error(`Reconnection attempt ${retries + 1} failed:`, err.message);\n      retries++;\n      if (retries === maxRetries) {\n        console.error('Max reconnection attempts reached. Connection failed.');\n        throw new Error('Failed to reconnect after maximum attempts');\n      }\n    }\n  }\n  return false;\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle SSE connection error in chat setup\nnot ok 1 - handle SSE connection error in chat setup\n  ---\n  duration_ms: 0.39075\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660881771.mjs:35:1'\n  failureType: 'testCodeFailure'\n  error: 'Connection failed'\n  code: 'ERR_TEST_FAILURE'\n  stack: |-\n    globalThis.fetchServerSentEvents (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660881771.mjs:29:72)\n    setupChatWithErrorHandling (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660881771.mjs:42:54)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660881771.mjs:36:18)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.873917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:21.879Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function handleSSEConnectionError(endpoint) {\n  try {\n    const connection = fetchServerSentEvents(endpoint);\n    return await connection.connect();\n  } catch (error) {\n    console.error('SSE Connection Error:', error.message);\n    throw new Error(`Failed to establish SSE connection to ${endpoint}: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle SSE connection error in chat setup\nnot ok 1 - handle SSE connection error in chat setup\n  ---\n  duration_ms: 0.339625\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660882878.mjs:22:1'\n  failureType: 'testCodeFailure'\n  error: 'Connection failed'\n  code: 'ERR_TEST_FAILURE'\n  stack: |-\n    globalThis.fetchServerSentEvents (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660882878.mjs:16:72)\n    setupChatWithErrorHandling (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660882878.mjs:29:54)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660882878.mjs:23:18)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.810209\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:22.983Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function handleSSEConnectionError(endpoint) {\n  try {\n    const connection = fetchServerSentEvents(endpoint);\n    return useChat({ connection });\n  } catch (error) {\n    console.error('SSE Connection Error:', error.message);\n    throw new Error(`Failed to establish SSE connection to ${endpoint}: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle SSE connection error in chat setup\nnot ok 1 - handle SSE connection error in chat setup\n  ---\n  duration_ms: 0.342875\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660884699.mjs:22:1'\n  failureType: 'testCodeFailure'\n  error: 'Connection failed'\n  code: 'ERR_TEST_FAILURE'\n  stack: |-\n    globalThis.fetchServerSentEvents (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660884699.mjs:16:72)\n    setupChatWithErrorHandling (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660884699.mjs:29:54)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660884699.mjs:23:18)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 54.174625\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:24.811Z"
+  },
+  {
+    "taskId": "task-005",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function handleSSEConnectionError(endpoint) {\n  try {\n    const connection = fetchServerSentEvents(endpoint);\n    return useChat({ connection });\n  } catch (error) {\n    console.error('SSE Connection Error:', error.message);\n    return { error: error.message };\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle SSE connection error in chat setup\nnot ok 1 - handle SSE connection error in chat setup\n  ---\n  duration_ms: 0.339959\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660886127.mjs:22:1'\n  failureType: 'testCodeFailure'\n  error: 'Connection failed'\n  code: 'ERR_TEST_FAILURE'\n  stack: |-\n    globalThis.fetchServerSentEvents (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660886127.mjs:16:72)\n    setupChatWithErrorHandling (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660886127.mjs:29:54)\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660886127.mjs:23:18)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.1955\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:26.231Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function initializeChatStream(apiKey, model = 'gpt-3.5-turbo') {\n  if (!apiKey) {\n    throw new Error('API key is required for OpenAI chat stream initialization');\n  }\n\n  try {\n    const response = await fetch('https://api.openai.com/v1/chat/completions', {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n        'Authorization': `Bearer ${apiKey}`,\n      },\n      body: JSON.stringify({\n        model,\n        messages: [],\n        stream: true,\n      }),\n    });\n\n    if (!response.ok) {\n      throw new Error(`Failed to initialize chat stream: ${response.status} ${response.statusText}`);\n    }\n\n    const stream = response.body;\n    return stream;\n  } catch (error) {\n    throw new Error(`Error initializing chat stream: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat with OpenAI adapter\nnot ok 1 - initialize chat with OpenAI adapter\n  ---\n  duration_ms: 0.809709\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660888193.mjs:39:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + undefined\n    - 'my-key'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'my-key'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660888193.mjs:41:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.263292\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:28.299Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function initializeChatStream(apiKey, model, initialMessages) {\n  return chat({\n    adapter: openaiText({ apiKey }),\n    model,\n    messages: initialMessages\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat with OpenAI adapter\nnot ok 1 - initialize chat with OpenAI adapter\n  ---\n  duration_ms: 0.788584\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660889078.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + undefined\n    - 'my-key'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'my-key'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660889078.mjs:19:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.714959\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:29.180Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function initializeChatStream(apiKey, model, initialMessages) {\n  return chat({\n    adapter: openaiText({ apiKey }),\n    model,\n    messages: initialMessages\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize chat with OpenAI adapter\nnot ok 1 - initialize chat with OpenAI adapter\n  ---\n  duration_ms: 0.778166\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660892934.mjs:17:1'\n  failureType: 'testCodeFailure'\n  error: |-\n    Expected values to be strictly equal:\n    + actual - expected\n    \n    + undefined\n    - 'my-key'\n    \n  code: 'ERR_ASSERTION'\n  name: 'AssertionError'\n  expected: 'my-key'\n  operator: 'strictEqual'\n  stack: |-\n    TestContext.<anonymous> (file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660892934.mjs:19:10)\n    Test.runInAsyncScope (node:async_hooks:211:14)\n    Test.run (node:internal/test_runner/test:979:25)\n    Test.start (node:internal/test_runner/test:877:17)\n    startSubtestAfterBootstrap (node:internal/test_runner/harness:296:17)\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.769666\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:33.039Z"
+  },
+  {
+    "taskId": "task-006",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function initOpenAIChat(apiKey) {\n  return chat({\n    adapter: openaiText({ apiKey }),\n    model: 'gpt-4o',\n    messages: []\n  });\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660894944.mjs:23\n# function initOpenAIChat(apiKey) {\n# ^\n# SyntaxError: Identifier 'initOpenAIChat' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660894944.mjs\nnot ok 1 - generated/temp-test-1768660894944.mjs\n  ---\n  duration_ms: 33.882333\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660894944.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 38.833584\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:35.034Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function switchProvider(providerName, config = {}) {\n  let adapter;\n  \n  switch (providerName.toLowerCase()) {\n    case 'provider1':\n      const { Provider1Adapter } = await import('./adapters/provider1.js');\n      adapter = new Provider1Adapter(config);\n      break;\n    case 'provider2':\n      const { Provider2Adapter } = await import('./adapters/provider2.js');\n      adapter = new Provider2Adapter(config);\n      break;\n    case 'provider3':\n      const { Provider3Adapter } = await import('./adapters/provider3.js');\n      adapter = new Provider3Adapter(config);\n      break;\n    default:\n      throw new Error(`Unsupported provider: ${providerName}`);\n  }\n  \n  return adapter;\n}",
+    "testOutput": "TAP version 13\n# Subtest: switch between provider adapters dynamically\nok 1 - switch between provider adapters dynamically\n  ---\n  duration_ms: 0.359833\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.257833\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:37.114Z"
+  },
+  {
+    "taskId": "task-007",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function switchProvider(providerName, apiKey, model, messages) {\n  let adapter;\n  switch (providerName.toLowerCase()) {\n    case 'openai':\n      adapter = openaiText({ apiKey });\n      break;\n    case 'anthropic':\n      adapter = anthropicText({ apiKey });\n      break;\n    default:\n      throw new Error(`Unsupported provider: ${providerName}`);\n  }\n  return await chat({ adapter, model, messages });\n}",
+    "testOutput": "TAP version 13\n# Subtest: switch between provider adapters dynamically\nok 1 - switch between provider adapters dynamically\n  ---\n  duration_ms: 0.365041\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 55.348125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:38.819Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function configureOllamaAdapter(modelName, customHost = 'localhost:11434') {\n  try {\n    const response = await fetch(`http://${customHost}/api/generate`, {\n      method: 'POST',\n      headers: {\n        'Content-Type': 'application/json',\n      },\n      body: JSON.stringify({\n        model: modelName,\n        prompt: 'Test connection',\n        stream: false,\n      }),\n    });\n\n    if (!response.ok) {\n      throw new Error(`Failed to connect to Ollama at ${customHost}: ${response.statusText}`);\n    }\n\n    const data = await response.json();\n    if (!data.response) {\n      throw new Error('Invalid response from Ollama server');\n    }\n\n    return {\n      status: 'success',\n      host: customHost,\n      model: modelName,\n      message: 'Ollama adapter configured successfully',\n    };\n  } catch (error) {\n    throw new Error(`Ollama configuration failed: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: configure Ollama adapter with custom host\nok 1 - configure Ollama adapter with custom host\n  ---\n  duration_ms: 0.384125\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.605625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:41.389Z"
+  },
+  {
+    "taskId": "task-008",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function configureOllamaAdapter(customHost) {\n  return {\n    adapter: ollamaText({ host: customHost }),\n    model: 'llama3',\n    messages: []\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: configure Ollama adapter with custom host\nok 1 - configure Ollama adapter with custom host\n  ---\n  duration_ms: 0.4065\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.057209\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:42.493Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "a",
+    "iteration": 1,
+    "code": "import { z } from 'zod';\n\nexport function defineTool() {\n  const toolSchema = z.object({\n    name: z.string().min(1, 'Tool name is required'),\n    description: z.string().optional(),\n    version: z.number().min(0, 'Version must be non-negative'),\n    config: z.record(z.string(), z.any()).optional(),\n  });\n\n  return {\n    define: (toolData) => {\n      return toolSchema.parse(toolData);\n    },\n    schema: toolSchema,\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: define a tool with toolDefinition and Zod schema\nok 1 - define a tool with toolDefinition and Zod schema\n  ---\n  duration_ms: 0.40025\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 70.857625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:44.243Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function defineWeatherTool() {\n  const weatherToolDef = toolDefinition({\n    name: 'get_weather',\n    description: 'Fetch current weather information for a specified location',\n    inputSchema: z.object({\n      location: z.string().describe('The city or location to get weather for')\n    })\n  });\n\n  return weatherToolDef.server(async ({ location }) => {\n    return {\n      temperature: 72,\n      conditions: 'sunny',\n      location\n    };\n  });\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660905871.mjs:33\n# function defineWeatherTool() {\n# ^\n# SyntaxError: Identifier 'defineWeatherTool' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660905871.mjs\nnot ok 1 - generated/temp-test-1768660905871.mjs\n  ---\n  duration_ms: 41.726166\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660905871.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.599333\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:45.979Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function defineWeatherTool() {\n  return toolDefinition({\n    name: 'get_weather',\n    description: 'Get current weather',\n    inputSchema: z.object({ location: z.string() })\n  });\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660907103.mjs:23\n# function defineWeatherTool() {\n# ^\n# SyntaxError: Identifier 'defineWeatherTool' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660907103.mjs\nnot ok 1 - generated/temp-test-1768660907103.mjs\n  ---\n  duration_ms: 34.74525\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660907103.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.817917\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:47.196Z"
+  },
+  {
+    "taskId": "task-009",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function createWeatherTool() {\n  return toolDefinition({\n    name: 'get_weather',\n    description: 'Get current weather',\n    inputSchema: z.object({ location: z.string() })\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: define a tool with toolDefinition and Zod schema\nok 1 - define a tool with toolDefinition and Zod schema\n  ---\n  duration_ms: 0.379041\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.905125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:48.250Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function processTool(toolDefinition, inputData) {\n  try {\n    const { parameters, required } = toolDefinition;\n    const validatedData = {};\n\n    // Validate required parameters\n    for (const param of required || []) {\n      if (!inputData[param]) {\n        throw new Error(`Missing required parameter: ${param}`);\n      }\n      validatedData[param] = inputData[param];\n    }\n\n    // Process optional parameters if provided\n    for (const [key, definition] of Object.entries(parameters || {})) {\n      if (inputData[key] !== undefined) {\n        // Validate type if specified in definition\n        if (definition.type) {\n          const expectedType = definition.type.toLowerCase();\n          const actualType = typeof inputData[key];\n          \n          if (expectedType === 'number' && isNaN(inputData[key])) {\n            throw new Error(`Parameter ${key} must be a valid number`);\n          }\n          if (expectedType !== actualType && expectedType !== 'number') {\n            throw new Error(`Parameter ${key} must be of type ${expectedType}`);\n          }\n        }\n        validatedData[key] = inputData[key];\n      }\n    }\n\n    // Simulate processing or API call\n    await new Promise(resolve => setTimeout(resolve, 100));\n\n    return {\n      success: true,\n      data: validatedData,\n      message: 'Tool processed successfully'\n    };\n  } catch (error) {\n    return {\n      success: false,\n      error: error.message,\n      data: null\n    };\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: implement server logic for a tool\nok 1 - implement server logic for a tool\n  ---\n  duration_ms: 0.445583\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.087167\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:52.878Z"
+  },
+  {
+    "taskId": "task-010",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function getWeather({ location }) {\n  return {\n    temperature: 72,\n    conditions: 'sunny',\n    location\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: implement server logic for a tool\nok 1 - implement server logic for a tool\n  ---\n  duration_ms: 0.459416\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.442834\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:53.895Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function integrateToolIntoChatStream(tool, openAIAdapter, chatStream) {\n  try {\n    const toolResponse = await tool.execute(chatStream.currentMessage);\n    if (toolResponse) {\n      chatStream.addToolResponse(toolResponse);\n      const aiResponse = await openAIAdapter.sendMessage(chatStream.getHistory());\n      chatStream.addAIResponse(aiResponse);\n      return aiResponse;\n    }\n    const aiResponse = await openAIAdapter.sendMessage(chatStream.getHistory());\n    chatStream.addAIResponse(aiResponse);\n    return aiResponse;\n  } catch (error) {\n    chatStream.addError(error.message);\n    throw new Error(`Tool integration failed: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: integrate tool into chat stream\nok 1 - integrate tool into chat stream\n  ---\n  duration_ms: 0.394875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.674584\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:56.459Z"
+  },
+  {
+    "taskId": "task-011",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createWeatherTool() {\n  const weatherTool = toolDefinition({\n    name: 'get_weather',\n    description: 'Get the current weather for a specific location',\n    inputSchema: z.object({\n      location: z.string().describe('The city or location to get weather for')\n    })\n  });\n\n  return weatherTool.server(async ({ location }) => {\n    return {\n      temperature: 72,\n      conditions: 'sunny',\n      location: location\n    };\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: integrate tool into chat stream\nok 1 - integrate tool into chat stream\n  ---\n  duration_ms: 0.387875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.454375\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:41:58.351Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function extractTextContent(messageParts) {\n  if (!Array.isArray(messageParts)) {\n    throw new Error('Input must be an array of message parts');\n  }\n\n  const textParts = messageParts\n    .filter(part => part.type === 'text' && typeof part.content === 'string')\n    .map(part => part.content.trim())\n    .filter(content => content.length > 0);\n\n  return textParts.join(' ');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660919610.mjs:28\n# function extractTextContent(message) {\n# ^\n# SyntaxError: Identifier 'extractTextContent' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660919610.mjs\nnot ok 1 - generated/temp-test-1768660919610.mjs\n  ---\n  duration_ms: 40.352291\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660919610.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.750542\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:41:59.713Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function extractTextContent(parts) {\n  return parts\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join(' ');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660920404.mjs:22\n# function extractTextContent(message) {\n# ^\n# SyntaxError: Identifier 'extractTextContent' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660920404.mjs\nnot ok 1 - generated/temp-test-1768660920404.mjs\n  ---\n  duration_ms: 36.964791\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660920404.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 42.562167\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:00.509Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 2,
+    "code": "function extractTextContent(message) {\n  return message.parts\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join(' ');\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660921513.mjs:22\n# function extractTextContent(message) {\n# ^\n# SyntaxError: Identifier 'extractTextContent' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660921513.mjs\nnot ok 1 - generated/temp-test-1768660921513.mjs\n  ---\n  duration_ms: 34.631583\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660921513.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.979959\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:01.612Z"
+  },
+  {
+    "taskId": "task-012",
+    "variant": "b",
+    "iteration": 3,
+    "code": "function getTextContent(message) {\n  return message.parts\n    .filter(part => part.type === 'text')\n    .map(part => part.content)\n    .join(' ');\n}",
+    "testOutput": "TAP version 13\n# Subtest: extract text content from message parts\nok 1 - extract text content from message parts\n  ---\n  duration_ms: 0.357292\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.818625\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:02.753Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function renderThinkingParts(message) {\n  return message.replace(/\\*think\\s+([^]*?)\\s*think\\*/g, '<i>$1</i>');\n}",
+    "testOutput": "TAP version 13\n# Subtest: render thinking parts as italic text\nok 1 - render thinking parts as italic text\n  ---\n  duration_ms: 0.355417\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.648875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:04.259Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function renderThinkingParts(parts) {\n  return parts.map((part, idx) => \n    part.type === 'thinking' ? <i key={idx}>{part.content}</i> : null\n  );\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660926292.mjs:3\n#     part.type === 'thinking' ? <i key={idx}>{part.content}</i> : null\n#                                ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660926292.mjs\nnot ok 1 - generated/temp-test-1768660926292.mjs\n  ---\n  duration_ms: 35.250959\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660926292.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.775875\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:06.392Z"
+  },
+  {
+    "taskId": "task-013",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function renderThinkingParts(parts) {\n  return parts\n    .filter(part => part.type === 'thinking')\n    .map(part => `<i>${part.content}</i>`)\n    .join('');\n}",
+    "testOutput": "TAP version 13\n# Subtest: render thinking parts as italic text\nok 1 - render thinking parts as italic text\n  ---\n  duration_ms: 0.352958\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.875208\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:07.821Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function formatMessageParts(parts) {\n  if (!Array.isArray(parts)) {\n    throw new Error('Input must be an array of message parts');\n  }\n\n  const formattedParts = await Promise.all(parts.map(async (part) => {\n    if (!part || typeof part !== 'object') {\n      return '';\n    }\n\n    const { type, content } = part;\n\n    switch (type) {\n      case 'text':\n        return content || '';\n      case 'bold':\n        return content ? `**${content}**` : '';\n      case 'italic':\n        return content ? `*${content}*` : '';\n      case 'code':\n        return content ? `\\`${content}\\`` : '';\n      case 'link':\n        return content && part.url ? `[${content}](${part.url})` : content || '';\n      case 'image':\n        if (part.url) {\n          await new Promise(resolve => setTimeout(resolve, 100)); // Simulate async image processing\n          return `![${part.alt || 'image'}](${part.url})`;\n        }\n        return '';\n      default:\n        return content || '';\n    }\n  }));\n\n  return formattedParts.join('').trim();\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660931443.mjs:56\n# function formatMessageParts(message) {\n# ^\n# SyntaxError: Identifier 'formatMessageParts' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660931443.mjs\nnot ok 1 - generated/temp-test-1768660931443.mjs\n  ---\n  duration_ms: 34.110792\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660931443.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 39.139375\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:11.536Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function formatMessageParts(parts) {\n  return parts.map((part, idx) => {\n    switch (part.type) {\n      case 'text':\n        return <span key={idx}>{part.content}</span>;\n      case 'thinking':\n        return <div key={idx}>Thinking: {part.content}</div>;\n      case 'tool_call':\n        return <div key={idx}>Tool Call: {JSON.stringify(part.content)}</div>;\n      default:\n        return null;\n    }\n  });\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660932980.mjs:5\n#         return <span key={idx}>{part.content}</span>;\n#                ^\n# SyntaxError: Unexpected token '<'\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660932980.mjs\nnot ok 1 - generated/temp-test-1768660932980.mjs\n  ---\n  duration_ms: 35.265083\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660932980.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.740792\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:13.078Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 2,
+    "code": "export function formatMessageParts(parts) {\n  return parts.map((part) => {\n    switch (part.type) {\n      case 'text':\n        return part.content;\n      case 'thinking':\n        return `Thinking: ${part.content}`;\n      case 'tool_call':\n        return `Tool: ${part.content}`;\n      default:\n        return '';\n    }\n  }).filter(Boolean);\n}",
+    "testOutput": "TAP version 13\n# file:///Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660935777.mjs:34\n# function formatMessageParts(message) {\n# ^\n# SyntaxError: Identifier 'formatMessageParts' has already been declared\n#     at compileSourceTextModule (node:internal/modules/esm/utils:338:16)\n#     at ModuleLoader.moduleStrategy (node:internal/modules/esm/translators:102:18)\n#     at \\#translate (node:internal/modules/esm/loader:468:12)\n#     at ModuleLoader.loadAndTranslate (node:internal/modules/esm/loader:515:27)\n#     at async ModuleJob._link (node:internal/modules/esm/module_job:115:19)\n# Node.js v22.14.0\n# Subtest: generated/temp-test-1768660935777.mjs\nnot ok 1 - generated/temp-test-1768660935777.mjs\n  ---\n  duration_ms: 34.923333\n  location: '/Users/oscargavin/Documents/projects/autest/generated/temp-test-1768660935777.mjs:1:1'\n  failureType: 'testCodeFailure'\n  exitCode: 1\n  signal: ~\n  error: 'test failed'\n  code: 'ERR_TEST_FAILURE'\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 0\n# fail 1\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 40.403\n",
+    "passed": false,
+    "timestamp": "2026-01-17T14:42:15.877Z"
+  },
+  {
+    "taskId": "task-014",
+    "variant": "b",
+    "iteration": 3,
+    "code": "export function formatMessageContent(message) {\n  return message.parts.map((part) => {\n    switch (part.type) {\n      case 'text':\n        return part.content;\n      case 'thinking':\n        return `Thinking: ${part.content}`;\n      case 'tool_call':\n        return `Tool: ${part.content}`;\n      default:\n        return '';\n    }\n  }).filter(Boolean);\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle all message part types with formatting\nok 1 - handle all message part types with formatting\n  ---\n  duration_ms: 0.359042\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 49.078667\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:18.096Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function initializeConnectionAdapter({ url, onMessage, onError }) {\n  const response = await fetch(url, {\n    method: 'GET',\n    headers: {\n      'Accept': 'text/event-stream',\n    },\n  });\n\n  if (!response.ok) {\n    throw new Error(`Failed to connect: ${response.status} ${response.statusText}`);\n  }\n\n  const reader = response.body.getReader();\n  const decoder = new TextDecoder('utf-8');\n  let buffer = '';\n\n  async function readStream() {\n    while (true) {\n      const { done, value } = await reader.read();\n      if (done) break;\n\n      buffer += decoder.decode(value, { stream: true });\n      const lines = buffer.split('\\n\\n');\n      buffer = lines.pop() || '';\n\n      for (const event of lines) {\n        if (!event) continue;\n        const parsedEvent = parseEvent(event);\n        if (parsedEvent && parsedEvent.data) {\n          try {\n            onMessage(parsedEvent);\n          } catch (err) {\n            onError(err);\n          }\n        }\n      }\n    }\n  }\n\n  function parseEvent(eventText) {\n    const lines = eventText.split('\\n');\n    const event = { event: '', data: '' };\n\n    for (const line of lines) {\n      if (line.startsWith('event:')) {\n        event.event = line.slice(6).trim();\n      } else if (line.startsWith('data:')) {\n        event.data += line.slice(5).trim() + '\\n';\n      }\n    }\n\n    event.data = event.data.trim();\n    return event.data ? event : null;\n  }\n\n  readStream().catch(onError);\n\n  return {\n    close: () => {\n      reader.cancel();\n    },\n  };\n}\n\nexport default initializeConnectionAdapter;",
+    "testOutput": "TAP version 13\n# Subtest: initialize connection with fetchServerSentEvents\nok 1 - initialize connection with fetchServerSentEvents\n  ---\n  duration_ms: 0.355375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.070292\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:24.163Z"
+  },
+  {
+    "taskId": "task-015",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function initializeConnectionAdapter(endpoint) {\n  return fetchServerSentEvents(endpoint);\n}",
+    "testOutput": "TAP version 13\n# Subtest: initialize connection with fetchServerSentEvents\nok 1 - initialize connection with fetchServerSentEvents\n  ---\n  duration_ms: 0.353375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.890584\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:24.958Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function retryConnectionAdapterSetup(setupFn, maxRetries = 3, delayMs = 1000) {\n  let retries = 0;\n  let lastError = null;\n\n  while (retries < maxRetries) {\n    try {\n      const result = await setupFn();\n      return result;\n    } catch (error) {\n      retries++;\n      lastError = error;\n      if (retries < maxRetries) {\n        await new Promise(resolve => setTimeout(resolve, delayMs));\n      }\n    }\n  }\n\n  throw new Error(`Failed to setup connection adapter after ${maxRetries} attempts: ${lastError.message}`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: retry connection adapter setup on failure\nok 1 - retry connection adapter setup on failure\n  ---\n  duration_ms: 0.368708\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.239458\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:26.697Z"
+  },
+  {
+    "taskId": "task-016",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function retryConnectionSetup(adapterFn, maxRetries = 3, delayMs = 1000) {\n  let retries = 0;\n  let lastError = null;\n\n  while (retries < maxRetries) {\n    try {\n      const connection = await adapterFn();\n      return connection;\n    } catch (error) {\n      retries++;\n      lastError = error;\n      if (retries < maxRetries) {\n        await new Promise(resolve => setTimeout(resolve, delayMs));\n      }\n    }\n  }\n\n  throw new Error(`Failed to setup connection after ${maxRetries} attempts: ${lastError.message}`);\n}",
+    "testOutput": "TAP version 13\n# Subtest: retry connection adapter setup on failure\nok 1 - retry connection adapter setup on failure\n  ---\n  duration_ms: 0.356375\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.35575\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:29.108Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function manageChatSessions(sessions) {\n  const results = [];\n  \n  for (const session of sessions) {\n    try {\n      const { userId, message } = session;\n      const response = await useChat(userId, message);\n      results.push({\n        userId,\n        message,\n        response: response.data,\n        status: 'success'\n      });\n    } catch (error) {\n      results.push({\n        userId: session.userId,\n        message: session.message,\n        response: error.message,\n        status: 'error'\n      });\n    }\n  }\n  \n  return results;\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle multiple chat sessions with useChat\nok 1 - handle multiple chat sessions with useChat\n  ---\n  duration_ms: 0.370542\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.7525\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:31.249Z"
+  },
+  {
+    "taskId": "task-017",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export function createChatSession(sessionId) {\n  const chat = useChat({\n    connection: fetchServerSentEvents(`/api/chat?session=${sessionId}`),\n    id: sessionId\n  });\n  \n  return {\n    getMessages: () => chat.messages,\n    sendMessage: async (content) => {\n      await chat.sendMessage(content);\n    },\n    isLoading: () => chat.isLoading\n  };\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle multiple chat sessions with useChat\nok 1 - handle multiple chat sessions with useChat\n  ---\n  duration_ms: 0.393875\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.43575\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:33.585Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "a",
+    "iteration": 1,
+    "code": "async function logStreamingEvent(eventData) {\n  const timestamp = new Date().toISOString();\n  const logEntry = {\n    timestamp,\n    event: eventData.eventType || 'unknown',\n    details: eventData.details || {},\n    source: eventData.source || 'server'\n  };\n\n  try {\n    console.log(JSON.stringify(logEntry, null, 2));\n    return logEntry;\n  } catch (error) {\n    console.error('Error logging streaming event:', error.message);\n    throw error;\n  }\n}\n\nexport default logStreamingEvent;",
+    "testOutput": "TAP version 13\n# Subtest: log server-side streaming events\nok 1 - log server-side streaming events\n  ---\n  duration_ms: 0.358208\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.815875\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:36.713Z"
+  },
+  {
+    "taskId": "task-018",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function logStreamingEvents(messages) {\n  const connection = fetchServerSentEvents('/api/chat');\n  const chatStream = stream((msgs) => connection({ messages: msgs }));\n  \n  return new Promise((resolve, reject) => {\n    const events = [];\n    \n    chatStream.on('data', (data) => {\n      events.push({ type: 'data', payload: data });\n      console.log('Stream Data:', data);\n    });\n    \n    chatStream.on('error', (error) => {\n      events.push({ type: 'error', payload: error.message });\n      console.error('Stream Error:', error);\n      reject(error);\n    });\n    \n    chatStream.on('end', () => {\n      events.push({ type: 'end', payload: null });\n      console.log('Stream Ended');\n      resolve(events);\n    });\n    \n    chatStream.start({ messages });\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: log server-side streaming events\nok 1 - log server-side streaming events\n  ---\n  duration_ms: 0.35975\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 45.133333\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:39.186Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function handleProviderError(providerCall, providerName) {\n  try {\n    const result = await providerCall();\n    return { success: true, data: result, provider: providerName };\n  } catch (error) {\n    console.error(`Error in ${providerName} provider:`, error.message);\n    return { \n      success: false, \n      error: error.message, \n      provider: providerName \n    };\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle provider adapter errors with fallback\nok 1 - handle provider adapter errors with fallback\n  ---\n  duration_ms: 0.405917\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 47.518417\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:40.790Z"
+  },
+  {
+    "taskId": "task-019",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function handleProviderError(adapterConfig, model, messages) {\n  try {\n    const stream = await chat({\n      adapter: adapterConfig,\n      model,\n      messages\n    });\n    return stream;\n  } catch (error) {\n    console.error(`Provider error: ${error.message}`);\n    throw new Error(`Failed to connect with provider: ${error.message}`);\n  }\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle provider adapter errors with fallback\nok 1 - handle provider adapter errors with fallback\n  ---\n  duration_ms: 0.383167\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 46.973041\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:42.233Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "a",
+    "iteration": 1,
+    "code": "export async function handleConnectionTimeout(adapter, timeoutMs = 5000) {\n  return new Promise((resolve, reject) => {\n    const timeoutId = setTimeout(() => {\n      reject(new Error(`Connection timeout after ${timeoutMs}ms`));\n    }, timeoutMs);\n\n    adapter.connect()\n      .then((result) => {\n        clearTimeout(timeoutId);\n        resolve(result);\n      })\n      .catch((error) => {\n        clearTimeout(timeoutId);\n        reject(error);\n      });\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle connection adapter timeouts\nok 1 - handle connection adapter timeouts\n  ---\n  duration_ms: 0.358334\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 48.07125\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:43.664Z"
+  },
+  {
+    "taskId": "task-020",
+    "variant": "b",
+    "iteration": 1,
+    "code": "export async function handleAdapterTimeout(adapter, timeoutMs = 5000) {\n  return new Promise((resolve, reject) => {\n    const timeoutId = setTimeout(() => {\n      reject(new Error(`Connection adapter timed out after ${timeoutMs}ms`));\n    }, timeoutMs);\n\n    adapter\n      .then((connection) => {\n        clearTimeout(timeoutId);\n        resolve(connection);\n      })\n      .catch((error) => {\n        clearTimeout(timeoutId);\n        reject(error);\n      });\n  });\n}",
+    "testOutput": "TAP version 13\n# Subtest: handle connection adapter timeouts\nok 1 - handle connection adapter timeouts\n  ---\n  duration_ms: 0.354625\n  ...\n1..1\n# tests 1\n# suites 0\n# pass 1\n# fail 0\n# cancelled 0\n# skipped 0\n# todo 0\n# duration_ms 43.802333\n",
+    "passed": true,
+    "timestamp": "2026-01-17T14:42:45.130Z"
+  }
+]

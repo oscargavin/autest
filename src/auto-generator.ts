@@ -42,7 +42,7 @@ async function generateTaskSuite(libraryName: string): Promise<void> {
     console.log('📚 Generating tasks with Grok + Context7...\n');
 
     const { text, steps } = await generateText({
-      model: xai('grok-3-fast'),
+      model: xai('grok-4-1-fast-reasoning'),
       system: systemPrompt,
       prompt: userPrompt,
       tools,

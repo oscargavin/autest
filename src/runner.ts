@@ -205,7 +205,7 @@ async function runTaskVariant(
 
     try {
       const { text } = await generateText({
-        model: xai('grok-3-fast'),
+        model: xai('grok-4-1-fast-reasoning'),
         prompt
       });
 

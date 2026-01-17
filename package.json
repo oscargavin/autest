@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "autogen": "tsx src/auto-generator.ts",
-    "run:a": "tsx src/runner.ts a",
-    "run:b": "tsx src/runner.ts b",
-    "run:all": "tsx src/runner.ts all",
+    "autogen": "node --env-file=.env --import=tsx src/auto-generator.ts",
+    "run:a": "node --env-file=.env --import=tsx src/runner.ts a",
+    "run:b": "node --env-file=.env --import=tsx src/runner.ts b",
+    "run:all": "node --env-file=.env --import=tsx src/runner.ts all",
     "evaluate": "tsx src/evaluator.ts",
     "export": "tsx src/training-exporter.ts",
     "test:generated": "node --test"
