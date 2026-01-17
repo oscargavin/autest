@@ -1,11 +1,9 @@
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { createMCPClient } from '@ai-sdk/mcp';
+import { Experimental_StdioMCPTransport } from '@ai-sdk/mcp/mcp-stdio';
+import { xai } from '@ai-sdk/xai';
+import { generateText, stepCountIs } from 'ai';
 import { writeFileSync, mkdirSync } from 'node:fs';
 import type { TaskSet, DocSection, Task } from './types.js';
-
-const CONTEXT7_MCP_CONFIG = {
-  command: 'npx',
-  args: ['-y', '@upstash/context7-mcp']
-};
 
 const GENERATION_TOPICS = [
   'hooks API useChat usage examples streaming',
@@ -24,112 +22,91 @@ interface GeneratedOutput {
 async function generateTaskSuite(libraryName: string): Promise<void> {
   console.log(`\n🚀 Generating test suite for: ${libraryName}\n`);
 
-  // Step 1: Use Claude with Context7 to fetch docs and generate tasks
-  const systemPrompt = buildSystemPrompt();
-  const userPrompt = buildUserPrompt(libraryName, GENERATION_TOPICS);
+  // Create MCP client for Context7
+  console.log('📡 Connecting to Context7 MCP server...\n');
 
-  console.log('📚 Querying Context7 and generating tasks with Claude...\n');
-
-  let fullResponse = '';
-
-  const response = query({
-    prompt: userPrompt,
-    options: {
-      systemPrompt,
-      mcpServers: {
-        context7: CONTEXT7_MCP_CONFIG
-      },
-      allowedTools: [
-        'mcp__context7__resolve-library-id',
-        'mcp__context7__query-docs'
-      ],
-      model: 'claude-sonnet-4-5',
-      maxTurns: 15
-    }
+  const mcpClient = await createMCPClient({
+    transport: new Experimental_StdioMCPTransport({
+      command: 'npx',
+      args: ['-y', '@upstash/context7-mcp']
+    })
   });
 
-  let turnCount = 0;
-  for await (const message of response) {
-    const msg = message as any;
+  try {
+    const tools = await mcpClient.tools();
+    console.log(`  ✓ Connected, ${Object.keys(tools).length} tools available\n`);
 
-    if (msg.type === 'assistant') {
-      const assistantMsg = msg.message;
-      if (assistantMsg?.content) {
-        if (typeof assistantMsg.content === 'string') {
-          fullResponse += assistantMsg.content;
-        } else if (Array.isArray(assistantMsg.content)) {
-          for (const block of assistantMsg.content) {
-            if (block.type === 'text' && block.text) {
-              fullResponse += block.text;
-            } else if (block.type === 'tool_use') {
-              console.log(`  🔧 ${block.name}`);
-            }
-          }
+    const systemPrompt = buildSystemPrompt();
+    const userPrompt = buildUserPrompt(libraryName, GENERATION_TOPICS);
+
+    console.log('📚 Generating tasks with Grok + Context7...\n');
+
+    const { text, steps } = await generateText({
+      model: xai('grok-3-fast'),
+      system: systemPrompt,
+      prompt: userPrompt,
+      tools,
+      stopWhen: stepCountIs(10),
+      onStepFinish: ({ toolCalls }) => {
+        for (const call of toolCalls) {
+          console.log(`  🔧 ${call.toolName}`);
         }
       }
-    } else if (msg.type === 'result') {
-      if (msg.result && typeof msg.result === 'string') {
-        fullResponse += msg.result;
-      }
-      if (msg.subtype === 'success') {
-        console.log(`  ✅ Generation complete`);
-      }
-    } else if (msg.type === 'system' && msg.subtype === 'init') {
-      console.log(`  📍 Session started`);
-    } else if (msg.type === 'error') {
-      console.error(`  ❌ Error: ${JSON.stringify(msg.error || msg)}`);
+    });
+
+    console.log(`\n  📊 Steps: ${steps.length}`);
+    console.log('  ✅ Generation complete\n');
+
+    // Extract JSON from response
+    console.log('📝 Parsing generated output...\n');
+    const generated = extractJSON(text);
+
+    if (!generated) {
+      console.error('❌ Failed to extract valid JSON from response');
+      console.log('Raw response:', text.slice(0, 500));
+      process.exit(1);
     }
 
-    turnCount++;
-  }
-  console.log(`\n  📊 Total turns: ${turnCount}`);
+    // Validate output
+    validateOutput(generated);
 
-  // Step 2: Extract JSON from response
-  console.log('\n📝 Parsing generated output...\n');
-  const generated = extractJSON(fullResponse);
+    // Write files
+    const taskSet: TaskSet = {
+      library: libraryName,
+      libraryId: `/${libraryName.replace('-', '/')}`,
+      generatedAt: new Date().toISOString(),
+      docs: generated.docs,
+      tasks: generated.tasks
+    };
 
-  if (!generated) {
-    console.error('❌ Failed to extract valid JSON from response');
-    console.log('Raw response:', fullResponse.slice(0, 500));
-    process.exit(1);
-  }
+    const outDir = `./tasks/${libraryName}`;
+    mkdirSync(outDir, { recursive: true });
 
-  // Step 3: Validate output
-  validateOutput(generated);
+    writeFileSync(`${outDir}/tasks.json`, JSON.stringify(taskSet, null, 2));
 
-  // Step 4: Write files
-  const taskSet: TaskSet = {
-    library: libraryName,
-    libraryId: `/${libraryName.replace('-', '/')}`, // tanstack-ai -> /tanstack/ai
-    generatedAt: new Date().toISOString(),
-    docs: generated.docs,
-    tasks: generated.tasks
-  };
+    const docsContent = generated.docs.map(d =>
+      `## ${d.title}\n\n${d.content}\n\n\`\`\`typescript\n${d.codeExamples.join('\n\n')}\n\`\`\``
+    ).join('\n\n---\n\n');
+    writeFileSync(`${outDir}/docs.md`, `# ${libraryName} Documentation\n\n${docsContent}`);
 
-  const outDir = `./tasks/${libraryName}`;
-  mkdirSync(outDir, { recursive: true });
+    // Print summary
+    console.log('✅ Generation complete!\n');
+    console.log(`  📁 Output: ${outDir}/`);
+    console.log(`  📄 Doc sections: ${generated.docs.length}`);
+    console.log(`  🧪 Tasks: ${generated.tasks.length}`);
 
-  writeFileSync(`${outDir}/tasks.json`, JSON.stringify(taskSet, null, 2));
+    const distribution = new Map<string, number>();
+    for (const task of generated.tasks) {
+      distribution.set(task.docTag, (distribution.get(task.docTag) || 0) + 1);
+    }
 
-  const docsContent = generated.docs.map(d =>
-    `## ${d.title}\n\n${d.content}\n\n\`\`\`typescript\n${d.codeExamples.join('\n\n')}\n\`\`\``
-  ).join('\n\n---\n\n');
-  writeFileSync(`${outDir}/docs.md`, `# ${libraryName} Documentation\n\n${docsContent}`);
+    console.log('\n  Task distribution:');
+    for (const [tag, count] of distribution) {
+      console.log(`    ${tag}: ${count}`);
+    }
 
-  // Print summary
-  console.log('✅ Generation complete!\n');
-  console.log(`  📁 Output: ${outDir}/`);
-  console.log(`  📄 Doc sections: ${generated.docs.length}`);
-  console.log(`  🧪 Tasks: ${generated.tasks.length}`);
-
-  const distribution = new Map<string, number>();
-  for (const task of generated.tasks) {
-    distribution.set(task.docTag, (distribution.get(task.docTag) || 0) + 1);
-  }
-
-  console.log('\n  Task distribution:');
-  for (const [tag, count] of distribution) {
-    console.log(`    ${tag}: ${count}`);
+  } finally {
+    await mcpClient.close();
   }
 }
 
@@ -291,6 +268,11 @@ async function main() {
   if (!libraryName) {
     console.error('Usage: npm run autogen -- <library-name>');
     console.error('Example: npm run autogen -- tanstack-ai');
+    process.exit(1);
+  }
+
+  if (!process.env.XAI_API_KEY) {
+    console.error('❌ XAI_API_KEY environment variable required');
     process.exit(1);
   }
 

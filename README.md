@@ -42,4 +42,4 @@ Docs help most for newer/unusual APIs.
 ## Requirements
 
 - Node 18+
-- `ANTHROPIC_API_KEY` env var
+- `XAI_API_KEY` env var (grok)

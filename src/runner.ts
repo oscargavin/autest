@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { spawn } from 'node:child_process';
-import { query } from '@anthropic-ai/claude-agent-sdk';
+import { xai } from '@ai-sdk/xai';
+import { generateText } from 'ai';
 import type { TaskSet, Task, Attempt } from './types.js';
 
 const MAX_ITERATIONS_A = 1;  // A gets one shot (baseline)
@@ -155,32 +156,13 @@ async function runTest(code: string, testCode: string): Promise<{ passed: boolea
   });
 }
 
-async function extractCode(response: AsyncIterable<any>): Promise<string> {
-  let fullContent = '';
-
-  for await (const message of response) {
-    // Handle result message (contains final output)
-    if (message.type === 'result' && message.result) {
-      fullContent = message.result;
-      break;
-    }
-    // Handle assistant message (streaming)
-    if (message.type === 'assistant' && message.message?.content) {
-      for (const block of message.message.content) {
-        if (block.type === 'text') {
-          fullContent += block.text;
-        }
-      }
-    }
-  }
-
+function extractCode(text: string): string {
   // Extract code from markdown code blocks if present
-  const codeBlockMatch = fullContent.match(/```(?:javascript|js)?\s*([\s\S]*?)```/);
+  const codeBlockMatch = text.match(/```(?:javascript|js)?\s*([\s\S]*?)```/);
   if (codeBlockMatch) {
     return codeBlockMatch[1].trim();
   }
-
-  return fullContent.trim();
+  return text.trim();
 }
 
 async function runTaskVariant(
@@ -222,15 +204,12 @@ async function runTaskVariant(
     }
 
     try {
-      const response = query({
-        prompt,
-        options: {
-          model: 'claude-sonnet-4-5',
-          permissionMode: 'bypassPermissions' // no interactive prompts needed
-        }
+      const { text } = await generateText({
+        model: xai('grok-3-fast'),
+        prompt
       });
 
-      currentCode = await extractCode(response);
+      currentCode = extractCode(text);
       const testResult = await runTest(currentCode, task.testCode);
 
       const attempt: Attempt = {
@@ -265,6 +244,11 @@ async function runTaskVariant(
 }
 
 async function runAll(config: RunConfig) {
+  if (!process.env.XAI_API_KEY) {
+    console.error('❌ XAI_API_KEY environment variable required');
+    process.exit(1);
+  }
+
   const taskSet = loadTaskSet(config.library);
   console.log(`\nRunning ${config.variant} variant(s) for ${taskSet.tasks.length} tasks\n`);
 
