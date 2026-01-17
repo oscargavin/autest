@@ -1,0 +1,367 @@
+{
+  "library": "socket.io",
+  "generatedAt": "2026-01-17T16:57:19.794Z",
+  "evaluatedAt": "2026-01-17T17:00:30.634Z",
+  "summary": {
+    "totalTasks": 25,
+    "aFirstPassRate": 40,
+    "bFirstPassRate": 56,
+    "docImpact": 16,
+    "bFailedFirstPass": 11,
+    "bRescuedByRetry": 9,
+    "iterationValue": 81.8,
+    "bFinalPassRate": 92
+  },
+  "results": [
+    {
+      "taskId": "task-001",
+      "docTag": "server-init",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { Server } from \"socket.io\";\n\nexport function initBasicServer(httpServer) {\n  return new Server(httpServer);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initBasicServer(httpServer) {\n  return new Server(httpServer);\n}"
+      }
+    },
+    {
+      "taskId": "task-002",
+      "docTag": "server-init",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { Server } from \"socket.io\";\n\nexport function initServerWithOptions(httpServer, options) {\n  return new Server(httpServer, options);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function initServerWithOptions(httpServer, options) {\n  const io = new Server(httpServer, options);\n  return io;\n}"
+      }
+    },
+    {
+      "taskId": "task-003",
+      "docTag": "server-init",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function setupConnectionHandler(io) {\n  io.on('connection', (socket) => {\n    console.log('user connected');\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupConnectionHandler(io) {\n  io.on('connection', (socket) => {\n    console.log('user connected');\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-004",
+      "docTag": "server-init",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import http from 'node:http';\nimport { Server } from 'socket.io';\n\nexport function fullServerSetup(app) {\n  const httpServer = http.createServer(app);\n  const io = new Server(httpServer);\n  io.on('connection', (socket) => {\n    console.log('a user connected');\n  });\n  return { httpServer, io };\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function fullServerSetup(app) {\n  const httpServer = createServer(app);\n  httpServer.on = (event) => {\n    if (event === 'connection') {\n      return (socket) => console.log('user connected');\n    }\n  };\n  const io = new Server(httpServer);\n  return { httpServer, io };\n}"
+      }
+    },
+    {
+      "taskId": "task-005",
+      "docTag": "client-connect",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "async function connectClient(url) {\n  const { io } = await import('socket.io-client');\n  return new Promise((resolve, reject) => {\n    const socket = io(url);\n    socket.on('connect', () => resolve(socket));\n    socket.on('connect_error', reject);\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function connectClient(url) {\n  return io(url);\n}"
+      }
+    },
+    {
+      "taskId": "task-006",
+      "docTag": "client-connect",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function setupClientConnectHandler(socket) {\n  socket.on('connect', () => console.log('Client connected'));\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupClientConnectHandler(socket) {\n  socket.on('connect', () => {\n    console.log('Client connected');\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-007",
+      "docTag": "client-connect",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export const clientWithAuth = (url, token) => async (endpoint, init = {}) => {\n  const fullUrl = new URL(endpoint, url);\n  const headers = new Headers(init.headers ?? {});\n  headers.set('Authorization', `Bearer ${token}`);\n  return fetch(fullUrl, {\n    ...init,\n    headers,\n  });\n};"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function clientWithAuth(url, token) {\n  return io(url, { auth: { token } });\n}"
+      }
+    },
+    {
+      "taskId": "task-008",
+      "docTag": "event-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function attachHelloListener(socket) {\n  socket.on('hello', (arg) => console.log(arg));\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "function attachHelloListener(socket) {\n  socket.on('hello', (arg) => { console.log(arg); });\n}"
+      }
+    },
+    {
+      "taskId": "task-009",
+      "docTag": "event-handling",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function emitHello(socket, message) {\n  await socket.emit('hello', message);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function emitHello(socket, message) {\n  socket.emit('hello', message);\n}"
+      }
+    },
+    {
+      "taskId": "task-010",
+      "docTag": "event-handling",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function setupBidirectionalEvents(io) {\n  io.on('connection', (socket) => {\n    socket.on('msg', (msg) => {\n      socket.emit('echo', msg);\n    });\n  });\n  return io;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function setupBidirectionalEvents(io) {\n  io.on('msg', (data, socket) => {\n    socket.emit('echo', data);\n  });\n  return io;\n}"
+      }
+    },
+    {
+      "taskId": "task-011",
+      "docTag": "acknowledgements",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function setupAckHandler(socket) {\n  socket.on('update', (data, ack) => {\n    ack({ status: 'ok' });\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 3,
+        "finalCode": "export function setupAckHandler(socket) {\n  socket.on('update', (...args) => {\n    const ack = args[args.length - 1];\n    ack({ status: 'ok' });\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-012",
+      "docTag": "acknowledgements",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function emitWithAck(socket) {\n  return new Promise((resolve, reject) => {\n    socket.emit('ping', (response) => {\n      resolve(response);\n    });\n    socket.once('error', reject);\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function emitWithAck(socket) {\n  return socket.emitWithAck('ping');\n}"
+      }
+    },
+    {
+      "taskId": "task-013",
+      "docTag": "acknowledgements",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "async function fullAckExchange(serverSocket, clientSocket) {\n  return new Promise((resolve, reject) => {\n    serverSocket.on('hi', (ack) => {\n      ack('hola');\n    });\n\n    const cb = (response) => {\n      if (response === 'hola') {\n        resolve();\n      } else {\n        reject(new Error(`Expected 'hola' but got '${response}'`));\n      }\n    };\n\n    clientSocket.emit('hi', cb);\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": false,
+        "totalAttempts": 3,
+        "finalCode": "import assert from 'node:assert/strict';\n\nexport function fullAckExchange(serverSocket, clientSocket) {\n  serverSocket.on('hi', (data, cb) => { cb('hola'); });\n  clientSocket.emit('hi', (response) => {\n    assert.strictEqual(response, 'hola');\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-014",
+      "docTag": "rooms-broadcast",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function joinRoom(socket, room) {\n  socket.join(room);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function joinRoom(socket, room) {\n  await socket.join(room);\n}"
+      }
+    },
+    {
+      "taskId": "task-015",
+      "docTag": "rooms-broadcast",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function broadcastToRoom(io, room, event, data) {\n  io.to(room).emit(event, data);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function broadcastToRoom(io, room, event, data) {\n  io.to(room).emit(event, data);\n}"
+      }
+    },
+    {
+      "taskId": "task-016",
+      "docTag": "rooms-broadcast",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function setupRoomJoinAndBroadcast(io) {\n  io.on('connection', (socket) => {\n    socket.join('general');\n    socket.to('general').emit('new user');\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function setupRoomJoinAndBroadcast(io) {\n  io.on('connection', (socket) => {\n    socket.join('general');\n    io.to('general').emit('new user');\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-017",
+      "docTag": "rooms-broadcast",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export async function leaveRoom(socket, room) {\n  socket.leave(room);\n  if (socket.rooms.has(room)) {\n    throw new Error(`Socket still in room \"${room}\" after leaveRoom`);\n  }\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export async function leaveRoom(socket, room) {\n  await new Promise((resolve, reject) => {\n    socket.leave(room, (err) => {\n      if (err) {\n        reject(err);\n      } else if (socket.rooms.has(room)) {\n        reject(new Error('Socket still in room after leave'));\n      } else {\n        resolve();\n      }\n    });\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-018",
+      "docTag": "namespaces",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function createNamespace(io, path) {\n  return io.of(path);\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function createNamespace(io, path) {\n  return io.of(path);\n}"
+      }
+    },
+    {
+      "taskId": "task-019",
+      "docTag": "namespaces",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function setupAdminNamespace(io) {\n  io.of('/admin').on('connection', (socket) => {\n    console.log('admin connected');\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupAdminNamespace(io) {\n  const nsp = io.of('/admin');\n  nsp.on('connection', (socket) => {\n    console.log('admin connected');\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-020",
+      "docTag": "namespaces",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "import { io } from 'socket.io-client';\n\nexport async function connectToNamespace(url, path) {\n  const socket = io(`${url}${path}`);\n  return new Promise((resolve, reject) => {\n    socket.on('connect', () => resolve(socket));\n    socket.on('connect_error', reject);\n    socket.connect();\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function connectToNamespace(url, path) {\n  return io(`${url}${path}`);\n}"
+      }
+    },
+    {
+      "taskId": "task-021",
+      "docTag": "conn-lifecycle",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export function setupDisconnectHandler(socket) {\n  socket.on('disconnect', (reason) => {\n    console.log(reason);\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupDisconnectHandler(socket) {\n  socket.on('disconnect', (reason) => {\n    console.log(reason);\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-022",
+      "docTag": "conn-lifecycle",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function fullLifecycleHandlers(io) {\n  io.on('connection', (socket) => {\n    console.log(`Client connected: ${socket.id}`);\n    socket.on('disconnect', () => {\n      console.log(`Client disconnected: ${socket.id}`);\n    });\n  });\n  return io;\n}"
+      },
+      "b": {
+        "passedFirstTry": false,
+        "passedAfterRetry": true,
+        "totalAttempts": 2,
+        "finalCode": "export function fullLifecycleHandlers(io) {\n  io.on('connection', (socket) => {\n    console.log('user connected');\n    socket.on('disconnect', (reason) => {\n      console.log('user disconnected');\n    });\n  });\n  return io;\n}"
+      }
+    },
+    {
+      "taskId": "task-023",
+      "docTag": "conn-lifecycle",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function handleReconnect(socket) {\n  socket.on('disconnect', async () => {\n    if (!socket.active) {\n      await new Promise(resolve => setTimeout(resolve, 1000));\n      socket.connect();\n    }\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function handleReconnect(socket) {\n  socket.on('disconnect', () => {\n    if (!socket.active) {\n      socket.connect();\n    }\n  });\n}"
+      }
+    },
+    {
+      "taskId": "task-024",
+      "docTag": "conn-lifecycle",
+      "a": {
+        "passedFirstTry": true,
+        "finalCode": "export const disconnectClient = async (socket) => {\n  socket.disconnect();\n};"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function disconnectClient(socket) {\n  socket.disconnect();\n}"
+      }
+    },
+    {
+      "taskId": "task-025",
+      "docTag": "rooms-broadcast",
+      "a": {
+        "passedFirstTry": false,
+        "finalCode": "export function setupPrivateRooms(io) {\n  io.on('connection', (socket) => {\n    socket.join(socket.id);\n    socket.emit('welcome', 'Private welcome');\n  });\n}"
+      },
+      "b": {
+        "passedFirstTry": true,
+        "passedAfterRetry": false,
+        "totalAttempts": 1,
+        "finalCode": "export function setupPrivateRooms(io) {\n  io.on('connection', (socket) => {\n    socket.join(socket.id);\n    io.to(socket.id).emit('welcome');\n  });\n}"
+      }
+    }
+  ]
+}

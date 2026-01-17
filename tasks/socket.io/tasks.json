@@ -1,0 +1,272 @@
+{
+  "library": "socket.io",
+  "libraryId": "/socket.io",
+  "generatedAt": "2026-01-17T16:57:19.794Z",
+  "docs": [
+    {
+      "id": "server-init",
+      "title": "Server Initialization",
+      "content": "Socket.IO server is initialized by creating an HTTP server and passing it to the Server constructor. Optional configuration like CORS or adapter can be provided. Handle incoming connections via io.on('connection', handler).",
+      "codeExamples": [
+        "import { createServer } from 'http'; import { Server } from 'socket.io'; const httpServer = createServer(); const io = new Server(httpServer); io.on('connection', (socket) => {}); httpServer.listen(3000);",
+        "const io = new Server(httpServer, { cors: { origin: '*' } });"
+      ]
+    },
+    {
+      "id": "client-connect",
+      "title": "Client Connection",
+      "content": "Clients connect to the server using the io() function with the server URL. It returns a socket instance for event handling. Listen to 'connect' event to confirm successful connection.",
+      "codeExamples": [
+        "import io from 'socket.io-client'; const socket = io('http://localhost:3000');",
+        "socket.on('connect', () => { console.log('connected'); });"
+      ]
+    },
+    {
+      "id": "event-handling",
+      "title": "Event Emission and Listeners",
+      "content": "Attach listeners with socket.on('event', handler) on both server and client. Emit events using socket.emit('event', data). Supports namespace and room targeting for selective emission.",
+      "codeExamples": [
+        "socket.on('hello', (arg) => { console.log(arg); });",
+        "socket.emit('hello', 'world');"
+      ]
+    },
+    {
+      "id": "acknowledgements",
+      "title": "Event Acknowledgements",
+      "content": "Enable request-response by passing a callback to emit: socket.emit('event', data, cb). Call cb(response) in the handler to acknowledge. Use emitWithAck() for promise-based handling.",
+      "codeExamples": [
+        "socket.emit('hi', (response) => { console.log(response); });",
+        "socket.on('hi', (cb) => { cb('hola'); });"
+      ]
+    },
+    {
+      "id": "rooms-broadcast",
+      "title": "Rooms and Broadcasting",
+      "content": "Sockets join rooms via socket.join('room'). Broadcast to rooms with io.to('room').emit('event'). Exclude rooms using except('room') or broadcast to all except sender with socket.broadcast.emit().",
+      "codeExamples": [
+        "socket.join('room1'); io.to('room1').emit('hello');",
+        "io.except('room1').emit('hello to others');"
+      ]
+    },
+    {
+      "id": "namespaces",
+      "title": "Namespaces",
+      "content": "Namespaces segment logic with io.of('/path'). They have independent rooms and connections. Clients connect with io('/path'). Rooms are local to each namespace.",
+      "codeExamples": [
+        "const nsp = io.of('/admin'); nsp.on('connection', (socket) => {});",
+        "const adminSocket = io('/admin');"
+      ]
+    },
+    {
+      "id": "conn-lifecycle",
+      "title": "Connection Lifecycle",
+      "content": "Server fires 'connection' on new socket. Handle 'disconnect' and 'disconnecting' events with reasons. Client has 'connect' and 'disconnect'. Use for cleanup and logging.",
+      "codeExamples": [
+        "io.on('connection', (socket) => { socket.on('disconnect', (reason) => {}); });",
+        "socket.on('disconnect', (reason) => { console.log(reason); });"
+      ]
+    }
+  ],
+  "tasks": [
+    {
+      "id": "task-001",
+      "docTag": "server-init",
+      "description": "Write a function initBasicServer(httpServer) that creates and returns a new Socket.IO Server instance attached to the given httpServer",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedArgs;\nconst mockIo = {};\nclass MockServer {\n  constructor(...args) {\n    capturedArgs = args;\n    return mockIo;\n  }\n}\nglobalThis.Server = MockServer;\n\nconst mockHttpServer = {};\n\ntest('initBasicServer basic', () => {\n  const result = initBasicServer(mockHttpServer);\n  assert.strictEqual(capturedArgs[0], mockHttpServer);\n  assert.strictEqual(capturedArgs.length, 1);\n  assert.strictEqual(result, mockIo);\n});\n\ntest('initBasicServer called Server', () => {\n  capturedArgs = null;\n  initBasicServer(mockHttpServer);\n  assert.ok(capturedArgs);\n});",
+      "solutionHint": "Use new Server(httpServer)"
+    },
+    {
+      "id": "task-002",
+      "docTag": "server-init",
+      "description": "Write a function initServerWithOptions(httpServer, options) that creates a Socket.IO Server with the given options",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedArgs;\nconst mockIo = {};\nclass MockServer {\n  constructor(...args) {\n    capturedArgs = args;\n    return mockIo;\n  }\n}\nglobalThis.Server = MockServer;\n\nconst mockHttpServer = {};\nconst testOptions = { cors: true };\n\ntest('initServerWithOptions captures options', () => {\n  const result = initServerWithOptions(mockHttpServer, testOptions);\n  assert.deepStrictEqual(capturedArgs.slice(0, 2), [mockHttpServer, testOptions]);\n  assert.strictEqual(result, mockIo);\n});",
+      "solutionHint": "Pass options as second arg to Server constructor"
+    },
+    {
+      "id": "task-003",
+      "docTag": "server-init",
+      "description": "Write a function setupConnectionHandler(io) that attaches a 'connection' event handler logging 'user connected'",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent, capturedHandler;\nconst mockIo = {\n  on(event, handler) {\n    capturedEvent = event;\n    capturedHandler = handler;\n    return this;\n  }\n};\n\nglobalThis.console = { log: (msg) => { capturedLog = msg; } };\nlet capturedLog;\n\nconst mockSocket = {};\n\ntest('setupConnectionHandler attaches handler', () => {\n  setupConnectionHandler(mockIo);\n  assert.strictEqual(capturedEvent, 'connection');\n  assert.ok(capturedHandler);\n});\n\ntest('setupConnectionHandler logs on connect', () => {\n  setupConnectionHandler(mockIo);\n  capturedHandler(mockSocket);\n  assert.strictEqual(capturedLog, 'user connected');\n});",
+      "solutionHint": "io.on('connection', (socket) => console.log('user connected'))"
+    },
+    {
+      "id": "task-004",
+      "docTag": "server-init",
+      "description": "Write a function fullServerSetup(app) that creates httpServer from app, attaches Socket.IO, sets connection handler, and returns {httpServer, io}",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet createServerCalls = 0;\nglobalThis.createServer = (app) => {\n  createServerCalls++;\n  return { listen: () => {} };\n};\n\nlet serverCapturedArgs;\nconst mockIo = { on: () => mockIo };\nclass MockServer {\n  constructor(...args) {\n    serverCapturedArgs = args;\n    return mockIo;\n  }\n}\nglobalThis.Server = MockServer;\n\nglobalThis.console = { log: () => {} };\n\nlet capturedLog;\nglobalThis.console.log = (msg) => capturedLog = msg;\n\nconst mockApp = {};\n\ntest('fullServerSetup chains correctly', () => {\n  const result = fullServerSetup(mockApp);\n  assert.strictEqual(createServerCalls, 1);\n  assert.deepStrictEqual(serverCapturedArgs[0], result.httpServer);\n  assert.strictEqual(result.io, mockIo);\n});\n\ntest('fullServerSetup handler works', () => {\n  fullServerSetup(mockApp);\n  const mockSocket = {};\n  serverCapturedArgs[0].on('connection')(mockSocket);\n  assert.strictEqual(capturedLog, 'user connected');\n});",
+      "solutionHint": "Create httpServer, io = new Server(httpServer), io.on('connection', ...), return both"
+    },
+    {
+      "id": "task-005",
+      "docTag": "client-connect",
+      "description": "Write a function connectClient(url) that creates and returns a socket.io client connected to the given url",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet ioCapturedArgs;\nconst mockSocket = {};\nglobalThis.io = (...args) => {\n  ioCapturedArgs = args;\n  return mockSocket;\n};\n\ntest('connectClient basic', () => {\n  const testUrl = 'http://localhost:3000';\n  const result = connectClient(testUrl);\n  assert.strictEqual(ioCapturedArgs[0], testUrl);\n  assert.strictEqual(result, mockSocket);\n});",
+      "solutionHint": "return io(url)"
+    },
+    {
+      "id": "task-006",
+      "docTag": "client-connect",
+      "description": "Write a function setupClientConnectHandler(socket) that attaches a 'connect' handler logging 'Client connected'",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent, capturedHandler;\nconst mockSocket = {\n  on(event, handler) {\n    capturedEvent = event;\n    capturedHandler = handler;\n    return this;\n  }\n};\nlet capturedLog;\nglobalThis.console = { log: (msg) => capturedLog = msg };\n\ntest('setupClientConnectHandler', () => {\n  setupClientConnectHandler(mockSocket);\n  assert.strictEqual(capturedEvent, 'connect');\n  capturedHandler();\n  assert.strictEqual(capturedLog, 'Client connected');\n});",
+      "solutionHint": "socket.on('connect', () => console.log('Client connected'))"
+    },
+    {
+      "id": "task-007",
+      "docTag": "client-connect",
+      "description": "Write a function clientWithAuth(url, token) that connects client with auth: { token }",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet ioCapturedArgs;\nconst mockSocket = {};\nglobalThis.io = (...args) => {\n  ioCapturedArgs = args;\n  return mockSocket;\n};\n\ntest('clientWithAuth options', () => {\n  const testUrl = 'ws://example.com';\n  const token = 'abc123';\n  const result = clientWithAuth(testUrl, token);\n  assert.deepStrictEqual(ioCapturedArgs[1].auth.token, token);\n});",
+      "solutionHint": "io(url, { auth: { token } })"
+    },
+    {
+      "id": "task-008",
+      "docTag": "event-handling",
+      "description": "Write a function attachHelloListener(socket) that listens for 'hello' event and logs the arg",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent, capturedHandler, capturedArg;\nconst mockSocket = {\n  on(event, handler) {\n    capturedEvent = event;\n    capturedHandler = handler;\n    return this;\n  }\n};\nglobalThis.console = { log: (arg) => capturedArg = arg };\n\nlet capturedArg;\ntest('attachHelloListener', () => {\n  attachHelloListener(mockSocket);\n  assert.strictEqual(capturedEvent, 'hello');\n  capturedHandler('world');\n  assert.strictEqual(capturedArg, 'world');\n});",
+      "solutionHint": "socket.on('hello', (arg) => console.log(arg))"
+    },
+    {
+      "id": "task-009",
+      "docTag": "event-handling",
+      "description": "Write a function emitHello(socket, message) that emits 'hello' event with the message",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent, capturedData;\nconst mockSocket = {\n  emit(event, data) {\n    capturedEvent = event;\n    capturedData = data;\n    return this;\n  }\n};\n\ntest('emitHello', () => {\n  emitHello(mockSocket, 'hi there');\n  assert.strictEqual(capturedEvent, 'hello');\n  assert.strictEqual(capturedData, 'hi there');\n});",
+      "solutionHint": "socket.emit('hello', message)"
+    },
+    {
+      "id": "task-010",
+      "docTag": "event-handling",
+      "description": "Write a function setupBidirectionalEvents(io) that sets server 'msg' handler to emit 'echo' back, returns io",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedServerEvent, capturedServerHandler;\nlet capturedClientEvent, capturedClientHandler;\nconst mockIo = {\n  on(event, handler) {\n    capturedServerEvent = event;\n    capturedServerHandler = handler;\n    return this;\n  }\n};\nconst mockSocket = {\n  emit(event) {\n    capturedClientEvent = event;\n  },\n  on(event, handler) {\n    capturedClientHandler = handler;\n  }\n};\n\ntest('setupBidirectionalEvents', () => {\n  setupBidirectionalEvents(mockIo);\n  assert.strictEqual(capturedServerEvent, 'msg');\n  const testData = 'test';\n  capturedServerHandler(testData, mockSocket);\n  assert.strictEqual(capturedClientEvent, 'echo');\n});",
+      "solutionHint": "io.on('msg', (data, socket) => socket.emit('echo', data))"
+    },
+    {
+      "id": "task-011",
+      "docTag": "acknowledgements",
+      "description": "Write a function setupAckHandler(socket) that handles 'update' with ack { status: 'ok' }",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent, capturedHandler;\nconst mockSocket = {\n  on(event, handler) {\n    capturedEvent = event;\n    capturedHandler = handler;\n  }\n};\nlet capturedCbArgs;\n\ntest('setupAckHandler', () => {\n  setupAckHandler(mockSocket);\n  assert.strictEqual(capturedEvent, 'update');\n  capturedHandler('id1', { name: 'new' }, (response) => { capturedCbArgs = response; });\n  assert.deepStrictEqual(capturedCbArgs, { status: 'ok' });\n});",
+      "solutionHint": "socket.on('update', (id, data, cb) => cb({ status: 'ok' })) "
+    },
+    {
+      "id": "task-012",
+      "docTag": "acknowledgements",
+      "description": "Write a function emitWithAck(socket) that emits 'ping' and returns promise resolving to response",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent;\nconst mockSocket = {\n  emitWithAck(event) {\n    capturedEvent = event;\n    return Promise.resolve('pong');\n  }\n};\n\ntest('emitWithAck resolves', async () => {\n  const result = await emitWithAck(mockSocket);\n  assert.strictEqual(result, 'pong');\n  assert.strictEqual(capturedEvent, 'ping');\n});",
+      "solutionHint": "await socket.emitWithAck('ping')"
+    },
+    {
+      "id": "task-013",
+      "docTag": "acknowledgements",
+      "description": "Write a function fullAckExchange(serverSocket, clientSocket) that sets up server ack for 'hi', client emits with cb, verifies cb gets 'hola'",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet clientCbArgs;\nconst mockServerSocket = {\n  on(event, handler) {\n    if (event === 'hi') handler(null, (arg) => {});\n  }\n};\nconst mockClientSocket = {\n  emit(event, cb) {\n    cb('hola');\n  }\n};\n\nlet capturedClientCb;\nglobalThis.setTimeout = (cb) => cb();\n\ntest('fullAckExchange', (t) => {\n  t.plan(1);\n  fullAckExchange(mockServerSocket, mockClientSocket);\n});",
+      "solutionHint": "Server on('hi', cb => cb('hola')), client emit('hi', cb => ...)"
+    },
+    {
+      "id": "task-014",
+      "docTag": "rooms-broadcast",
+      "description": "Write a function joinRoom(socket, room) that makes the socket join the given room",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedRoom;\nconst mockSocket = {\n  join(room) {\n    capturedRoom = room;\n  }\n};\n\ntest('joinRoom', () => {\n  joinRoom(mockSocket, 'chatroom');\n  assert.strictEqual(capturedRoom, 'chatroom');\n});",
+      "solutionHint": "socket.join(room)"
+    },
+    {
+      "id": "task-015",
+      "docTag": "rooms-broadcast",
+      "description": "Write a function broadcastToRoom(io, room, event, data) that emits the event to the room",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedRoom, capturedEvent, capturedData;\nconst mockIo = {\n  to(room) {\n    capturedRoom = room;\n    return {\n      emit(e, d) {\n        capturedEvent = e;\n        capturedData = d;\n      }\n    };\n  }\n};\n\ntest('broadcastToRoom', () => {\n  broadcastToRoom(mockIo, 'room1', 'msg', 'hello');\n  assert.strictEqual(capturedRoom, 'room1');\n  assert.strictEqual(capturedEvent, 'msg');\n  assert.strictEqual(capturedData, 'hello');\n});",
+      "solutionHint": "io.to(room).emit(event, data)"
+    },
+    {
+      "id": "task-016",
+      "docTag": "rooms-broadcast",
+      "description": "Write a function setupRoomJoinAndBroadcast(io) that on connection joins 'general' and broadcasts 'new user' to it",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedJoin;\nlet capturedToRoom, capturedBroadcastEvent;\nconst mockSocket = {\n  join(room) {\n    capturedJoin = room;\n  }\n};\nconst mockIo = {\n  to(room) {\n    capturedToRoom = room;\n    return { emit(e) { capturedBroadcastEvent = e; } };\n  }\n};\nconst mockIoWithSocket = { ...mockIo, on: (e, h) => h(mockSocket) };\n\ntest('setupRoomJoinAndBroadcast', () => {\n  setupRoomJoinAndBroadcast(mockIoWithSocket);\n  assert.strictEqual(capturedJoin, 'general');\n  assert.strictEqual(capturedToRoom, 'general');\n  assert.strictEqual(capturedBroadcastEvent, 'new user');\n});",
+      "solutionHint": "io.on('connection', socket => { socket.join('general'); io.to('general').emit('new user'); })"
+    },
+    {
+      "id": "task-017",
+      "docTag": "rooms-broadcast",
+      "description": "Write a function leaveRoom(socket, room) that makes socket leave the room and verifies socket.rooms",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedLeave;\nlet roomsCheck;\nconst mockSocket = {\n  leave(room) {\n    capturedLeave = room;\n  },\n  get rooms() {\n    return new Set();\n  }\n};\n\ntest('leaveRoom', () => {\n  leaveRoom(mockSocket, 'oldroom');\n  assert.strictEqual(capturedLeave, 'oldroom');\n});",
+      "solutionHint": "socket.leave(room)"
+    },
+    {
+      "id": "task-018",
+      "docTag": "namespaces",
+      "description": "Write a function createNamespace(io, path) that returns io.of(path)",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedPath;\nconst mockNsp = {};\nconst mockIo = {\n  of(path) {\n    capturedPath = path;\n    return mockNsp;\n  }\n};\n\ntest('createNamespace', () => {\n  const result = createNamespace(mockIo, '/admin');\n  assert.strictEqual(capturedPath, '/admin');\n  assert.strictEqual(result, mockNsp);\n});",
+      "solutionHint": "io.of(path)"
+    },
+    {
+      "id": "task-019",
+      "docTag": "namespaces",
+      "description": "Write a function setupAdminNamespace(io) that sets up '/admin' namespace with connection handler logging 'admin connected'",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedNspPath, capturedConnHandler;\nlet capturedLog;\nglobalThis.console = { log: (msg) => capturedLog = msg };\nconst mockNsp = {\n  on(event, handler) {\n    capturedConnHandler = handler;\n    return this;\n  }\n};\nconst mockIo = {\n  of(path) {\n    capturedNspPath = path;\n    return mockNsp;\n  }\n};\n\nconst mockAdminSocket = {};\n\ntest('setupAdminNamespace', () => {\n  setupAdminNamespace(mockIo);\n  assert.strictEqual(capturedNspPath, '/admin');\n  capturedConnHandler(mockAdminSocket);\n  assert.strictEqual(capturedLog, 'admin connected');\n});",
+      "solutionHint": "const admin = io.of('/admin'); admin.on('connection', socket => console.log('admin connected'))"
+    },
+    {
+      "id": "task-020",
+      "docTag": "namespaces",
+      "description": "Write a function connectToNamespace(url, path) that connects client to namespace",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet ioArgs;\nconst mockNsSocket = {};\nglobalThis.io = (...args) => {\n  ioArgs = args;\n  return mockNsSocket;\n};\n\ntest('connectToNamespace', () => {\n  connectToNamespace('http://localhost:3000', '/admin');\n  assert.strictEqual(ioArgs[0], 'http://localhost:3000/admin');\n});",
+      "solutionHint": "io(`${url}${path}`)"
+    },
+    {
+      "id": "task-021",
+      "docTag": "conn-lifecycle",
+      "description": "Write a function setupDisconnectHandler(socket) that logs disconnect reason on 'disconnect'",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedEvent;\nlet capturedReason;\nconst mockSocket = {\n  on(event, handler) {\n    capturedEvent = event;\n    handler('ping timeout');\n  }\n};\nglobalThis.console = { log: (reason) => capturedReason = reason };\n\ntest('setupDisconnectHandler', () => {\n  setupDisconnectHandler(mockSocket);\n  assert.strictEqual(capturedEvent, 'disconnect');\n  assert.strictEqual(capturedReason, 'ping timeout');\n});",
+      "solutionHint": "socket.on('disconnect', (reason) => console.log(reason))"
+    },
+    {
+      "id": "task-022",
+      "docTag": "conn-lifecycle",
+      "description": "Write a function fullLifecycleHandlers(io) that sets connection log and disconnect log, returns io",
+      "difficulty": "medium",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet connLog, discLog;\nglobalThis.console = {\n  log: (msg) => {\n    if (msg === 'user connected') connLog = true;\n    if (msg === 'user disconnected') discLog = true;\n  }\n};\nlet capturedConnHandler, capturedDiscHandler;\nconst mockSocket = {\n  on(event, handler) {\n    capturedDiscHandler = handler;\n  }\n};\nconst mockIo = {\n  on(event, handler) {\n    capturedConnHandler = handler;\n    handler(mockSocket);\n  }\n};\n\ntest('fullLifecycleHandlers', () => {\n  fullLifecycleHandlers(mockIo);\n  assert.ok(connLog);\n  capturedDiscHandler();\n  assert.ok(discLog);\n});",
+      "solutionHint": "io.on('connection', socket => { console.log('user connected'); socket.on('disconnect', () => console.log('user disconnected')); })"
+    },
+    {
+      "id": "task-023",
+      "docTag": "conn-lifecycle",
+      "description": "Write a function handleReconnect(socket) that on disconnect checks if active and reconnects if not",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedConnect;\nconst mockSocket = {\n  get active() { return false; },\n  connect() { capturedConnect = true; },\n  on(event, handler) {\n    handler('forced');\n  }\n};\n\ntest('handleReconnect reconnects if not active', () => {\n  handleReconnect(mockSocket);\n  assert.ok(capturedConnect);\n});",
+      "solutionHint": "socket.on('disconnect', (reason) => { if (!socket.active) socket.connect(); })"
+    },
+    {
+      "id": "task-024",
+      "docTag": "conn-lifecycle",
+      "description": "Write a function disconnectClient(socket) that calls socket.disconnect()",
+      "difficulty": "easy",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet disconnected = false;\nconst mockSocket = {\n  disconnect() { disconnected = true; }\n};\n\ntest('disconnectClient', () => {\n  disconnectClient(mockSocket);\n  assert.ok(disconnected);\n});",
+      "solutionHint": "socket.disconnect()"
+    },
+    {
+      "id": "task-025",
+      "docTag": "rooms-broadcast",
+      "description": "Write a function setupPrivateRooms(io) that on connection joins socket.id room, emits private welcome",
+      "difficulty": "hard",
+      "testCode": "import { test } from 'node:test';\nimport assert from 'node:assert/strict';\n\nlet capturedJoin, capturedTo, capturedEmit;\nconst mockSocket = {\n  id: 'sock123',\n  join(room) { capturedJoin = room; },\n};\nconst mockIo = {\n  to(room) {\n    capturedTo = room;\n    return {\n      emit(event) { capturedEmit = event; }\n    };\n  }\n};\nconst mockIoFull = {\n  ...mockIo,\n  on: (_, h) => h(mockSocket)\n};\n\ntest('setupPrivateRooms', () => {\n  setupPrivateRooms(mockIoFull);\n  assert.strictEqual(capturedJoin, 'sock123');\n  assert.strictEqual(capturedTo, 'sock123');\n  assert.strictEqual(capturedEmit, 'welcome');\n});",
+      "solutionHint": "io.on('connection', socket => { socket.join(socket.id); io.to(socket.id).emit('welcome'); })"
+    }
+  ]
+}
