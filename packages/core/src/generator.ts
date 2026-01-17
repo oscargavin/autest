@@ -201,39 +201,82 @@ Remember: Output ONLY the JSON object at the end, no markdown code blocks.`;
 }
 
 function extractJSON(text: string): GeneratedOutput | null {
-  // First try: find JSON between code blocks
-  const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-  if (codeBlockMatch) {
+  // Try multiple extraction strategies
+  const strategies = [
+    // 1. JSON in code blocks
+    () => {
+      const match = text.match(/```(?:json)?\s*([\s\S]*?)```/);
+      return match ? JSON.parse(match[1].trim()) : null;
+    },
+    // 2. Find { "docs" pattern and extract balanced braces
+    () => {
+      const match = text.match(/\{\s*"docs"\s*:/);
+      if (!match?.index) return null;
+      return extractBalancedJSON(text, match.index);
+    },
+    // 3. Find { "tasks" pattern (in case order is reversed)
+    () => {
+      const match = text.match(/\{\s*"tasks"\s*:/);
+      if (!match?.index) return null;
+      return extractBalancedJSON(text, match.index);
+    },
+    // 4. Find any { followed by " (start of JSON object)
+    () => {
+      const match = text.match(/\{\s*"/);
+      if (!match?.index) return null;
+      return extractBalancedJSON(text, match.index);
+    },
+    // 5. Whole response
+    () => JSON.parse(text.trim())
+  ];
+
+  for (const strategy of strategies) {
     try {
-      return JSON.parse(codeBlockMatch[1].trim());
+      const result = strategy();
+      if (result && result.docs && result.tasks) {
+        return result;
+      }
     } catch {}
   }
 
-  // Second try: find JSON object starting with { "docs"
-  const jsonStartMatch = text.match(/\{\s*"docs"\s*:/);
-  if (jsonStartMatch && jsonStartMatch.index !== undefined) {
-    const jsonStart = jsonStartMatch.index;
-    let braceCount = 0;
-    let jsonEnd = -1;
-    for (let i = jsonStart; i < text.length; i++) {
-      if (text[i] === '{') braceCount++;
-      if (text[i] === '}') braceCount--;
-      if (braceCount === 0) {
-        jsonEnd = i + 1;
-        break;
+  // Log failure for debugging
+  console.error('[extractJSON] Failed to extract. Response preview:', text.slice(0, 500));
+  return null;
+}
+
+function extractBalancedJSON(text: string, start: number): GeneratedOutput | null {
+  let braceCount = 0;
+  let inString = false;
+  let escape = false;
+
+  for (let i = start; i < text.length; i++) {
+    const char = text[i];
+
+    if (escape) {
+      escape = false;
+      continue;
+    }
+
+    if (char === '\\' && inString) {
+      escape = true;
+      continue;
+    }
+
+    if (char === '"' && !escape) {
+      inString = !inString;
+      continue;
+    }
+
+    if (!inString) {
+      if (char === '{') braceCount++;
+      if (char === '}') {
+        braceCount--;
+        if (braceCount === 0) {
+          return JSON.parse(text.slice(start, i + 1));
+        }
       }
     }
-    if (jsonEnd > jsonStart) {
-      try {
-        return JSON.parse(text.slice(jsonStart, jsonEnd));
-      } catch {}
-    }
   }
-
-  // Third try: parse the whole thing
-  try {
-    return JSON.parse(text.trim());
-  } catch {}
 
   return null;
 }
